@@ -26,8 +26,8 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   css: [],
-  plugins: [],
-  buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa'],
+  plugins: ['~/plugins/filters'],
+  buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts', '@nuxtjs/fontawesome'],
   modules: ['@nuxtjs/axios'],
   axios: {
     baseURL: '/api',
@@ -37,6 +37,16 @@ export default {
     config: {
       productionTip: false,
       devtools: true,
+    },
+  },
+  googleFonts: {
+    families: {
+      'Courier+Prime': true,
+    },
+  },
+  fontawesome: {
+    icons: {
+      solid: true,
     },
   },
 }
