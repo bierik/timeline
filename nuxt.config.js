@@ -25,14 +25,13 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  css: [],
+  css: ['vis-timeline/dist/vis-timeline-graph2d.css'],
   plugins: ['~/plugins/filters'],
-  buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts', '@nuxtjs/fontawesome'],
+  buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts'],
   modules: ['@nuxtjs/axios'],
   axios: {
     baseURL: '/api',
   },
-  build: {},
   vue: {
     config: {
       productionTip: false,
@@ -44,9 +43,7 @@ export default {
       'Courier+Prime': true,
     },
   },
-  fontawesome: {
-    icons: {
-      solid: true,
-    },
+  build: {
+    transpile: ['vis-data', 'vis-timeline'],
   },
 }

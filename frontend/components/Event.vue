@@ -1,6 +1,6 @@
 <template>
-  <div class="event">
-    <div class="event-line" />
+  <div class="event" @click="dialogOpen = !dialogOpen">
+    <MorphDialog :open="dialogOpen" />
     <div class="event-icon">
       {{ icon }}
     </div>
@@ -21,39 +21,57 @@ export default {
       default: () => '',
     },
   },
+  data() {
+    return {
+      dialogOpen: false,
+    }
+  },
 }
 </script>
 
 <style>
+.vis-item.vis-box {
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.vis-item.vis-dot {
+  border-color: black;
+  background-color: black;
+}
+
+.vis-item.vis-line {
+  border-color: black;
+  background-color: black;
+}
+
+.vis-item .vis-item-content {
+  padding: 0;
+}
+
 .event {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  position: absolute;
-  transform: translateX(-50%);
-  top: -120px;
-  cursor: pointer;
 }
 
 .event-icon {
+  transition: box-shadow 0.2s ease-in-out;
   border-radius: 50%;
   background-color: #f4c2c2;
-  padding: 30px;
-  font-size: 40px;
-  box-shadow: 0 0 0 6px #f4c2c280;
+  box-shadow: 0 0 0 6px #f5dddc;
   width: 50px;
   height: 50px;
+  margin-bottom: 15px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  color: white;
-  margin-bottom: 10px;
-  transition: box-shadow 0.2s ease-in-out;
+  justify-content: center;
+  font-size: 30px;
 }
 
-.event-icon:hover {
-  box-shadow: 0 0 0 10px #f4c2c280;
+.vis-item.vis-box:hover .event-icon {
+  box-shadow: 0 0 0 10px #f5dddc;
 }
 
 .event-text {
@@ -63,14 +81,5 @@ export default {
   font-family: 'Courier Prime';
   font-size: 12px;
   line-height: normal;
-}
-
-.event-line {
-  width: 1px;
-  background: black;
-  height: 60px;
-  position: absolute;
-  top: 60px;
-  z-index: -1;
 }
 </style>
