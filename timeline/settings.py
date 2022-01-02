@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
+    'django_filters',
+    'rest_framework',
+    'timeline.events',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +79,14 @@ WSGI_APPLICATION = 'timeline.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'timeline_development',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
+        'OPTIONS': {},
+        'ATOMIC_REQUESTS': True,
     }
 }
 
@@ -103,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'de-ch'
 
 TIME_ZONE = 'UTC'
 

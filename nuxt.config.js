@@ -5,6 +5,7 @@ export default {
   rootDir: path.join(__dirname, 'frontend'),
   ssr: false,
   target: 'static',
+  loading: false,
   components: [
     {
       path: '~/components',
@@ -26,12 +27,13 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   css: ['vis-timeline/dist/vis-timeline-graph2d.css'],
-  plugins: ['~/plugins/filters'],
+  plugins: ['~/plugins/filters', '~/plugins/axios'],
   buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts'],
-  modules: ['@nuxtjs/axios'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/proxy'],
   axios: {
     baseURL: '/api',
   },
+  proxy: ['http://localhost:8000/api'],
   vue: {
     config: {
       productionTip: false,

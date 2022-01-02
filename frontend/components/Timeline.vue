@@ -18,10 +18,15 @@ export default {
       default: () => [],
     },
   },
+  watch: {
+    events(events) {
+      this.timeline.setItems(new DataSet(events))
+    },
+  },
   mounted() {
     const options = {
       locale: 'de-CH',
-      template(item, element, data) {
+      template(item) {
         const eventComponentInstance = new EventComponentConstructor({
           propsData: { title: item.title, icon: item.icon },
         })
@@ -41,20 +46,9 @@ export default {
     this.timeline = new Timeline(this.$refs.timeline, new DataSet(this.events), options)
     const now = DateTime.local()
     this.timeline.setWindow(now.minus({ months: 1 }).toISODate(), now.plus({ months: 1 }).toISODate())
+    this.timeline.on('rangechange', (args) => {
+      this.$emit('rangechange', args)
+    })
   },
 }
 </script>
-
-<style>
-.vis-time-axis .vis-grid.vis-odd {
-  background: transparent;
-}
-
-.vis-grid.vis-vertical.vis-minor {
-  border-color: #fafafa;
-}
-
-.vis-grid.vis-vertical.vis-major {
-  border-style: dotted;
-}
-</style>

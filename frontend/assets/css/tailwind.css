@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --color-primary-DEFAULT: #E15B5B;
+        --color-primary-50: #FDF6F6;
+        --color-primary-100: #FAE5E5;
+        --color-primary-200: #F4C3C3;
+        --color-primary-300: #EEA0A0;
+        --color-primary-400: #E87D7D;
+        --color-primary-500: #E15B5B;
+        --color-primary-600: #D92B2B;
+        --color-primary-700: #AD1F1F;
+        --color-primary-800: #7D1717;
+        --color-primary-900: #4E0E0E;
+    }
+    .theme-secondary {
+        --color-primary-DEFAULT: #3B82F6;
+        --color-primary-50: #EBF2FE;
+        --color-primary-100: #D7E6FD;
+        --color-primary-200: #B0CDFB;
+        --color-primary-300: #89B4FA;
+        --color-primary-400: #629BF8;
+        --color-primary-500: #3B82F6;
+        --color-primary-600: #0B61EE;
+        --color-primary-700: #084BB8;
+        --color-primary-800: #063583;
+        --color-primary-900: #041F4D;
+    }
+}
+
+.vis-item.vis-box {
+    @apply border-transparent  !important;
+    @apply bg-transparent  !important;
+  }
+  
+  .vis-item.vis-dot, .vis-item.vis-line {
+    @apply border-black  !important;
+    @apply bg-black  !important;
+  }
+  
+  .vis-item .vis-item-content {
+    @apply p-0  !important;
+  }
+
+  .vis-time-axis .vis-grid.vis-odd {
+    @apply bg-transparent  !important;
+  }
+  
+  .vis-grid.vis-vertical.vis-minor {
+    @apply border-gray-100 !important;
+  }
+  
+  .vis-grid.vis-vertical.vis-major {
+    @apply border-dotted  !important;
+  }

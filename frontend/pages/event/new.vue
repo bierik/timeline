@@ -1,0 +1,40 @@
+<template>
+  <div class="container mx-auto max-w-screen-md h-screen flex flex-col justify-center">
+    <h1 class="text-xl mb-4 font-bold">Neues Ereignis hinzfügen</h1>
+    <form class="w-full" @submit.prevent="save" @reset.prevent="reset">
+      <TextInput v-model="event.title" class="mb-4 block" label="Titel" />
+      <DateInput v-model="event.date" label="Datum" class="mb-4 block" />
+      <TextFieldInput v-model="event.description" label="Beschreibung" class="mb-4 block" />
+      <TextInput v-model="event.icon" label="Icon" class="mb-4 block" />
+      <Button class="mt-4" type="submit">Speichern</Button>
+      <ButtonSecondary class="mt-4" type="reset">Abbrechen</ButtonSecondary>
+    </form>
+  </div>
+</template>
+
+<script>
+import DateTime from 'luxon/src/datetime'
+
+export default {
+  data() {
+    return {
+      event: {
+        title: '',
+        description: '',
+        date: DateTime.local().toISODate(),
+      },
+    }
+  },
+  methods: {
+    async save() {
+      try {
+        await this.$axios.$post('/events/', { ...this.event })
+        this.$router.push('/')
+      } catch (error) {}
+    },
+    reset() {
+      this.$router.push('/')
+    },
+  },
+}
+</script>

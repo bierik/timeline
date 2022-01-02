@@ -1,84 +1,51 @@
 <template>
-  <Timeline :events="events" class="timeline" />
+  <div>
+    <Timeline :events="events" class="timeline" @rangechange="fetchEvents" />
+    <nuxt-link
+      to="/event/new"
+      class="
+        rounded-full
+        w-16
+        h-16
+        flex
+        items-center
+        justify-center
+        text-white
+        fixed
+        bottom-8
+        right-8
+        drop-shadow-lg
+        bg-primary-300
+        text-2xl
+      "
+      >+</nuxt-link
+    >
+  </div>
 </template>
 
 <script>
+import throttle from 'lodash/throttle'
+import DateTime from 'luxon/src/datetime'
+
 export default {
+  async asyncData({ $axios }) {
+    // const events = await $axios.$get('/events/')
+    // return { events }
+  },
   data() {
     return {
-      events: [
-        {
-          title: 'Schwanger',
-          start: '2020-11-09',
-          icon: '🤰🏼',
-        },
-        {
-          title: 'Anfrage Gotti',
-          start: '2020-12-29',
-          icon: '👩‍👧',
-        },
-        {
-          title: 'Häkelbuch',
-          start: '2021-03-07',
-          icon: '📓',
-        },
-        {
-          title: 'Brunch auf Pläfe',
-          start: '2021-04-18',
-          icon: '🥐',
-        },
-        {
-          title: 'Geburt',
-          start: '2021-04-29',
-          icon: '🐣',
-        },
-        {
-          title: 'Erstes Video',
-          start: '2021-05-02',
-          icon: '🎥',
-        },
-        {
-          title: 'Stofftier fertig',
-          start: '2021-05-07',
-          icon: '🦙',
-        },
-        {
-          title: 'Erster Besuch Gotti',
-          start: '2021-05-08',
-          icon: '🙋‍♀️',
-        },
-        {
-          title: 'Besuch Gotti',
-          start: '2021-05-24',
-          icon: '🙋‍♀️',
-        },
-        {
-          title: 'Besuch Gotti',
-          start: '2021-06-27',
-          icon: '🙋‍♀️',
-        },
-        {
-          title: 'Postkarte Gotti',
-          start: '2021-07-13',
-          icon: '💌',
-        },
-        {
-          title: 'Ferienfotos',
-          start: '2021-08-08',
-          icon: '📸',
-        },
-        {
-          title: 'Besuch Gotti',
-          start: '2021-09-03',
-          icon: '🙋‍♀️',
-        },
-        {
-          title: 'Griechisches Essen',
-          start: '2021-12-12',
-          icon: '🇬🇷',
-        },
-      ],
+      events: [],
     }
+  },
+  methods: {
+    fetchEvents: throttle(async function fetchEvents({ start, end }) {
+      this.events = await this.$axios.$get('/events/', {
+        params: {
+          date_after: DateTime.fromJSDate(start).minus({ months: 1 }).toISODate(),
+          date_before: DateTime.fromJSDate(end).plus({ months: 1 }).toISODate(),
+        },
+      })
+    }, 500),
   },
 }
 </script>
