@@ -1,11 +1,11 @@
 <template>
-  <div class="d-flex flex-column">
-    <div class="d-flex">
-      <input type="file" @change="handleFile" />
-    </div>
-    {{ progress }}
-    <!-- <v-progress-linear :value="progress" data-testid="tus-upload-progress" /> -->
-  </div>
+  <label class="bg-gray-200 border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 flex flex-col">
+    <input class="hidden" type="file" :disabled="success" @input="handleFile" />
+    <span v-if="!hasFile" class="block mb-2">Datei auswählen…</span>
+    <span v-else-if="success" class="block mb-2">Erfolgreich uploaded</span>
+    <span v-else-if="error" class="block mb-2">Beim upload ist ein Fehler aufgetreten</span>
+    <progress class="w-full h-1" max="100" :value="progress" />
+  </label>
 </template>
 
 <script>
@@ -16,12 +16,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inheritAttrs: false,
-  props: {
-    uploads: {
-      type: Array,
-      default: () => [],
-    },
-  },
   data() {
     return {
       bytesUploaded: 0,
@@ -45,10 +39,6 @@ export default {
     },
   },
   methods: {
-    startUpload() {
-      this.upload.options.metadata.filename = this.randomFilename(this.upload.options.metadata.filename)
-      this.upload.start()
-    },
     randomFilename(filename) {
       const extension = last(filename.split('.'))
       return `${uuidv4()}.${extension}`
@@ -83,7 +73,7 @@ export default {
           vm.bytesTotal = bytesTotal
         },
         onSuccess() {
-          vm.$emit('input', [...this.uploads, vm.upload.options.metadata.filename])
+          vm.$emit('uploaded', vm.upload.options.metadata.filename)
           vm.success = true
         },
       })
@@ -92,7 +82,8 @@ export default {
           this.upload.resumeFromPreviousUpload(previousUploads[0])
         }
       })
-      this.startUpload()
+      this.upload.options.metadata.filename = this.randomFilename(this.upload.options.metadata.filename)
+      this.upload.start()
     },
   },
 }

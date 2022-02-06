@@ -22,8 +22,14 @@ class Media(TimeStampedModel):
     class Meta:
         abstract = True
 
+
 class Image(Media):
-    event = models.ForeignKey(Event, verbose_name=_("Ereignis"), related_name=_("images"), on_delete=models.PROTECT)
+    event = models.ForeignKey(
+        Event,
+        verbose_name=_("Ereignis"),
+        related_name=_("images"),
+        on_delete=models.CASCADE,
+    )
     file = models.ImageField(verbose_name=_("Bilddatei"))
 
     class Meta:
