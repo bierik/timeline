@@ -8,6 +8,8 @@
       <TextInput v-model="event.icon" label="Icon" class="mb-4 block" />
       <Button class="mt-4" type="submit">Speichern</Button>
       <ButtonSecondary class="mt-4" type="reset">Abbrechen</ButtonSecondary>
+      <TUSUpload v-model="upload" />
+      {{ upload }}
     </form>
   </div>
 </template>
@@ -18,10 +20,12 @@ import DateTime from 'luxon/src/datetime'
 export default {
   data() {
     return {
+      upload: [],
       event: {
         title: '',
         description: '',
         date: DateTime.local().toISODate(),
+        icon: '',
       },
     }
   },

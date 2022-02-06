@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 from configurations import Configuration
+from corsheaders.defaults import default_headers
 
 class Base(Configuration):
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,11 +43,14 @@ class Base(Configuration):
         'django.contrib.staticfiles',
         'django_extensions',
         'django_filters',
+        "corsheaders",
         'rest_framework',
+        'django_tus',
         'timeline.events',
     ]
 
     MIDDLEWARE = [
+        "corsheaders.middleware.CorsMiddleware",
         'django.middleware.security.SecurityMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
@@ -136,6 +141,13 @@ class Base(Configuration):
 
     DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+    DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
+
+    TUS_UPLOAD_DIR = os.path.join(BASE_DIR, 'tus_upload')
+    TUS_DESTINATION_DIR = os.path.join(BASE_DIR, 'media')
+    TUS_FILE_NAME_FORMAT = 'increment'  # Other options are: 'random-suffix', 'random', 'keep'
+    TUS_EXISTING_FILE = 'error'  #  Other options are: 'overwrite',  'error', 'rename'
+
 class Development(Base):
     DEBUG = True
     STATIC_URL = "/staticfiles/"
@@ -148,3 +160,9 @@ class Development(Base):
 
     def MEDIA_ROOT(self):
         return self.BASE_DIR / "media"
+
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOW_HEADERS = default_headers + (
+        "upload-offset",
+        "tus-resumable",
+    )
