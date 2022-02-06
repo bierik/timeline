@@ -27,8 +27,15 @@ export default {
     const options = {
       locale: 'de-CH',
       template(item) {
+        const thumbnail = `/api/events/${item.id}/thumbnail/`
         const eventComponentInstance = new EventComponentConstructor({
-          propsData: { title: item.title, icon: item.icon },
+          propsData: {
+            title: item.title,
+            icon: item.icon,
+            images: item.images,
+            thumbnail,
+            description: item.description,
+          },
         })
         eventComponentInstance.$mount()
         return eventComponentInstance.$el

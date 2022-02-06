@@ -26,7 +26,11 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  css: ['vis-timeline/dist/vis-timeline-graph2d.css'],
+  css: [
+    'vis-timeline/dist/vis-timeline-graph2d.css',
+    'photoswipe/dist/photoswipe.css',
+    'photoswipe/dist/default-skin/default-skin.css',
+  ],
   plugins: ['~/plugins/filters', '~/plugins/axios'],
   buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts'],
   modules: ['@nuxtjs/axios', '@nuxtjs/proxy'],

@@ -4,7 +4,7 @@
     :class="activeClass"
     style="z-index: -1"
   >
-    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the.
+    <slot />
   </div>
 </template>
 
