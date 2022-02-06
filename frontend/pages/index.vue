@@ -28,10 +28,6 @@ import throttle from 'lodash/throttle'
 import DateTime from 'luxon/src/datetime'
 
 export default {
-  async asyncData({ $axios }) {
-    // const events = await $axios.$get('/events/')
-    // return { events }
-  },
   data() {
     return {
       events: [],
