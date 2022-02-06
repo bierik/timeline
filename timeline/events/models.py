@@ -1,12 +1,13 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django_editorjs_fields import EditorJsJSONField
 from django_extensions.db.models import TimeStampedModel
 
 
 class Event(TimeStampedModel):
     title = models.CharField(verbose_name=_("Titel"), max_length=255)
     date = models.DateField(verbose_name=_("Datum"))
-    description = models.TextField(verbose_name=_("Beschreibung"), blank=True)
+    description = EditorJsJSONField(verbose_name=_("Beschreibung"), null=True)
     icon = models.CharField(verbose_name=_("Icon"), max_length=255, blank=True)
 
     class Meta:

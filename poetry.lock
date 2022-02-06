@@ -38,6 +38,14 @@ python-versions = ">=3.6"
 django = "*"
 
 [[package]]
+name = "django-cleanup"
+version = "6.0.0"
+description = "Deletes old files."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "django-configurations"
 version = "2.3.2"
 description = "A helper for organizing Django settings."
@@ -65,6 +73,14 @@ python-versions = ">=3.7"
 
 [package.dependencies]
 Django = ">=2.2"
+
+[[package]]
+name = "django-editorjs-fields"
+version = "0.2.6"
+description = "Django plugin for using Editor.js"
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
 
 [[package]]
 name = "django-extensions"
@@ -166,7 +182,7 @@ python-versions = ">=3.5"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "e0eab5598cfa58a768cbc0d18f4788c1494b6483551c47892c49e5c8eae86220"
+content-hash = "3eeba43cf77626f3fa5416953a9657a7635ae26bd78ef26c5124702ac88e8bcf"
 
 [metadata.files]
 asgiref = [
@@ -181,6 +197,10 @@ django-appconf = [
     {file = "django-appconf-1.0.5.tar.gz", hash = "sha256:be3db0be6c81fa84742000b89a81c016d70ae66a7ccb620cdef592b1f1a6aaa4"},
     {file = "django_appconf-1.0.5-py3-none-any.whl", hash = "sha256:ae9f864ee1958c815a965ed63b3fba4874eec13de10236ba063a788f9a17389d"},
 ]
+django-cleanup = [
+    {file = "django-cleanup-6.0.0.tar.gz", hash = "sha256:922e06ef8839c92bd3ab37a84db6058b8764f3fe44dbb4487bbca941d288280a"},
+    {file = "django_cleanup-6.0.0-py2.py3-none-any.whl", hash = "sha256:997feab3b1f7a2e84f71c29e83b1d664459ec0d4b1924977b1fa25b5babb8703"},
+]
 django-configurations = [
     {file = "django-configurations-2.3.2.tar.gz", hash = "sha256:bd1a77a60735839b7d105912cc3977735fa005ea06544c632fbd322d1e021677"},
     {file = "django_configurations-2.3.2-py3-none-any.whl", hash = "sha256:c0363b0111df6536442186d0f23d12138390eaa9f4f97ce46950ee78856a46c9"},
@@ -188,6 +208,10 @@ django-configurations = [
 django-cors-headers = [
     {file = "django-cors-headers-3.11.0.tar.gz", hash = "sha256:eb98389bf7a2afc5d374806af4a9149697e3a6955b5a2dc2bf049f7d33647456"},
     {file = "django_cors_headers-3.11.0-py3-none-any.whl", hash = "sha256:a22be2befd4069c4fc174f11cf067351df5c061a3a5f94a01650b4e928b0372b"},
+]
+django-editorjs-fields = [
+    {file = "django-editorjs-fields-0.2.6.tar.gz", hash = "sha256:ce9b86a58542f22f0084ba9dd819a1b73bad669ee2a7d19cc8c4591a41ed8758"},
+    {file = "django_editorjs_fields-0.2.6-py3-none-any.whl", hash = "sha256:861de2c00f3a0e86c4f339087c6be8e2dbc7c078ceb89daccd0734a1fc43c436"},
 ]
 django-extensions = [
     {file = "django-extensions-3.1.5.tar.gz", hash = "sha256:28e1e1bf49f0e00307ba574d645b0af3564c981a6dfc87209d48cb98f77d0b1a"},

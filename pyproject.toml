@@ -15,6 +15,8 @@ django-configurations = "^2.3.2"
 Pillow = "^9.0.1"
 django-tus = {git = "https://github.com/alican/django-tus.git"}
 django-cors-headers = "^3.11.0"
+django-editorjs-fields = "^0.2.6"
+django-cleanup = "^6.0.0"
 
 [tool.poetry.dev-dependencies]
 

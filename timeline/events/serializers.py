@@ -4,6 +4,7 @@ from pathlib import Path
 from django.conf import settings
 from django.core.files import File
 from django.core.files.images import get_image_dimensions
+from django_editorjs_fields.templatetags.editorjs import editorjs
 from rest_framework import serializers
 
 from timeline.events import models
@@ -25,13 +26,25 @@ class EventSerializer(serializers.ModelSerializer):
     start = serializers.DateField(source="date", read_only=True)
     images = ImageSerializer(read_only=True, many=True)
     has_images = serializers.SerializerMethodField()
+    description_html = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Event
-        fields = ("id", "title", "description", "icon", "start", "images", "has_images")
+        fields = (
+            "id",
+            "title",
+            "description_html",
+            "icon",
+            "start",
+            "images",
+            "has_images",
+        )
 
     def get_has_images(self, event):
         return event.images.exists()
+
+    def get_description_html(self, event):
+        return editorjs(event.description)
 
 
 class EventCreateSerializer(serializers.ModelSerializer):

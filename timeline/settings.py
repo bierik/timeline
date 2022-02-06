@@ -46,7 +46,9 @@ class Base(Configuration):
         "corsheaders",
         "rest_framework",
         "django_tus",
+        "django_editorjs_fields",
         "timeline.events",
+        "django_cleanup.apps.CleanupConfig",
     ]
 
     MIDDLEWARE = [

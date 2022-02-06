@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-center items-center" @click="dialogOpen = !dialogOpen">
     <MorphDialog :open="true">
-      <span class="text-xs">{{ description }}</span>
+      <span class="text-xs" v-html="description" />
       <Gallery v-if="thumbnail" :images="images" :thumbnail="thumbnail" />
     </MorphDialog>
     <div

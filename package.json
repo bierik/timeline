@@ -10,6 +10,7 @@
   },
   "prettier": "@4tw/prettier-config",
   "dependencies": {
+    "@editorjs/editorjs": "^2.22.2",
     "@egjs/hammerjs": "^2.0.17",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/proxy": "^2.1.0",

@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { Timeline } from 'vis-timeline/esnext'
-import { DataSet } from 'vis-data/esnext'
 import DateTime from 'luxon/src/datetime'
+import { DataSet } from 'vis-data/esnext'
+import { Timeline } from 'vis-timeline/esnext'
+import Vue from 'vue'
 import EventComponent from '@/components/Event.vue'
 
 const EventComponentConstructor = Vue.extend(EventComponent)
@@ -34,7 +34,7 @@ export default {
             icon: item.icon,
             images: item.images,
             thumbnail,
-            description: item.description,
+            description: item.description_html,
           },
         })
         eventComponentInstance.$mount()

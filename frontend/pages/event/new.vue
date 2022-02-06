@@ -4,8 +4,8 @@
     <form class="w-full" @submit.prevent="save" @reset.prevent="reset">
       <TextInput v-model="event.title" class="mb-4 block" label="Titel" />
       <DateInput v-model="event.date" label="Datum" class="mb-4 block" />
-      <TextFieldInput v-model="event.description" label="Beschreibung" class="mb-4 block" />
       <TextInput v-model="event.icon" label="Icon" class="mb-4 block" />
+      <Editor v-model="event.description" />
       <label>
         <span class="block text-gray-500 font-bold">Dateien</span>
         <MultiTUSUpload @uploaded="handleUploadedFiles" />
@@ -25,7 +25,7 @@ export default {
       files: [],
       event: {
         title: '',
-        description: '',
+        description: null,
         date: DateTime.local().toISODate(),
         icon: '',
       },
