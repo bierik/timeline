@@ -47,6 +47,7 @@ class Base(Configuration):
         "rest_framework",
         "django_tus",
         "django_editorjs_fields",
+        'sorl.thumbnail',
         "timeline.events",
         "django_cleanup.apps.CleanupConfig",
     ]

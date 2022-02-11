@@ -15,6 +15,7 @@
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/proxy": "^2.1.0",
     "core-js": "^3.21.0",
+    "feather-icons": "4",
     "keycharm": "^0.4.0",
     "luxon": "^2.2.0",
     "moment": "^2.29.1",
@@ -26,6 +27,7 @@
     "vis-data": "^7.1.2",
     "vis-timeline": "^7.5.0",
     "vis-util": "^5.0.2",
+    "vue-feather": "1",
     "xss": "^1.0.10"
   },
   "devDependencies": {

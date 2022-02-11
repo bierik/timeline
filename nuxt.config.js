@@ -31,13 +31,13 @@ export default {
     'photoswipe/dist/photoswipe.css',
     'photoswipe/dist/default-skin/default-skin.css',
   ],
-  plugins: ['~/plugins/filters', '~/plugins/axios'],
+  plugins: ['~/plugins/filters', '~/plugins/axios', '~/plugins/feather'],
   buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts'],
   modules: ['@nuxtjs/axios', '@nuxtjs/proxy'],
   axios: {
     baseURL: '/api',
   },
-  proxy: ['http://localhost:8000/api'],
+  proxy: ['http://localhost:8000/api', 'http://localhost:8000/media'],
   vue: {
     config: {
       productionTip: false,

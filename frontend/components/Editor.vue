@@ -1,5 +1,5 @@
 <template>
-  <div id="editorjs" />
+  <div id="editorjs" class="bg-gray-200 border-2 border-gray-200 rounded-lg w-full py-4 text-gray-700 flex flex-col" />
 </template>
 
 <script>

@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_editorjs_fields import EditorJsJSONField
 from django_extensions.db.models import TimeStampedModel
+from sorl.thumbnail import ImageField
 
 
 class Event(TimeStampedModel):
@@ -31,7 +32,7 @@ class Image(Media):
         related_name=_("images"),
         on_delete=models.CASCADE,
     )
-    file = models.ImageField(verbose_name=_("Bilddatei"))
+    file = ImageField(verbose_name=_("Bilddatei"))
 
     class Meta:
         ordering = ["created"]

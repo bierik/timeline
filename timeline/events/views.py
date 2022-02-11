@@ -2,11 +2,11 @@ from django.http.response import HttpResponse
 from django_filters import rest_framework as filters
 from PIL import Image
 from rest_framework.decorators import action
-from rest_framework.mixins import CreateModelMixin, ListModelMixin
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from timeline.events import models
-from timeline.events.serializers import EventCreateSerializer, EventSerializer
+from timeline.events.serializers import EventCreateOrUpdateSerializer, EventSerializer, ImageSerializer
 from timeline.serializers import SerializerActionMixin
 
 
@@ -19,10 +19,10 @@ class EventFilter(filters.FilterSet):
 
 
 class EventViewSet(
-    SerializerActionMixin, ListModelMixin, CreateModelMixin, GenericViewSet
+    SerializerActionMixin, ModelViewSet,
 ):
     serializer_class = EventSerializer
-    serializer_action_classes = {"create": EventCreateSerializer}
+    serializer_action_classes = {"create": EventCreateOrUpdateSerializer, "partial_update": EventCreateOrUpdateSerializer}
     queryset = models.Event.objects.all()
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = EventFilter
@@ -35,3 +35,8 @@ class EventViewSet(
         response = HttpResponse(content_type="image/jpeg")
         image.save(response, "jpeg")
         return response
+
+
+class ImageViewSet(RetrieveModelMixin, GenericViewSet):
+    serializer_class = ImageSerializer
+    queryset = models.Image.objects.all()

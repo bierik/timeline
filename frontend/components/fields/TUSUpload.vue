@@ -1,10 +1,19 @@
 <template>
-  <label class="bg-gray-200 border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 flex flex-col">
+  <div v-if="success" class="relative">
+    <img :src="preview" class="w-32 h-32 object-cover" />
+    <button
+      class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      @click="$emit('deleted')"
+    >
+      <feather type="x" />
+    </button>
+  </div>
+  <div v-else-if="loading" class="bg-gray-200 w-32 h-32 flex items-center justify-center">
+    <feather type="loader" animation="spin" />
+  </div>
+  <label v-else class="bg-gray-200 w-32 h-32 relative">
+    <feather type="upload" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
     <input class="hidden" type="file" :disabled="success" @input="handleFile" />
-    <span v-if="!hasFile" class="block mb-2">Datei auswählen…</span>
-    <span v-else-if="success" class="block mb-2">Erfolgreich uploaded</span>
-    <span v-else-if="error" class="block mb-2">Beim upload ist ein Fehler aufgetreten</span>
-    <progress class="w-full h-1" max="100" :value="progress" />
   </label>
 </template>
 
@@ -24,6 +33,8 @@ export default {
       success: false,
       error: null,
       file: null,
+      preview: null,
+      loading: false,
     }
   },
   computed: {
@@ -45,6 +56,7 @@ export default {
     },
     handleFile(event) {
       const file = first(event.target.files)
+      this.loading = true
       this.success = false
       this.error = null
       this.bytesUploaded = 0
@@ -54,6 +66,12 @@ export default {
       if (!file) {
         return
       }
+
+      const reader = new FileReader()
+      reader.onload = () => {
+        this.preview = reader.result
+      }
+      reader.readAsDataURL(file)
 
       const vm = this
       this.upload = new tus.Upload(file, {
@@ -75,6 +93,7 @@ export default {
         onSuccess() {
           vm.$emit('uploaded', vm.upload.options.metadata.filename)
           vm.success = true
+          vm.loading = false
         },
       })
       this.upload.findPreviousUploads().then((previousUploads) => {

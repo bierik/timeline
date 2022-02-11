@@ -21,7 +21,7 @@ from django_tus.views import TusUpload
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/events/", include("timeline.events.urls")),
+    path("api/", include("timeline.events.urls")),
     path("api/upload/", TusUpload.as_view(), name="tus_upload"),
     path(
         "api/upload/<uuid:resource_id>", TusUpload.as_view(), name="tus_upload_chunks"
