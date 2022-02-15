@@ -57,14 +57,14 @@ class EventSerializer(serializers.ModelSerializer):
 
 class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
     files = serializers.ListField(child=serializers.CharField(), write_only=True)
-    deleted_files = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    deleted_files = serializers.ListField(child=serializers.IntegerField(), write_only=True, required=False)
 
     class Meta:
         model = models.Event
         fields = ("id", "title", "description", "icon", "date", "files", "deleted_files")
 
     def save(self, *args, **kwargs):
-        deleted_files = self.validated_data.pop("deleted_files")
+        deleted_files = self.validated_data.pop("deleted_files", [])
         files = self.validated_data.pop("files")        
         
         event = super().save(**kwargs)

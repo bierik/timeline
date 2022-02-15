@@ -24,17 +24,15 @@ export default {
     },
   },
   mounted() {
+    const $router = this.$router
     const options = {
       locale: 'de-CH',
       template(item) {
         const thumbnail = `/api/events/${item.id}/thumbnail/`
         const eventComponentInstance = new EventComponentConstructor({
+          $router,
           propsData: {
-            title: item.title,
-            icon: item.icon,
-            images: item.images,
-            thumbnail,
-            description: item.description_html,
+            event: { ...item, thumbnail },
           },
         })
         eventComponentInstance.$mount()
