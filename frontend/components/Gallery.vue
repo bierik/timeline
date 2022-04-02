@@ -1,13 +1,9 @@
 <template>
-  <div class="relative" style="width: fit-content">
-    <img :src="thumbnail" />
-    <div
-      class="group bg-black bg-opacity-0 absolute inset-0 hover:bg-opacity-25 transition-all flex items-center justify-items-center"
-      @click="openGallery"
-    >
-      <div class="opacity-0 transition-opacity group-hover:opacity-100 flex-grow">🔍</div>
-    </div>
-  </div>
+  <img
+    :src="thumbnail"
+    class="transition-all rounded-full absolute shadow-flat shadow-primary hover:shadow-flat-lg object-cover"
+    @click="openGallery"
+  />
 </template>
 
 <script>

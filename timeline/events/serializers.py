@@ -10,6 +10,7 @@ from rest_framework import serializers
 
 from timeline.events import models
 from sorl.thumbnail import get_thumbnail
+from rest_framework_recursive.fields import RecursiveField
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -34,6 +35,7 @@ class EventSerializer(serializers.ModelSerializer):
     images = ImageSerializer(read_only=True, many=True)
     has_images = serializers.SerializerMethodField()
     description_html = serializers.SerializerMethodField()
+    relations = RecursiveField(many=True)
 
     class Meta:
         model = models.Event
@@ -47,6 +49,7 @@ class EventSerializer(serializers.ModelSerializer):
             "date",
             "images",
             "has_images",
+            "relations",
         )
 
     def get_has_images(self, event):
@@ -61,7 +64,7 @@ class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Event
-        fields = ("id", "title", "description", "icon", "date", "files", "deleted_files")
+        fields = ("id", "title", "description", "icon", "date", "files", "deleted_files", "relations")
 
     def save(self, *args, **kwargs):
         deleted_files = self.validated_data.pop("deleted_files", [])

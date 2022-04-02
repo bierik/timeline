@@ -12,6 +12,7 @@ from timeline.serializers import SerializerActionMixin
 
 class EventFilter(filters.FilterSet):
     date = filters.DateFromToRangeFilter()
+    title = filters.CharFilter(field_name="title", lookup_expr='icontains')
 
     class Meta:
         model = models.Event

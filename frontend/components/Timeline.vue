@@ -22,15 +22,25 @@ export default {
     events(events) {
       this.timeline.setItems(new DataSet(events))
     },
+    $route: {
+      handler({ query: { activeEvent } }) {
+        setTimeout(() => {
+          this.timeline.focus(Number.parseInt(activeEvent), { zoom: false })
+        }, 0)
+      },
+      immediate: true,
+    },
   },
   mounted() {
     const $router = this.$router
+    const $axios = this.$axios
     const options = {
       locale: 'de-CH',
       template(item) {
         const thumbnail = `/api/events/${item.id}/thumbnail/`
         const eventComponentInstance = new EventComponentConstructor({
           $router,
+          $axios,
           propsData: {
             event: { ...item, thumbnail },
           },
@@ -54,6 +64,15 @@ export default {
     this.timeline.on('rangechange', (args) => {
       this.$emit('rangechange', args)
     })
+    this.timeline.on('changed', () => this.selectActiveEvent())
+  },
+  methods: {
+    selectActiveEvent() {
+      const eventEl = document.querySelector(`[data-event-id="${this.$route.query.activeEvent}"]`)
+      if (eventEl) {
+        eventEl.closest('.vis-item').classList.add('vis-selected')
+      }
+    },
   },
 }
 </script>
