@@ -9,13 +9,14 @@ from django_editorjs_fields.templatetags.editorjs import editorjs
 from rest_framework import serializers
 
 from timeline.events import models
-from sorl.thumbnail import get_thumbnail
+from sorl.thumbnail import get_thumbnail as sorl_get_thumbnail
 from rest_framework_recursive.fields import RecursiveField
 
 
 class ImageSerializer(serializers.ModelSerializer):
     dimensions = serializers.SerializerMethodField()
     thumbnail = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Image
@@ -26,7 +27,10 @@ class ImageSerializer(serializers.ModelSerializer):
         return {"width": width, "height": height}
 
     def get_thumbnail(self, image):
-        return get_thumbnail(image.file, '100x100', crop='center', quality=99).url
+        return sorl_get_thumbnail(image.file, '100x100', crop='center', quality=99).url
+
+    def get_file(self, image):
+        return self.context["request"].build_absolute_uri(image.file.url)
         
 
 
@@ -36,6 +40,7 @@ class EventSerializer(serializers.ModelSerializer):
     has_images = serializers.SerializerMethodField()
     description_html = serializers.SerializerMethodField()
     relations = RecursiveField(many=True)
+    thumbnail = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Event
@@ -50,6 +55,7 @@ class EventSerializer(serializers.ModelSerializer):
             "images",
             "has_images",
             "relations",
+            "thumbnail",
         )
 
     def get_has_images(self, event):
@@ -57,6 +63,12 @@ class EventSerializer(serializers.ModelSerializer):
 
     def get_description_html(self, event):
         return editorjs(event.description)
+
+    def get_thumbnail(self, event):
+        if event.images.exists():
+            thumbnail = sorl_get_thumbnail(event.images.first().file, '100x100', crop="center")
+            return self.context["request"].build_absolute_uri(thumbnail.url)
+        return None
 
 class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
     files = serializers.ListField(child=serializers.CharField(), write_only=True)

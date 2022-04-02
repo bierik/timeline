@@ -52,4 +52,7 @@ export default {
   build: {
     transpile: ['vis-data', 'vis-timeline'],
   },
+  generate: {
+    dir: '../staticfiles',
+  },
 }

@@ -37,12 +37,11 @@ export default {
     const options = {
       locale: 'de-CH',
       template(item) {
-        const thumbnail = `/api/events/${item.id}/thumbnail/`
         const eventComponentInstance = new EventComponentConstructor({
           $router,
           $axios,
           propsData: {
-            event: { ...item, thumbnail },
+            event: item,
           },
         })
         eventComponentInstance.$mount()

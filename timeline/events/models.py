@@ -17,6 +17,9 @@ class Event(TimeStampedModel):
         verbose_name = _("Ereignis")
         verbose_name_plural = _("Ereignisse")
 
+    def __str__(self):
+        return self.title
+
 
 class Media(TimeStampedModel):
     title = models.CharField(verbose_name=_("Titel"), max_length=255)

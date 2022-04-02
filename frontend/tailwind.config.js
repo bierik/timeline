@@ -1,5 +1,4 @@
-module.exports = {
-  mode: 'jit',
+const config = {
   theme: {
     extend: {
       fontFamily: {
@@ -27,3 +26,9 @@ module.exports = {
     },
   },
 }
+
+if (process.env.NODE_ENV !== 'production') {
+  config.mode = 'jit'
+}
+
+module.exports = config
