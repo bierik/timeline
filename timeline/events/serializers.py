@@ -31,12 +31,12 @@ class ImageSerializer(serializers.ModelSerializer):
 
     def get_file(self, image):
         return self.context["request"].build_absolute_uri(image.file.url)
-        
+
 
 
 class EventSerializer(serializers.ModelSerializer):
     start = serializers.DateField(source="date", read_only=True)
-    images = ImageSerializer(read_only=True, many=True)
+    # images = ImageSerializer(read_only=True, many=True)
     has_images = serializers.SerializerMethodField()
     description_html = serializers.SerializerMethodField()
     relations = RecursiveField(many=True)
@@ -52,7 +52,7 @@ class EventSerializer(serializers.ModelSerializer):
             "icon",
             "start",
             "date",
-            "images",
+            # "images",
             "has_images",
             "relations",
             "thumbnail",
@@ -80,8 +80,8 @@ class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
 
     def save(self, *args, **kwargs):
         deleted_files = self.validated_data.pop("deleted_files", [])
-        files = self.validated_data.pop("files")        
-        
+        files = self.validated_data.pop("files")
+
         event = super().save(**kwargs)
         for file in files:
             imagePath = Path(settings.TUS_DESTINATION_DIR) / file
