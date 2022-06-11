@@ -99,6 +99,9 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# https://github.com/jazzband/sorl-thumbnail#is-so-slow-in-amazon-s3
+THUMBNAIL_FORCE_OVERWRITE = True
+
 django_heroku.settings(locals(), logging=False)
 
 try:
