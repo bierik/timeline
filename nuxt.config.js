@@ -26,18 +26,14 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  css: [
-    'vis-timeline/dist/vis-timeline-graph2d.css',
-    'photoswipe/dist/photoswipe.css',
-    'photoswipe/dist/default-skin/default-skin.css',
-  ],
+  css: ['vis-timeline/dist/vis-timeline-graph2d.css', 'photoswipe/dist/photoswipe.css'],
   plugins: ['~/plugins/filters', '~/plugins/axios', '~/plugins/feather'],
   buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts'],
   modules: ['@nuxtjs/axios', '@nuxtjs/proxy'],
   axios: {
     baseURL: '/api',
   },
-  proxy: ['http://localhost:8000/api', 'http://localhost:8000/media'],
+  proxy: ['http://localhost:8000/api'],
   vue: {
     config: {
       productionTip: false,
@@ -46,7 +42,7 @@ export default {
   },
   googleFonts: {
     families: {
-      'Courier+Prime': true,
+      'Courier Prime': true,
     },
   },
   build: {

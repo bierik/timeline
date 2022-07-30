@@ -7,8 +7,13 @@
 </template>
 
 <script>
-import PhotoSwipe from 'photoswipe'
-import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default'
+import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js'
+import Vue from 'vue'
+
+import GalleryCaptionComponent from '@/components/GalleryCaption.vue'
+
+const GalleryCaptionComponentConstructor = Vue.extend(GalleryCaptionComponent)
+
 export default {
   props: {
     images: {
@@ -20,22 +25,57 @@ export default {
       required: true,
     },
   },
-  computed: {
-    items() {
-      return this.images.map((image) => ({
-        src: image.file,
-        w: image.dimensions.width,
-        h: image.dimensions.height,
-        title: `${image.title} — ${image.description}`,
-      }))
-    },
+  data() {
+    return {
+      gallery: null,
+    }
+  },
+  mounted() {
+    this.initGallery()
   },
   methods: {
+    buildCaption({ title, description }) {
+      const galleryCaptionComponentInstance = new GalleryCaptionComponentConstructor({
+        propsData: {
+          title,
+          description,
+        },
+      })
+      galleryCaptionComponentInstance.$mount()
+      return galleryCaptionComponentInstance.$el.outerHTML
+    },
+    buildDataSource() {
+      return this.images.map((image) => ({
+        src: image.file,
+        width: image.dimensions.width,
+        height: image.dimensions.height,
+        alt: `${image.title} — ${image.description}`,
+        title: image.title,
+        description: image.description,
+      }))
+    },
     openGallery() {
-      const photoSwipeRoot = document.querySelector('#pswp')
-      const options = {}
-      const gallery = new PhotoSwipe(photoSwipeRoot, PhotoSwipeUIDefault, this.items, options)
-      gallery.init()
+      this.gallery.loadAndOpen(0)
+    },
+    initGallery() {
+      const options = {
+        dataSource: this.buildDataSource(),
+        pswpModule: () => import('photoswipe/dist/photoswipe.esm.js'),
+      }
+      this.gallery = new PhotoSwipeLightbox(options)
+      this.gallery.on('uiRegister', () => {
+        this.gallery.pswp.ui.registerElement({
+          name: 'caption',
+          isButton: false,
+          appendTo: 'root',
+          onInit: (el, pswp) => {
+            this.gallery.pswp.on('change', () => {
+              el.innerHTML = this.buildCaption(pswp.currSlide.data)
+            })
+          },
+        })
+      })
+      this.gallery.init()
     },
   },
 }

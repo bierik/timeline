@@ -27,8 +27,4 @@ const config = {
   },
 }
 
-if (process.env.NODE_ENV !== 'production') {
-  config.mode = 'jit'
-}
-
 module.exports = config

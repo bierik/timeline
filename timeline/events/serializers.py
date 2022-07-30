@@ -27,7 +27,8 @@ class ImageSerializer(serializers.ModelSerializer):
         return {"width": width, "height": height}
 
     def get_thumbnail(self, image):
-        return sorl_get_thumbnail(image.file, '100x100', crop='center', quality=99).url
+        thumbnail = sorl_get_thumbnail(image.file, '100x100', crop='center', quality=99)
+        return self.context["request"].build_absolute_uri(thumbnail.url)
 
     def get_file(self, image):
         return self.context["request"].build_absolute_uri(image.file.url)
@@ -36,7 +37,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class EventSerializer(serializers.ModelSerializer):
     start = serializers.DateField(source="date", read_only=True)
-    # images = ImageSerializer(read_only=True, many=True)
+    images = ImageSerializer(read_only=True, many=True)
     has_images = serializers.SerializerMethodField()
     description_html = serializers.SerializerMethodField()
     relations = RecursiveField(many=True)
@@ -52,7 +53,7 @@ class EventSerializer(serializers.ModelSerializer):
             "icon",
             "start",
             "date",
-            # "images",
+            "images",
             "has_images",
             "relations",
             "thumbnail",
