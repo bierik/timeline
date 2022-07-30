@@ -37,6 +37,8 @@ class Image(Media):
         on_delete=models.CASCADE,
     )
     file = ImageField(verbose_name=_("Bilddatei"))
+    width = models.PositiveIntegerField(blank=True, default=0)
+    height = models.PositiveIntegerField(blank=True, default=0)
 
     class Meta:
         ordering = ["created"]

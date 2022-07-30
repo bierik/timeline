@@ -1,4 +1,3 @@
-from asyncore import write
 import os
 from pathlib import Path
 
@@ -23,8 +22,7 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "description", "file", "dimensions", "thumbnail"]
 
     def get_dimensions(self, image):
-        width, height = get_image_dimensions(image.file)
-        return {"width": width, "height": height}
+        return {"width": image.width, "height": image.height}
 
     def get_thumbnail(self, image):
         thumbnail = sorl_get_thumbnail(image.file, '100x100', crop='center', quality=99)
@@ -87,7 +85,8 @@ class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
         for file in files:
             imagePath = Path(settings.TUS_DESTINATION_DIR) / file
             with open(imagePath, "rb") as image:
-                event_image = models.Image.objects.create(title="title", event=event)
+                width, height = get_image_dimensions(image)
+                event_image = models.Image.objects.create(title="title", event=event, width=width, height=height)
                 event_image.file.save(file, File(image))
                 os.remove(imagePath)
 
