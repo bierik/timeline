@@ -4,8 +4,8 @@
     <nuxt-link
       to="/event/new"
       class="rounded-full w-16 h-16 flex items-center justify-center text-white fixed bottom-8 right-8 drop-shadow-lg bg-primary-300 text-2xl"
-      >+</nuxt-link
-    >
+      ><feather type="plus"
+    /></nuxt-link>
   </div>
 </template>
 

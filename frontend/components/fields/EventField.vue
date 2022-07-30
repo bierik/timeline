@@ -31,6 +31,10 @@ import uniqBy from 'lodash/uniqBy'
 export default {
   inheritAttrs: false,
   props: {
+    exclude: {
+      type: Number,
+      default: () => null,
+    },
     value: {
       type: Array,
       default: () => [],
@@ -95,7 +99,7 @@ export default {
         this.items = uniqBy(
           [...this.itemsCache, ...(await this.$axios.$get('/events/', { params: { title: this.query } }))],
           'id',
-        )
+        ).filter((item) => item.id !== this.exclude)
       } catch (e) {
         this.items = []
         throw e

@@ -9,7 +9,6 @@ from rest_framework import serializers
 
 from timeline.events import models
 from sorl.thumbnail import get_thumbnail as sorl_get_thumbnail
-from rest_framework_recursive.fields import RecursiveField
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -32,13 +31,18 @@ class ImageSerializer(serializers.ModelSerializer):
         return self.context["request"].build_absolute_uri(image.file.url)
 
 
+class EventRelatedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Event
+        fields = ("id", "title")
+
 
 class EventSerializer(serializers.ModelSerializer):
     start = serializers.DateField(source="date", read_only=True)
     images = ImageSerializer(read_only=True, many=True)
     has_images = serializers.SerializerMethodField()
     description_html = serializers.SerializerMethodField()
-    relations = RecursiveField(many=True)
+    relations = serializers.SerializerMethodField()
     thumbnail = serializers.SerializerMethodField()
 
     class Meta:
@@ -68,6 +72,12 @@ class EventSerializer(serializers.ModelSerializer):
             thumbnail = sorl_get_thumbnail(event.images.first().file, '100x100', crop="center")
             return self.context["request"].build_absolute_uri(thumbnail.url)
         return None
+
+    def get_relations(self, event):
+        relations = event.relations.values_list('id', flat=True)
+        reverse_relations = event.reverse_relations.values_list('id', flat=True)
+        return EventRelatedSerializer(models.Event.objects.filter(id__in=[*relations, *reverse_relations]), many=True).data
+
 
 class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
     files = serializers.ListField(child=serializers.CharField(), write_only=True)

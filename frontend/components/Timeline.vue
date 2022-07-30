@@ -23,7 +23,11 @@ export default {
       this.timeline.setItems(new DataSet(events))
     },
     $route: {
-      handler({ query: { activeEvent } }) {
+      async handler({ query: { activeEvent } }) {
+        if (!activeEvent) {
+          return
+        }
+        await this.addEvent(activeEvent)
         setTimeout(() => {
           this.timeline.focus(Number.parseInt(activeEvent), { zoom: false })
         }, 0)
@@ -32,16 +36,14 @@ export default {
     },
   },
   mounted() {
-    const $router = this.$router
-    const $axios = this.$axios
+    const self = this
     const options = {
       locale: 'de-CH',
       template(item) {
         const eventComponentInstance = new EventComponentConstructor({
-          $router,
-          $axios,
           propsData: {
             event: item,
+            $router: self.$router,
           },
         })
         eventComponentInstance.$mount()
@@ -66,6 +68,22 @@ export default {
     this.timeline.on('changed', () => this.selectActiveEvent())
   },
   methods: {
+    hasEvent(id) {
+      if (!this.timeline) {
+        return false
+      }
+      return this.timeline.itemsData.getIds().includes(Number.parseInt(id))
+    },
+    async addEvent(id) {
+      if (!this.timeline) {
+        return
+      }
+      if (this.hasEvent(id)) {
+        return
+      }
+      const event = await this.$axios.$get(`/events/${id}/`)
+      this.timeline.itemsData.add(event)
+    },
     selectActiveEvent() {
       const eventEl = document.querySelector(`[data-event-id="${this.$route.query.activeEvent}"]`)
       if (eventEl) {

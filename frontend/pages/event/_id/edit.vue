@@ -5,7 +5,7 @@
       <TextInput v-model="event.title" class="mb-4 block" label="Titel" />
       <DateInput v-model="event.date" label="Datum" class="mb-4 block" />
       <TextInput v-model="event.icon" label="Icon" class="mb-4 block" />
-      <EventField v-model="event.relations" label="Verknüpfungen" class="mb-4" />
+      <EventField v-model="event.relations" label="Verknüpfungen" class="mb-4" :exclude="excludeFromSearch" />
       <label>
         <span class="block text-gray-500 font-bold">Beschreibung</span>
         <Editor v-model="event.description" />
@@ -29,6 +29,11 @@ export default {
       files: [],
       deletedFiles: [],
     }
+  },
+  computed: {
+    excludeFromSearch() {
+      return Number.parseInt(this.$route.params.id)
+    },
   },
   methods: {
     async save() {

@@ -55,39 +55,37 @@ export default {
       type: Object,
       required: true,
     },
+    $router: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
       relations: [],
-      isActive: false,
     }
   },
-  watch: {
-    'this.$options.$router.currentRoute': {
-      handler() {
-        this.isActive = Number.parseInt(this.$options.$router.currentRoute.query.activeEvent) === this.event.id
-      },
-      deep: true,
-      immediate: true,
+  computed: {
+    isActive() {
+      return Number.parseInt(this.$router.currentRoute.query.activeEvent) === this.event.id
     },
   },
   methods: {
     edit() {
-      this.$options.$router.push({
+      this.$router.push({
         name: 'event-id-edit',
         params: { id: this.event.id },
-        query: this.$options.$router.currentRoute.query,
       })
     },
     focusRelation(relation) {
-      this.$options.$router.push({ query: { activeEvent: relation } })
+      this.$router.push({ name: 'index', query: { activeEvent: relation } })
+      this.$router.push({ name: 'index', query: { activeEvent: relation } })
     },
     openDialog() {
-      this.$options.$router.push({ query: { activeEvent: this.event.id } })
+      this.$router.push({ name: 'index', query: { activeEvent: this.event.id } })
     },
     closeDialog() {
-      this.isActive = false
-      this.$options.$router.push({ query: { activeEvent: undefined } })
+      this.$router.push({ name: 'index' })
     },
   },
 }
