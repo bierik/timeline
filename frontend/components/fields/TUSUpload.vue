@@ -1,20 +1,22 @@
 <template>
-  <div v-if="success" class="relative">
-    <img :src="preview" class="w-32 h-32 object-cover" />
-    <button
-      class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-      @click="$emit('deleted')"
-    >
-      <feather type="x" />
-    </button>
+  <div class="flex">
+    <div v-if="success" class="relative">
+      <img :src="preview" class="w-32 h-32 object-cover" />
+      <button
+        class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        @click="remove"
+      >
+        <feather type="x" />
+      </button>
+    </div>
+    <div v-else-if="loading" class="bg-gray-200 w-32 h-32 flex items-center justify-center">
+      <feather type="loader" animation="spin" />
+    </div>
+    <label v-else class="bg-gray-200 w-32 h-32 relative">
+      <feather type="upload" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+      <input class="hidden" type="file" :disabled="success" @input="handleFile" />
+    </label>
   </div>
-  <div v-else-if="loading" class="bg-gray-200 w-32 h-32 flex items-center justify-center">
-    <feather type="loader" animation="spin" />
-  </div>
-  <label v-else class="bg-gray-200 w-32 h-32 relative">
-    <feather type="upload" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-    <input class="hidden" type="file" :disabled="success" @input="handleFile" />
-  </label>
 </template>
 
 <script>
@@ -50,6 +52,10 @@ export default {
     },
   },
   methods: {
+    remove() {
+      this.$emit('deleted')
+      this.success = false
+    },
     randomFilename(filename) {
       const extension = last(filename.split('.'))
       return `${uuidv4()}.${extension}`

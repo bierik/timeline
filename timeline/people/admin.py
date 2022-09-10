@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from timeline.events import models
+from timeline.people import models
 from timeline.image.models import Image
 
 
@@ -9,10 +9,10 @@ class ImageInline(admin.TabularInline):
     extra = 1
 
 
-@admin.register(models.Event)
-class EventAdmin(admin.ModelAdmin):
-    list_display = ["pk", "title"]
-    search_fields = ["title"]
-    list_display_links = ["title"]
+@admin.register(models.Person)
+class PersonAdmin(admin.ModelAdmin):
+    list_display = ["pk", "name"]
+    search_fields = ["name"]
+    list_display_links = ["name"]
     inlines = [ImageInline]
     filter_horizonal = ('relations',)

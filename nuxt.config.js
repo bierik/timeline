@@ -33,7 +33,7 @@ export default {
   axios: {
     baseURL: '/api',
   },
-  proxy: ['http://localhost:8000/api'],
+  proxy: ['http://localhost:8000/api', 'http://localhost:8000/media'],
   vue: {
     config: {
       productionTip: false,

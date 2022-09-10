@@ -10,25 +10,11 @@ from rest_framework import serializers
 from timeline.events import models
 from sorl.thumbnail import get_thumbnail as sorl_get_thumbnail
 
+from timeline.image.serializers import ImageSerializer
+from timeline.image.models import Image
+from timeline.people.serializers import PersonSerializer
 
-class ImageSerializer(serializers.ModelSerializer):
-    dimensions = serializers.SerializerMethodField()
-    thumbnail = serializers.SerializerMethodField()
-    file = serializers.SerializerMethodField()
 
-    class Meta:
-        model = models.Image
-        fields = ["id", "title", "description", "file", "dimensions", "thumbnail"]
-
-    def get_dimensions(self, image):
-        return {"width": image.width, "height": image.height}
-
-    def get_thumbnail(self, image):
-        thumbnail = sorl_get_thumbnail(image.file, '100x100', crop='center', quality=99)
-        return self.context["request"].build_absolute_uri(thumbnail.url)
-
-    def get_file(self, image):
-        return self.context["request"].build_absolute_uri(image.file.url)
 
 
 class EventRelatedSerializer(serializers.ModelSerializer):
@@ -44,6 +30,7 @@ class EventSerializer(serializers.ModelSerializer):
     description_html = serializers.SerializerMethodField()
     relations = serializers.SerializerMethodField()
     thumbnail = serializers.SerializerMethodField()
+    people = PersonSerializer(read_only=True, many=True)
 
     class Meta:
         model = models.Event
@@ -59,6 +46,7 @@ class EventSerializer(serializers.ModelSerializer):
             "has_images",
             "relations",
             "thumbnail",
+            "people",
         )
 
     def get_has_images(self, event):
@@ -85,7 +73,7 @@ class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Event
-        fields = ("id", "title", "description", "icon", "date", "files", "deleted_files", "relations")
+        fields = ("id", "title", "description", "icon", "date", "files", "deleted_files", "relations", "people")
 
     def save(self, *args, **kwargs):
         deleted_files = self.validated_data.pop("deleted_files", [])
@@ -96,8 +84,8 @@ class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
             imagePath = Path(settings.TUS_DESTINATION_DIR) / file
             with open(imagePath, "rb") as image:
                 width, height = get_image_dimensions(image)
-                event_image = models.Image.objects.create(title="title", event=event, width=width, height=height)
+                event_image = Image.objects.create(title="title", event=event, width=width, height=height)
                 event_image.file.save(file, File(image))
                 os.remove(imagePath)
 
-        models.Image.objects.filter(id__in=deleted_files).delete()
+        Image.objects.filter(id__in=deleted_files).delete()

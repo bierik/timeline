@@ -53,11 +53,20 @@
 }
 
 .vis-grid.vis-vertical.vis-minor {
-  @apply border-gray-100 !important;
+  @apply border-primary-50 !important;
 }
 
 .vis-grid.vis-vertical.vis-major {
+  @apply border-primary-300 !important;
   @apply border-dotted  !important;
+}
+
+.vis-panel.vis-center {
+  @apply border-none !important;
+}
+
+.vis-bottom {
+  border: 1px solid var(--color-primary-300) !important;
 }
 
 .pswp__caption {

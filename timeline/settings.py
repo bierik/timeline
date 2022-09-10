@@ -22,6 +22,8 @@ INSTALLED_APPS = [
     "django_editorjs_fields",
     'sorl.thumbnail',
     "timeline.events",
+    "timeline.people",
+    "timeline.image",
     "django_cleanup.apps.CleanupConfig",
 ]
 MIDDLEWARE = [

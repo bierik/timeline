@@ -7,14 +7,16 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include("timeline.events.urls")),
+    path("api/events/", include("timeline.events.urls")),
+    path("api/people/", include("timeline.people.urls")),
     path("api/upload/", TusUpload.as_view(), name="tus_upload"),
     path(
         "api/upload/<uuid:resource_id>", TusUpload.as_view(), name="tus_upload_chunks"
     ),
     path('editorjs/', include('django_editorjs_fields.urls')),
-    re_path(r'', TemplateView.as_view(template_name='index.html')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    urlpatterns += re_path(r'', TemplateView.as_view(template_name='index.html'))

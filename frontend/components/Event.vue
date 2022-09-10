@@ -17,6 +17,15 @@
             {{ relation.title }}
           </span>
         </div>
+        <div class="flex">
+          <span
+            v-for="person in event.people"
+            :key="`person-${person.id}`"
+            class="bg-primary-400 rounded-md px-2 py-1 text-xs mr-1 whitespace-nowrap overflow-x-hidden overflow-ellipsis"
+          >
+            {{ person.name }}
+          </span>
+        </div>
       </div>
       <Gallery
         v-if="event.has_images"

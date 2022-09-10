@@ -1,9 +1,8 @@
 from django_filters import rest_framework as filters
-from rest_framework.mixins import RetrieveModelMixin
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 
 from timeline.events import models
-from timeline.events.serializers import EventCreateOrUpdateSerializer, EventSerializer, ImageSerializer
+from timeline.events.serializers import EventCreateOrUpdateSerializer, EventSerializer
 from timeline.serializers import SerializerActionMixin
 
 
@@ -25,8 +24,3 @@ class EventViewSet(
     queryset = models.Event.objects.all()
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = EventFilter
-
-
-class ImageViewSet(RetrieveModelMixin, GenericViewSet):
-    serializer_class = ImageSerializer
-    queryset = models.Image.objects.all()
