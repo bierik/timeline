@@ -30,6 +30,7 @@
     "vis-timeline": "^7.7.0",
     "vis-util": "^5.0.3",
     "vue-feather": "1",
+    "vue-toastification": "^1.7.14",
     "xss": "^1.0.13"
   },
   "devDependencies": {

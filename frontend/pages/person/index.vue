@@ -3,10 +3,10 @@
     <template #append>
       <nuxt-link to="/person/new" class="flex items-center text-white px-4 hover:bg-primary-400 h-full">
         <feather type="plus" size="18" class="mr-1" />
-        <span>Hinzufügen</span>
+        <span class="hidden sm:block">Hinzufügen</span>
       </nuxt-link>
     </template>
-    <div class="container mx-auto">
+    <div class="container">
       <h1 class="text-xl mb-4 font-bold">Personen</h1>
       <template v-for="person in people">
         <div :key="person.id" class="flex items-center">
@@ -34,8 +34,15 @@ export default {
   },
   methods: {
     async remove(person) {
-      await this.$axios.$delete(`/people/${person.id}/`)
-      this.$nuxt.refresh()
+      try {
+        if (window.confirm('Person wirklich löschen?')) {
+          await this.$axios.$delete(`/people/${person.id}/`)
+          this.$nuxt.refresh()
+          this.$toast.success('Person gelöscht')
+        }
+      } catch (e) {
+        this.$toast.error(JSON.stringify(e.response.data))
+      }
     },
   },
 }

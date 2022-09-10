@@ -3,7 +3,7 @@
     <template #append>
       <nuxt-link to="/event/new" class="flex items-center text-white px-4 hover:bg-primary-400 h-full">
         <feather type="plus" size="18" class="mr-1" />
-        <span>Hinzufügen</span>
+        <span class="hidden sm:block">Hinzufügen</span>
       </nuxt-link>
     </template>
     <Timeline :events="events" class="timeline" @rangechange="fetchEvents" />

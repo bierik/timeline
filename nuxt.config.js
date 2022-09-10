@@ -27,9 +27,9 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   css: ['vis-timeline/dist/vis-timeline-graph2d.css', 'photoswipe/dist/photoswipe.css'],
-  plugins: ['~/plugins/filters', '~/plugins/axios', '~/plugins/feather'],
+  plugins: ['~/plugins/filters', '~/plugins/axios', '~/plugins/feather', '~/plugins/theme'],
   buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts'],
-  modules: ['@nuxtjs/axios', '@nuxtjs/proxy'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/proxy', 'vue-toastification/nuxt'],
   axios: {
     baseURL: '/api',
   },

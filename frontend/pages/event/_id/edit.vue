@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <div class="container mx-auto flex flex-col pt-6 pb-10">
+    <div class="container">
       <h1 class="text-xl mb-4 font-bold">Ereignis bearbeiten</h1>
       <form class="w-full" @submit.prevent="save" @reset.prevent="reset">
         <TextInput v-model="event.title" class="mb-4 block" label="Titel" />
@@ -47,19 +47,31 @@ export default {
   },
   methods: {
     async save() {
-      await this.$axios.$patch(`/events/${this.event.id}/`, {
-        ...this.event,
-        files: this.files,
-        deleted_files: this.deletedFiles,
-      })
-      this.$router.push({ name: 'index', query: this.$route.query })
+      try {
+        await this.$axios.$patch(`/events/${this.event.id}/`, {
+          ...this.event,
+          files: this.files,
+          deleted_files: this.deletedFiles,
+        })
+        this.$router.push({ name: 'index', query: this.$route.query })
+        this.$toast.success('Ereignis bearbeitet')
+      } catch (e) {
+        this.$toast.error(JSON.stringify(e.response.data))
+      }
     },
     reset() {
       this.$router.push({ name: 'index', query: this.$route.query })
     },
     async remove() {
-      await this.$axios.$delete(`/events/${this.event.id}/`)
-      this.$router.push({ name: 'index', query: this.$route.query })
+      try {
+        if (window.confirm('Ereignis wirklich löschen?')) {
+          await this.$axios.$delete(`/events/${this.event.id}/`)
+          this.$router.push({ name: 'index', query: this.$route.query })
+          this.$toast.success('Ereignis gelöscht')
+        }
+      } catch (e) {
+        this.$toast.error(JSON.stringify(e.response.data))
+      }
     },
     handleUploadedFiles(files) {
       this.files = files

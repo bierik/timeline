@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 :root {
+  @apply theme-sunrise;
+}
+
+.theme-sunrise {
     --color-primary-DEFAULT: #E15B5B;
     --color-primary-50: #FDF6F6;
     --color-primary-100: #FAE5E5;
@@ -16,7 +20,7 @@
     --color-primary-900: #4E0E0E;
 }
 
-.theme-secondary {
+.theme-ocean {
   --color-primary-DEFAULT: #3B82F6;
   --color-primary-50: #EBF2FE;
   --color-primary-100: #D7E6FD;
@@ -28,6 +32,20 @@
   --color-primary-700: #084BB8;
   --color-primary-800: #063583;
   --color-primary-900: #041F4D;
+}
+
+.theme-grass {
+  --color-primary-DEFAULT: #486F38;
+  --color-primary-50: #8ABB77;
+  --color-primary-100: #7FB46A;
+  --color-primary-200: #73AD5C;
+  --color-primary-300: #60954B;
+  --color-primary-400: #578844;
+  --color-primary-500: #486F38;
+  --color-primary-600: #466D37;
+  --color-primary-700: #3D5F30;
+  --color-primary-800: #345129;
+  --color-primary-900: #2C4422;
 }
 
 .vis-timeline {
