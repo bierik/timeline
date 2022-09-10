@@ -1,11 +1,14 @@
 <template>
-  <div>
+  <div class="pt-12">
+    <div class="fixed top-0 right-0 left-0 bg-primary h-12">
+      <div class="container items-center mx-auto flex h-full">
+        <nuxt-link to="/event/new" class="flex items-center text-white px-4 hover:bg-primary-400 h-full">
+          <feather type="plus" size="18" class="mr-1" />
+          <span>Ereignis</span>
+        </nuxt-link>
+      </div>
+    </div>
     <Timeline :events="events" class="timeline" @rangechange="fetchEvents" />
-    <nuxt-link
-      to="/event/new"
-      class="rounded-full w-16 h-16 flex items-center justify-center text-white fixed bottom-8 right-8 drop-shadow-lg bg-primary-300 text-2xl"
-      ><feather type="plus"
-    /></nuxt-link>
   </div>
 </template>
 
@@ -42,6 +45,6 @@ export default {
 </script>
 <style>
 .timeline {
-  height: 50vh;
+  height: calc(100vh - 3rem);
 }
 </style>

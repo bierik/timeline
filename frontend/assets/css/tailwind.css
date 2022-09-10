@@ -30,6 +30,10 @@
   --color-primary-900: #041F4D;
 }
 
+.vis-timeline {
+  @apply border-none !important;
+}
+
 .vis-item.vis-box {
   @apply border-transparent  !important;
   @apply bg-transparent  !important;

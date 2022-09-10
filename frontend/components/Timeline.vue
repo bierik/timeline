@@ -4,6 +4,7 @@
 
 <script>
 import DateTime from 'luxon/src/datetime'
+import Duration from 'luxon/src/duration'
 import { DataSet } from 'vis-data/esnext'
 import { Timeline } from 'vis-timeline/esnext'
 import Vue from 'vue'
@@ -58,6 +59,8 @@ export default {
       height: '100%',
       showCurrentTime: false,
       showTooltips: false,
+      zoomMax: Duration.fromObject({ months: 2 }).toMillis(),
+      zoomMin: Duration.fromObject({ days: 4 }).toMillis(),
     }
     this.timeline = new Timeline(this.$refs.timeline, new DataSet(this.events), options)
     const now = DateTime.local()
