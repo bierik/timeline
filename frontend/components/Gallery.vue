@@ -1,9 +1,5 @@
 <template>
-  <img
-    :src="thumbnail"
-    class="transition-all rounded-full absolute shadow-flat shadow-primary hover:shadow-flat-lg object-cover"
-    @click="openGallery"
-  />
+  <img :src="thumbnail" class="cursor-zoom-in" @click.prevent.stop="openGallery" />
 </template>
 
 <script>

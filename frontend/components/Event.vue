@@ -29,7 +29,7 @@
       </div>
       <Gallery
         v-if="event.has_images"
-        class="bottom-0 left-0 w-8 h-8"
+        class="bottom-0 left-0 w-8 h-8 transition-all rounded-full absolute shadow-flat shadow-primary hover:shadow-flat-lg object-cover"
         :images="event.images"
         :thumbnail="event.thumbnail"
       />
@@ -87,14 +87,14 @@ export default {
       })
     },
     focusRelation(relation) {
-      this.$router.push({ name: 'index', query: { activeEvent: relation } })
-      this.$router.push({ name: 'index', query: { activeEvent: relation } })
+      this.$router.push({ name: 'event-timeline', query: { activeEvent: relation } })
+      this.$router.push({ name: 'event-timeline', query: { activeEvent: relation } })
     },
     openDialog() {
-      this.$router.push({ name: 'index', query: { activeEvent: this.event.id } })
+      this.$router.push({ name: 'event-timeline', query: { activeEvent: this.event.id } })
     },
     closeDialog() {
-      this.$router.push({ name: 'index' })
+      this.$router.push({ name: 'event-timeline' })
     },
   },
 }

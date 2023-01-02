@@ -3,17 +3,21 @@
     <div class="container">
       <h1 class="text-xl mb-4 font-bold">Ereignis bearbeiten</h1>
       <form class="w-full" @submit.prevent="save" @reset.prevent="reset">
-        <TextInput v-model="event.title" class="mb-4 block" label="Titel" />
-        <DateInput v-model="event.date" label="Datum" class="mb-4 block" />
-        <TextInput v-model="event.icon" label="Icon" class="mb-4 block" />
-        <EventField v-model="event.relations" label="Verknüpfungen" class="mb-4" :exclude="excludeFromSearch" />
-        <PersonField v-model="event.people" label="Personen" class="mb-4" />
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <TextInput v-model="event.title" class="mb-4 block" label="Titel" />
+          <DateInput v-model="event.date" label="Datum" class="mb-4 block" />
+          <TextInput v-model="event.icon" label="Icon" class="mb-4 block" />
+          <EventField v-model="event.relations" label="Verknüpfungen" class="mb-4" :exclude="excludeFromSearch" />
+          <PersonField v-model="event.people" label="Personen" class="mb-4" />
+          <div>
+            <span class="block text-gray-500 font-bold">Dateien</span>
+            <MultiTUSUpload :files="event.images" @uploaded="handleUploadedFiles" @deleted="handleFilesDeleted" />
+          </div>
+        </div>
         <label>
           <span class="block text-gray-500 font-bold">Beschreibung</span>
           <Editor v-model="event.description" />
         </label>
-        <span class="block text-gray-500 font-bold">Dateien</span>
-        <MultiTUSUpload :files="event.images" @uploaded="handleUploadedFiles" @deleted="handleFilesDeleted" />
         <div class="flex mt-4">
           <Button class="mr-2" type="submit">Speichern</Button>
           <ButtonSecondary type="reset">Abbrechen</ButtonSecondary>
@@ -53,20 +57,20 @@ export default {
           files: this.files,
           deleted_files: this.deletedFiles,
         })
-        this.$router.push({ name: 'index', query: this.$route.query })
+        this.$router.push({ name: 'event-timeline', query: this.$route.query })
         this.$toast.success('Ereignis bearbeitet')
       } catch (e) {
         this.$toast.error(JSON.stringify(e.response.data))
       }
     },
     reset() {
-      this.$router.push({ name: 'index', query: this.$route.query })
+      this.$router.push({ name: 'event-timeline', query: this.$route.query })
     },
     async remove() {
       try {
         if (window.confirm('Ereignis wirklich löschen?')) {
           await this.$axios.$delete(`/events/${this.event.id}/`)
-          this.$router.push({ name: 'index', query: this.$route.query })
+          this.$router.push({ name: 'event-timeline', query: this.$route.query })
           this.$toast.success('Ereignis gelöscht')
         }
       } catch (e) {

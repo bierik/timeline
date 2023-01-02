@@ -97,7 +97,7 @@ export default {
       this.loading = true
       try {
         this.items = uniqBy(
-          [...this.itemsCache, ...(await this.$axios.$get('/events/', { params: { title: this.query } }))],
+          [...this.itemsCache, ...(await this.$axios.$get('/events/', { params: { title: this.query } })).results],
           'id',
         ).filter((item) => item.id !== this.exclude)
       } catch (e) {

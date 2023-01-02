@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
-import django_heroku
 
+import django_heroku
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-4t0+fq(6892+u&3s=gv48=)9487&oi6e=s&%pn00)-kj^i5g_#"
@@ -45,6 +45,10 @@ TUS_UPLOAD_DIR = os.path.join(BASE_DIR, "tus_upload")
 TUS_DESTINATION_DIR = os.path.join(BASE_DIR, "media", "uploads")
 TUS_FILE_NAME_FORMAT = "keep"
 TUS_EXISTING_FILE = "error"
+
+REST_FRAMEWORK = {
+    'PAGE_SIZE': 40,
+}
 
 AWS_STORAGE_BUCKET_NAME = 'maxi-timeline-bucket'
 AWS_S3_REGION_NAME = "eu-central-1"
