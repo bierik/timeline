@@ -2,7 +2,7 @@
   <div>
     <TextInput
       v-model="query"
-      :label="label"
+      v-bind="$attrs"
       placeholder="Nach Ereignissen suchen"
       target-class="rounded-bl-none rounded-br-none"
     />
@@ -38,10 +38,6 @@ export default {
     value: {
       type: Array,
       default: () => [],
-    },
-    label: {
-      type: String,
-      default: () => '',
     },
   },
   data() {

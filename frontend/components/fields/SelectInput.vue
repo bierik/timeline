@@ -1,6 +1,5 @@
 <template>
-  <label>
-    <span class="block text-gray-500 font-bold">{{ label }}</span>
+  <Field v-bind="$attrs">
     <select
       v-model="modelValue"
       v-bind="$attrs"
@@ -11,38 +10,18 @@
         {{ option.display_name }}
       </option>
     </select>
-  </label>
+  </Field>
 </template>
 
 <script>
+import fieldMixin from '@/components/fields/field-mixin'
+
 export default {
-  inheritAttrs: false,
+  mixins: [fieldMixin],
   props: {
-    label: {
-      type: String,
-      default: () => '',
-    },
-    value: {
-      type: [Number, Array],
-      required: true,
-    },
-    targetClass: {
-      type: String,
-      default: () => '',
-    },
     options: {
       type: Array,
       default: () => [],
-    },
-  },
-  computed: {
-    modelValue: {
-      get() {
-        return this.value
-      },
-      set(modelValue) {
-        this.$emit('input', modelValue)
-      },
     },
   },
 }

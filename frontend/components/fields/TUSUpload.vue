@@ -1,7 +1,7 @@
 <template>
-  <div class="flex">
-    <div v-if="success" class="relative">
-      <img :src="preview" class="w-32 h-32 object-cover" />
+  <Field v-bind="$attrs">
+    <div v-if="value" class="relative">
+      <img :src="value.thumbnail" class="w-32 h-32 object-cover" />
       <button
         class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
         @click="remove"
@@ -12,11 +12,11 @@
     <div v-else-if="loading" class="bg-gray-200 w-32 h-32 flex items-center justify-center">
       <feather type="loader" animation="spin" />
     </div>
-    <label v-else class="bg-gray-200 w-32 h-32 relative">
+    <div v-else class="bg-gray-200 w-32 h-32 relative cursor-pointer">
       <feather type="upload" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-      <input class="hidden" type="file" :disabled="success" @input="handleFile" />
-    </label>
-  </div>
+      <input class="hidden" type="file" @input="handleFile" />
+    </div>
+  </Field>
 </template>
 
 <script>
@@ -24,15 +24,15 @@ import first from 'lodash/first'
 import last from 'lodash/last'
 import * as tus from 'tus-js-client'
 import { v4 as uuidv4 } from 'uuid'
+import fieldMixin from '@/components/fields/field-mixin'
 
 export default {
-  inheritAttrs: false,
+  mixins: [fieldMixin],
   data() {
     return {
       bytesUploaded: 0,
       bytesTotal: 0,
       upload: null,
-      success: false,
       error: null,
       file: null,
       preview: null,
@@ -53,8 +53,7 @@ export default {
   },
   methods: {
     remove() {
-      this.$emit('deleted')
-      this.success = false
+      this.$emit('input', null)
     },
     randomFilename(filename) {
       const extension = last(filename.split('.'))
@@ -63,7 +62,6 @@ export default {
     handleFile(event) {
       const file = first(event.target.files)
       this.loading = true
-      this.success = false
       this.error = null
       this.bytesUploaded = 0
       this.bytesTotal = 0
@@ -76,6 +74,11 @@ export default {
       const reader = new FileReader()
       reader.onload = () => {
         this.preview = reader.result
+        this.$emit('input', {
+          id: Date.now(),
+          file: this.upload.options.metadata.filename,
+          thumbnail: reader.result,
+        })
       }
       reader.readAsDataURL(file)
 
@@ -90,15 +93,12 @@ export default {
         },
         onError(error) {
           vm.error = error
-          vm.success = false
         },
         onProgress(bytesUploaded, bytesTotal) {
           vm.bytesUploaded = bytesUploaded
           vm.bytesTotal = bytesTotal
         },
         onSuccess() {
-          vm.$emit('uploaded', vm.upload.options.metadata.filename)
-          vm.success = true
           vm.loading = false
         },
       })

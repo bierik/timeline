@@ -1,25 +1,9 @@
 <template>
-  <TextInput v-model="modelValue" type="date" v-bind="$attrs" />
+  <TextInput v-bind="$attrs" type="date" v-on="$listeners" />
 </template>
 
 <script>
 export default {
-  inheritAttrs: false,
-  props: {
-    value: {
-      type: String,
-      required: true,
-    },
-  },
-  computed: {
-    modelValue: {
-      get() {
-        return this.value
-      },
-      set(modelValue) {
-        this.$emit('input', modelValue)
-      },
-    },
-  },
+  name: 'DateInput',
 }
 </script>

@@ -6,10 +6,9 @@ from django.core.files import File
 from django.core.files.images import get_image_dimensions
 from rest_framework import serializers
 
-from timeline.people import models
-
-from timeline.image.serializers import ImageSerializer
 from timeline.image.models import Image
+from timeline.image.serializers import ImageSerializer
+from timeline.people import models
 
 
 class PersonSerializer(serializers.ModelSerializer):
@@ -27,20 +26,28 @@ class PersonSerializer(serializers.ModelSerializer):
         )
 
 
+class FileCreateSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    file = serializers.CharField()
+
+
 class PersonCreateOrUpdateSerializer(serializers.ModelSerializer):
-    file = serializers.CharField(write_only=True)
+    image = FileCreateSerializer()
 
     class Meta:
         model = models.Person
-        fields = ("id", "name", "role", "file")
+        fields = ("id", "name", "role", "image")
 
     def save(self, *args, **kwargs):
-        file = self.validated_data.pop("file")
+        file = self.validated_data.pop("image")
 
         person = super().save(**kwargs)
-        imagePath = Path(settings.TUS_DESTINATION_DIR) / file
+        imagePath = Path(settings.TUS_DESTINATION_DIR) / file['file']
         with open(imagePath, "rb") as image:
             width, height = get_image_dimensions(image)
             person_image = Image.objects.create(title="title", person=person, width=width, height=height)
-            person_image.file.save(file, File(image))
+            person_image.file.save(file['file'], File(image))
             os.remove(imagePath)
+
+    def to_representation(self, instance):
+        return PersonSerializer(instance, context=self.context).data

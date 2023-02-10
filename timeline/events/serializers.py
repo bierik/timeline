@@ -1,4 +1,5 @@
 import os
+from operator import itemgetter
 from pathlib import Path
 
 from django.conf import settings
@@ -6,15 +7,12 @@ from django.core.files import File
 from django.core.files.images import get_image_dimensions
 from django_editorjs_fields.templatetags.editorjs import editorjs
 from rest_framework import serializers
-
-from timeline.events import models
 from sorl.thumbnail import get_thumbnail as sorl_get_thumbnail
 
-from timeline.image.serializers import ImageSerializer
+from timeline.events import models
 from timeline.image.models import Image
+from timeline.image.serializers import ImageSerializer
 from timeline.people.serializers import PersonSerializer
-
-
 
 
 class EventRelatedSerializer(serializers.ModelSerializer):
@@ -66,21 +64,27 @@ class EventSerializer(serializers.ModelSerializer):
         reverse_relations = event.reverse_relations.values_list('id', flat=True)
         return EventRelatedSerializer(models.Event.objects.filter(id__in=[*relations, *reverse_relations]), many=True).data
 
+class FileCreateSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    file = serializers.CharField()
+
 
 class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
-    files = serializers.ListField(child=serializers.CharField(), write_only=True)
-    deleted_files = serializers.ListField(child=serializers.IntegerField(), write_only=True, required=False)
+    images = FileCreateSerializer(many=True)
 
     class Meta:
         model = models.Event
-        fields = ("id", "title", "description", "icon", "date", "files", "deleted_files", "relations", "people")
+        fields = ("id", "title", "description", "icon", "date", "images", "relations", "people")
 
     def save(self, *args, **kwargs):
-        deleted_files = self.validated_data.pop("deleted_files", [])
-        files = self.validated_data.pop("files")
-
+        images = self.validated_data.pop("images")
         event = super().save(**kwargs)
-        for file in files:
+
+        event.images.exclude(id__in=map(itemgetter('id'), images)).delete()
+        existing_image_ids = list(event.images.values_list('id', flat=True))
+
+        new_files = list(filter(lambda image: image['id'] not in existing_image_ids, images))
+        for file in map(itemgetter('file'), new_files):
             imagePath = Path(settings.TUS_DESTINATION_DIR) / file
             with open(imagePath, "rb") as image:
                 width, height = get_image_dimensions(image)
@@ -88,4 +92,5 @@ class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
                 event_image.file.save(file, File(image))
                 os.remove(imagePath)
 
-        Image.objects.filter(id__in=deleted_files).delete()
+    def to_representation(self, instance):
+        return EventSerializer(instance, context=self.context).data

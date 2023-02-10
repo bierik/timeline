@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="bg-primary h-12 sticky top-0">
+    <div class="bg-primary h-12 sticky top-0 z-10">
       <div class="container items-center flex h-full">
         <nuxt-link
           :to="{ name: 'event-timeline' }"

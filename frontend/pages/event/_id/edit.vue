@@ -2,7 +2,7 @@
   <Layout>
     <div class="container">
       <h1 class="text-xl mb-4 font-bold">Ereignis bearbeiten</h1>
-      <form class="w-full" @submit.prevent="save" @reset.prevent="reset">
+      <Form :errors.sync="errors" class="w-full" :save="save" :cancel="cancel" @success="success">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <TextInput v-model="event.title" class="mb-4 block" label="Titel" />
           <DateInput v-model="event.date" label="Datum" class="mb-4 block" />
@@ -11,7 +11,7 @@
           <PersonField v-model="event.people" label="Personen" class="mb-4" />
           <div>
             <span class="block text-gray-500 font-bold">Dateien</span>
-            <MultiTUSUpload :files="event.images" @uploaded="handleUploadedFiles" @deleted="handleFilesDeleted" />
+            <MultiTUSUpload v-model="event.images" />
           </div>
         </div>
         <label>
@@ -19,27 +19,21 @@
           <Editor v-model="event.description" />
         </label>
         <div class="flex mt-4">
-          <Button class="mr-2" type="submit">Speichern</Button>
-          <ButtonSecondary type="reset">Abbrechen</ButtonSecondary>
-          <div class="grow" />
           <ButtonDelete @click="remove">Löschen</ButtonDelete>
         </div>
-      </form>
+      </Form>
     </div>
   </Layout>
 </template>
 
 <script>
+import formErrorMixin from '@/components/form/form-error-mixin'
+
 export default {
+  mixins: [formErrorMixin],
   async asyncData({ $axios, route }) {
     const event = await $axios.$get(`/events/${route.params.id}/`)
     return { event }
-  },
-  data() {
-    return {
-      files: [],
-      deletedFiles: [],
-    }
   },
   computed: {
     excludeFromSearch() {
@@ -50,20 +44,14 @@ export default {
     this.event.people = this.event.people.map((person) => person.id)
   },
   methods: {
-    async save() {
-      try {
-        await this.$axios.$patch(`/events/${this.event.id}/`, {
-          ...this.event,
-          files: this.files,
-          deleted_files: this.deletedFiles,
-        })
-        this.$router.push({ name: 'event-timeline', query: this.$route.query })
-        this.$toast.success('Ereignis bearbeitet')
-      } catch (e) {
-        this.$toast.error(JSON.stringify(e.response.data))
-      }
+    success() {
+      this.$toast.success('Ereignis bearbeitet')
+      this.$router.push({ name: 'event-timeline', query: this.$route.query })
     },
-    reset() {
+    async save() {
+      await this.$axios.$patch(`/events/${this.event.id}/`, this.event)
+    },
+    cancel() {
       this.$router.push({ name: 'event-timeline', query: this.$route.query })
     },
     async remove() {
@@ -76,12 +64,6 @@ export default {
       } catch (e) {
         this.$toast.error(JSON.stringify(e.response.data))
       }
-    },
-    handleUploadedFiles(files) {
-      this.files = files
-    },
-    handleFilesDeleted(files) {
-      this.deletedFiles = files
     },
   },
 }

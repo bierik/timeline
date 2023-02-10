@@ -2,53 +2,50 @@
   <Layout>
     <div class="container">
       <h1 class="text-xl mb-4 font-bold">Neue Person hinzfügen</h1>
-      <form class="w-full" @submit.prevent="save" @reset.prevent="reset">
+      <Form :errors.sync="errors" :save="save" :cancel="cancel" @success="success">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <TextInput v-model="person.name" class="mb-4 block" label="Name" />
+          <TextInput v-model="person.name" :errors="errorsForField('name')" class="mb-4 block" label="Name" />
           <SelectInput
             v-model="person.role"
+            :errors="errorsForField('role')"
             class="mb-4 block"
             label="Rolle"
             :options="schema.actions.POST.role.choices"
           />
-          <label class="block">
-            <span class="block text-gray-500 font-bold">Bild</span>
-            <TUSUpload @uploaded="file = $event" @deleted="file = null" />
-          </label>
+          <TUSUpload v-model="person.image" :errors="errorsForField('image')" label="Bild" />
         </div>
-        <Button class="mt-4" type="submit">Speichern</Button>
-        <ButtonSecondary class="mt-4" type="reset">Abbrechen</ButtonSecondary>
-      </form>
+      </Form>
     </div>
   </Layout>
 </template>
 
 <script>
+import formErrorMixin from '@/components/form/form-error-mixin'
+
 export default {
+  mixins: [formErrorMixin],
   async asyncData({ $axios }) {
     const schema = await $axios.$options('/people/')
     return { schema }
   },
   data() {
     return {
-      file: null,
       person: {
         name: '',
         role: 1,
+        file: null,
       },
     }
   },
   methods: {
-    async save() {
-      try {
-        await this.$axios.$post('/people/', { ...this.person, file: this.file })
-        this.$router.push('/person')
-        this.$toast.success('Person erstellt')
-      } catch (e) {
-        this.$toast.error(JSON.stringify(e.response.data))
-      }
+    success() {
+      this.$toast.success('Person erstellt')
+      this.$router.push('/')
     },
-    reset() {
+    async save() {
+      await this.$axios.$post('/people/', this.person)
+    },
+    cancel() {
       this.$router.push('/')
     },
   },
