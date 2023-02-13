@@ -9,7 +9,12 @@ class Event(TimeStampedModel):
     date = models.DateField(verbose_name=_("Datum"))
     description = EditorJsJSONField(verbose_name=_("Beschreibung"), null=True)
     icon = models.CharField(verbose_name=_("Icon"), max_length=255, blank=True)
-    relations = models.ManyToManyField("Event", verbose_name=_("Relationen"), blank=True, related_name="reverse_relations")
+    relations = models.ManyToManyField(
+        "Event",
+        verbose_name=_("Relationen"),
+        blank=True,
+        related_name="reverse_relations",
+    )
 
     class Meta:
         ordering = ["created"]

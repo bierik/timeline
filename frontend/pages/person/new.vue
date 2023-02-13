@@ -33,7 +33,7 @@ export default {
       person: {
         name: '',
         role: 1,
-        file: null,
+        image: null,
       },
     }
   },

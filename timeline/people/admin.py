@@ -15,4 +15,4 @@ class PersonAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_display_links = ["name"]
     inlines = [ImageInline]
-    filter_horizonal = ('relations',)
+    filter_horizonal = ("relations",)

@@ -15,4 +15,4 @@ class EventAdmin(admin.ModelAdmin):
     search_fields = ["title"]
     list_display_links = ["title"]
     inlines = [ImageInline]
-    filter_horizonal = ('relations',)
+    filter_horizonal = ("relations",)

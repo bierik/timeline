@@ -19,12 +19,14 @@
               <div class="flex flex-col place-content-center h-full flex-grow px-8">
                 <span class="text-xl">{{ event.title }}</span>
                 <small>{{ event.date | toLocaleDateString }}</small>
-                <nuxt-link
-                  class="underline text-blue-400 flex items-center"
-                  :to="{ name: 'event-timeline', query: { activeEvent: event.id } }"
-                >
-                  <feather class="mr-1" size="15" type="map-pin" /> <small>Timeline</small>
-                </nuxt-link>
+                <div>
+                  <nuxt-link
+                    class="underline text-blue-400 inline-flex items-center"
+                    :to="{ name: 'event-timeline', query: { activeEvent: event.id } }"
+                  >
+                    <feather class="mr-1" size="15" type="map-pin" /> <small>Timeline</small>
+                  </nuxt-link>
+                </div>
               </div>
               <Gallery
                 v-if="event.has_images"

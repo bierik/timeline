@@ -18,9 +18,9 @@
           <span class="block text-gray-500 font-bold">Beschreibung</span>
           <Editor v-model="event.description" />
         </label>
-        <div class="flex mt-4">
+        <template #action-before>
           <ButtonDelete @click="remove">Löschen</ButtonDelete>
-        </div>
+        </template>
       </Form>
     </div>
   </Layout>
@@ -58,7 +58,7 @@ export default {
       try {
         if (window.confirm('Ereignis wirklich löschen?')) {
           await this.$axios.$delete(`/events/${this.event.id}/`)
-          this.$router.push({ name: 'event-timeline', query: this.$route.query })
+          this.$router.push({ name: 'event-timeline' })
           this.$toast.success('Ereignis gelöscht')
         }
       } catch (e) {

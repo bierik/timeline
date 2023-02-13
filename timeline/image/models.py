@@ -6,6 +6,7 @@ from sorl.thumbnail import ImageField
 from timeline.events.models import Event
 from timeline.people.models import Person
 
+
 class Image(TimeStampedModel):
     title = models.CharField(verbose_name=_("Titel"), max_length=255)
     description = models.TextField(verbose_name=_("Beschreibung"), blank=True)

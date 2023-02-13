@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_tus",
     "django_editorjs_fields",
-    'sorl.thumbnail',
+    "sorl.thumbnail",
     "timeline.events",
     "timeline.people",
     "timeline.image",
@@ -46,21 +46,23 @@ TUS_DESTINATION_DIR = os.path.join(BASE_DIR, "media", "uploads")
 TUS_FILE_NAME_FORMAT = "keep"
 TUS_EXISTING_FILE = "error"
 
+SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
+
 REST_FRAMEWORK = {
-    'PAGE_SIZE': 40,
+    "PAGE_SIZE": 40,
 }
 
-AWS_STORAGE_BUCKET_NAME = 'maxi-timeline-bucket'
+AWS_STORAGE_BUCKET_NAME = "maxi-timeline-bucket"
 AWS_S3_REGION_NAME = "eu-central-1"
 AWS_DEFAULT_ACL = None
 AWS_S3_SIGNATURE_VERSION = "s3v4"
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_CUSTOM_DOMAIN = "%s.s3.amazonaws.com" % AWS_STORAGE_BUCKET_NAME
 AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
+    "CacheControl": "max-age=86400",
 }
-DEFAULT_FILE_STORAGE = 'timeline.storage_backends.MediaStorage'
+DEFAULT_FILE_STORAGE = "timeline.storage_backends.MediaStorage"
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 WHITENOISE_ROOT = STATIC_ROOT
 WHITENOISE_MAX_AGE = 31536000
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

@@ -15,7 +15,7 @@
           class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
           active-class="bg-primary-400"
         >
-          <feather class="mr-1" size="20" type="calendar" />
+          <feather class="mr-1" size="20" type="list" />
           <span class="hidden sm:block">Ereignisse</span>
         </nuxt-link>
         <nuxt-link

@@ -6,8 +6,12 @@ from timeline.serializers import SerializerActionMixin
 
 
 class PersonViewSet(
-    SerializerActionMixin, ModelViewSet,
+    SerializerActionMixin,
+    ModelViewSet,
 ):
     serializer_class = PersonSerializer
-    serializer_action_classes = {"create": PersonCreateOrUpdateSerializer, "partial_update": PersonCreateOrUpdateSerializer}
+    serializer_action_classes = {
+        "create": PersonCreateOrUpdateSerializer,
+        "partial_update": PersonCreateOrUpdateSerializer,
+    }
     queryset = models.Person.objects.all()

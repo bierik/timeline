@@ -1,10 +1,11 @@
 <template>
   <form @submit.prevent="_save" @reset.prevent="cancel">
     <slot />
-    <div class="flex">
-      <div class="grow" />
-      <Button type="submit" :loading="loading">Speichern</Button>
+    <div class="flex pt-4">
+      <Button type="submit" :loading="loading" class="mr-2">Speichern</Button>
       <ButtonSecondary type="reset">Abbrechen</ButtonSecondary>
+      <div class="grow" />
+      <slot name="action-before" />
     </div>
   </form>
 </template>

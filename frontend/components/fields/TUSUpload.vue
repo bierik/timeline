@@ -14,7 +14,7 @@
     </div>
     <div v-else class="bg-gray-200 w-32 h-32 relative cursor-pointer">
       <feather type="upload" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-      <input class="hidden" type="file" @input="handleFile" />
+      <input class="hidden" type="file" @input="handleImage" />
     </div>
   </Field>
 </template>
@@ -34,7 +34,7 @@ export default {
       bytesTotal: 0,
       upload: null,
       error: null,
-      file: null,
+      image: null,
       preview: null,
       loading: false,
     }
@@ -47,9 +47,6 @@ export default {
       const fraction = (this.bytesUploaded / this.bytesTotal) * 100
       return Number.isNaN(fraction) ? 0 : fraction
     },
-    hasFile() {
-      return !!this.file
-    },
   },
   methods: {
     remove() {
@@ -59,15 +56,14 @@ export default {
       const extension = last(filename.split('.'))
       return `${uuidv4()}.${extension}`
     },
-    handleFile(event) {
-      const file = first(event.target.files)
+    handleImage(event) {
+      const image = first(event.target.files)
       this.loading = true
       this.error = null
       this.bytesUploaded = 0
       this.bytesTotal = 0
-      this.file = file
 
-      if (!file) {
+      if (!image) {
         return
       }
 
@@ -76,20 +72,20 @@ export default {
         this.preview = reader.result
         this.$emit('input', {
           id: Date.now(),
-          file: this.upload.options.metadata.filename,
+          filename: this.upload.options.metadata.filename,
           thumbnail: reader.result,
         })
       }
-      reader.readAsDataURL(file)
+      reader.readAsDataURL(image)
 
       const vm = this
-      this.upload = new tus.Upload(file, {
+      this.upload = new tus.Upload(image, {
         endpoint: '/api/upload/',
         retryDelays: [0, 3000, 5000, 10000, 20000],
         chunkSize: 5242880,
         metadata: {
-          filename: file.name,
-          filetype: file.type,
+          filename: image.name,
+          filetype: image.type,
         },
         onError(error) {
           vm.error = error

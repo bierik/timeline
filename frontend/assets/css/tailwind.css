@@ -87,6 +87,10 @@
   border: 1px solid var(--color-primary-300) !important;
 }
 
+.vis-major {
+  font-weight: bold;
+}
+
 .pswp__caption {
  @apply absolute;
  @apply bottom-0;

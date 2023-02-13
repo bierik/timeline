@@ -6,29 +6,61 @@ import django_extensions.db.fields
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('title', models.CharField(max_length=255, verbose_name='Titel')),
-                ('date', models.DateField(verbose_name='Datum')),
-                ('description', django_editorjs_fields.fields.EditorJsJSONField(null=True, verbose_name='Beschreibung')),
-                ('icon', models.CharField(blank=True, max_length=255, verbose_name='Icon')),
-                ('relations', models.ManyToManyField(blank=True, related_name='reverse_relations', to='events.Event', verbose_name='Relationen')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                ("title", models.CharField(max_length=255, verbose_name="Titel")),
+                ("date", models.DateField(verbose_name="Datum")),
+                (
+                    "description",
+                    django_editorjs_fields.fields.EditorJsJSONField(
+                        null=True, verbose_name="Beschreibung"
+                    ),
+                ),
+                (
+                    "icon",
+                    models.CharField(blank=True, max_length=255, verbose_name="Icon"),
+                ),
+                (
+                    "relations",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="reverse_relations",
+                        to="events.Event",
+                        verbose_name="Relationen",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Ereignis',
-                'verbose_name_plural': 'Ereignisse',
-                'ordering': ['created'],
+                "verbose_name": "Ereignis",
+                "verbose_name_plural": "Ereignisse",
+                "ordering": ["created"],
             },
         ),
     ]
