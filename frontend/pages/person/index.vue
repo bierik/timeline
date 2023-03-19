@@ -7,20 +7,19 @@
       </nuxt-link>
     </template>
     <div class="container">
-      <h1 class="text-xl mb-4 font-bold">Personen</h1>
       <template v-for="person in people">
-        <div :key="person.id" class="flex items-center">
+        <nuxt-link
+          :key="person.id"
+          class="flex items-center hover:bg-gray-200 block py-6 px-4"
+          :to="{ name: 'person-id-edit', params: { id: person.id } }"
+        >
           <img :src="person.image.thumbnail" class="rounded-full mr-6" />
           <div class="flex flex-col place-content-center h-full">
             <span class="text-xl">{{ person.name }}</span>
             <small>{{ person.role_display }}</small>
           </div>
-          <div class="grow" />
-          <ButtonDelete class="bg-red-500 p-2 flex items-center rounded" @click="remove(person)">
-            <feather type="trash" size="18" stroke="white" />
-          </ButtonDelete>
-        </div>
-        <hr :key="`divider-${person.id}`" class="my-4" />
+        </nuxt-link>
+        <hr :key="`divider-${person.id}`" />
       </template>
     </div>
   </Layout>
@@ -31,19 +30,6 @@ export default {
   async asyncData({ $axios }) {
     const people = await $axios.$get('/people/')
     return { people }
-  },
-  methods: {
-    async remove(person) {
-      try {
-        if (window.confirm('Person wirklich löschen?')) {
-          await this.$axios.$delete(`/people/${person.id}/`)
-          this.$nuxt.refresh()
-          this.$toast.success('Person gelöscht')
-        }
-      } catch (e) {
-        this.$toast.error(JSON.stringify(e.response.data))
-      }
-    },
   },
 }
 </script>

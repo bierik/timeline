@@ -35,8 +35,11 @@ class PersonCreateOrUpdateSerializer(serializers.ModelSerializer):
 
     def save(self, *args, **kwargs):
         image = self.validated_data.pop("image")
-
         person = super().save(**kwargs)
+        if not "filename" in image:
+            return
+        if hasattr(person, "image"):
+            person.image.delete()
         file_name = image["filename"]
         image_path = Path(settings.TUS_DESTINATION_DIR) / file_name
         with open(image_path, "rb") as image:

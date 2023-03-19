@@ -40,13 +40,13 @@ export default {
   methods: {
     success() {
       this.$toast.success('Person erstellt')
-      this.$router.push('/')
+      this.$router.push({ name: 'person' })
     },
     async save() {
       await this.$axios.$post('/people/', this.person)
     },
     cancel() {
-      this.$router.push('/')
+      this.$router.push({ name: 'person' })
     },
   },
 }

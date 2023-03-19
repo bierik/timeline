@@ -42,7 +42,7 @@ export default {
     },
     buildDataSource() {
       return this.images.map((image) => ({
-        src: image.file,
+        src: image.image,
         width: image.dimensions.width,
         height: image.dimensions.height,
         alt: `${image.title} — ${image.description}`,
