@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js'
+import PhotoSwipeLightbox from 'photoswipe'
 import Vue from 'vue'
 
 import GalleryCaptionComponent from '@/components/GalleryCaption.vue'
