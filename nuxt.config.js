@@ -28,11 +28,10 @@ export default {
   },
   css: ['vis-timeline/dist/vis-timeline-graph2d.css', 'photoswipe/dist/photoswipe.css'],
   plugins: ['~/plugins/filters', '~/plugins/axios', '~/plugins/feather', '~/plugins/theme'],
-  buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts'],
+  buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts', '@nuxtjs/proxy'],
   modules: ['@nuxtjs/axios', 'vue-toastification/nuxt'],
   axios: {
     baseURL: '/api',
-    proxy: true,
   },
   proxy: ['http://localhost:8000/api', 'http://localhost:8000/media'],
   vue: {
