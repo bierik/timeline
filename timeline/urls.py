@@ -2,8 +2,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
-from django_tus.views import TusUpload
 from django.views.generic import TemplateView
+from django_tus.views import TusUpload
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -14,6 +14,7 @@ urlpatterns = [
         "api/upload/<uuid:resource_id>", TusUpload.as_view(), name="tus_upload_chunks"
     ),
     path("editorjs/", include("django_editorjs_fields.urls")),
+    path("api/auth/", include("timeline.authentication.urls")),
 ]
 
 if settings.DEBUG:

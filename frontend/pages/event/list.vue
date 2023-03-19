@@ -6,7 +6,7 @@
         <span class="hidden sm:block">Hinzufügen</span>
       </nuxt-link>
     </template>
-    <div class="container py-12">
+    <div class="container">
       <ul>
         <template v-for="event in events">
           <nuxt-link

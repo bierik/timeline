@@ -1,5 +1,5 @@
 <template>
-  <Layout>
+  <Layout narrow>
     <template #append>
       <nuxt-link to="/person/new" class="flex items-center text-white px-4 hover:bg-primary-400 h-full">
         <feather type="plus" size="18" class="mr-1" />

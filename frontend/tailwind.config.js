@@ -9,7 +9,6 @@ const config = {
         xl: '984px',
         '2xl': '984px',
       },
-      padding: '1rem',
     },
     extend: {
       fontFamily: {

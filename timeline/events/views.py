@@ -30,3 +30,4 @@ class EventViewSet(
     filter_backends = (filters.DjangoFilterBackend, OrderingFilter)
     filterset_class = EventFilter
     pagination_class = CursorPagination
+    ordering = ("date",)

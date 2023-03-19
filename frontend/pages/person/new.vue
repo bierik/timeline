@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <div class="container">
+    <div class="container px-4">
       <h1 class="text-xl mb-4 font-bold">Neue Person hinzfügen</h1>
       <Form :errors.sync="errors" :save="save" :cancel="cancel" @success="success">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">

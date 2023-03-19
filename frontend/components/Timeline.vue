@@ -39,7 +39,7 @@ export default {
   },
   watch: {
     events(events) {
-      this.timeline.setItems(new DataSet(events))
+      this.timeline.itemsData.update(events)
     },
     $route: {
       async handler({ query: { activeEvent } }) {

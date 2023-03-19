@@ -1,9 +1,9 @@
 <template>
-  <img :src="thumbnail" class="cursor-zoom-in" @click.prevent.stop="openGallery" />
+  <img :src="thumbnail" class="cursor-zoom-in bla" @click.prevent.stop="openGallery" />
 </template>
 
 <script>
-import PhotoSwipeLightbox from 'photoswipe'
+import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js'
 import Vue from 'vue'
 
 import GalleryCaptionComponent from '@/components/GalleryCaption.vue'

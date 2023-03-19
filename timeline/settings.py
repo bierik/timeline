@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     "django_filters",
     "corsheaders",
     "rest_framework",
+    "rest_framework.authtoken",
     "django_tus",
     "django_editorjs_fields",
     "sorl.thumbnail",
@@ -49,7 +50,13 @@ TUS_EXISTING_FILE = "error"
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
 
 REST_FRAMEWORK = {
-    "PAGE_SIZE": 40,
+    "PAGE_SIZE": 10,
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
 
 AWS_STORAGE_BUCKET_NAME = "maxi-timeline-bucket"

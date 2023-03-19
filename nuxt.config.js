@@ -12,6 +12,9 @@ export default {
       pathPrefix: false,
     },
   ],
+  router: {
+    middleware: ['auth'],
+  },
   telemetry: false,
   head: {
     title: 'timeline',
@@ -29,9 +32,31 @@ export default {
   css: ['vis-timeline/dist/vis-timeline-graph2d.css', 'photoswipe/dist/photoswipe.css'],
   plugins: ['~/plugins/filters', '~/plugins/axios', '~/plugins/feather', '~/plugins/theme'],
   buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts', '@nuxtjs/proxy'],
-  modules: ['@nuxtjs/axios', 'vue-toastification/nuxt'],
+  modules: ['@nuxtjs/axios', 'vue-toastification/nuxt', '@nuxtjs/auth-next'],
   axios: {
     baseURL: '/api',
+  },
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      callback: false,
+      home: '/person',
+    },
+    fullPathRedirect: true,
+    strategies: {
+      local: {
+        token: {
+          type: 'Token',
+          maxAge: Infinity,
+        },
+        endpoints: {
+          login: { url: '/auth/login/', method: 'post' },
+          logout: { url: '/auth/logout/', method: 'post' },
+          user: { url: '/auth/user/', method: 'get' },
+        },
+      },
+    },
   },
   proxy: ['http://localhost:8000/api', 'http://localhost:8000/media'],
   vue: {
@@ -46,6 +71,7 @@ export default {
     },
   },
   build: {
+    target: 'modern',
     transpile: ['vis-data', 'vis-timeline', 'photoswipe'],
   },
   generate: {

@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <div class="container">
+    <div class="container px-4">
       <h1 class="text-xl mb-4 font-bold">Ereignis bearbeiten</h1>
       <Form :errors.sync="errors" class="w-full" :save="save" :cancel="cancel" @success="success">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -15,7 +15,7 @@
           <TUSUpload v-model="person.image" :errors="errorsForField('image')" label="Bild" />
         </div>
         <template #action-before>
-          <ButtonDelete @click="remove">Löschen</ButtonDelete>
+          <ButtonDelete @click.prevent="remove">Löschen</ButtonDelete>
         </template>
       </Form>
     </div>
