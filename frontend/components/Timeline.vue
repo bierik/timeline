@@ -2,13 +2,25 @@
   <div class="relative">
     <div ref="timeline" class="h-full" />
     <div class="flex flex-col fixed bottom-0 right-0 pr-5 pb-20">
-      <Button v-if="timeline" class="rounded-full px-3 py-3 flex mb-2 justify-center items-center" @click="zoomIn">
+      <Button
+        v-if="timeline"
+        class="rounded-full px-3 py-3 flex mb-2 justify-center items-center drop-shadow-lg"
+        @click="zoomIn"
+      >
         <feather size="20" type="plus" />
       </Button>
-      <Button v-if="timeline" class="rounded-full px-3 py-3 flex justify-center items-center mb-2" @click="zoomOut">
+      <Button
+        v-if="timeline"
+        class="rounded-full px-3 py-3 flex justify-center items-center mb-2 drop-shadow-lg"
+        @click="zoomOut"
+      >
         <feather size="20" type="minus" />
       </Button>
-      <Button v-if="timeline" class="rounded-full px-3 py-3 flex justify-center items-center" @click="goToToday">
+      <Button
+        v-if="timeline"
+        class="rounded-full px-3 py-3 flex justify-center items-center drop-shadow-lg"
+        @click="goToToday"
+      >
         <feather size="20" type="calendar" />
       </Button>
     </div>
@@ -17,13 +29,9 @@
 
 <script>
 import DateTime from 'luxon/src/datetime'
-import Duration from 'luxon/src/duration'
+import Interval from 'luxon/src/interval'
 import { DataSet } from 'vis-data/esnext'
 import { Timeline } from 'vis-timeline/esnext'
-import Vue from 'vue'
-import EventComponent from '@/components/Event.vue'
-
-const EventComponentConstructor = Vue.extend(EventComponent)
 
 export default {
   props: {
@@ -39,12 +47,14 @@ export default {
   },
   watch: {
     events(events) {
-      this.timeline.itemsData.update(events)
+      this.timeline.itemsData.clear()
+      this.timeline.itemsData.add(events)
     },
     $route: {
       async handler({ query: { activeEvent } }) {
         await this.initTimeline()
         if (!activeEvent) {
+          this.timeline.setSelection([])
           return
         }
         await this.addEvent(activeEvent)
@@ -61,38 +71,19 @@ export default {
       if (this.timeline) {
         return
       }
-      const self = this
-      const options = {
-        locale: 'de-CH',
-        template(item) {
-          const eventComponentInstance = new EventComponentConstructor({
-            propsData: {
-              event: item,
-              $router: self.$router,
-            },
-          })
-          eventComponentInstance.$mount()
-          return eventComponentInstance.$el
-        },
-        timeAxis: { scale: 'day', step: 1 },
-        format: {
-          majorLabels(date) {
-            return date.format('MMMM yyyy')
-          },
-        },
-        height: '100%',
-        showCurrentTime: false,
-        showTooltips: false,
-        zoomMax: Duration.fromObject({ months: 2 }).toMillis(),
-        zoomMin: Duration.fromObject({ days: 4 }).toMillis(),
-        horizontalScroll: true,
-        zoomable: false,
-      }
-      this.timeline = new Timeline(this.$refs.timeline, new DataSet(this.events), options)
+      this.timeline = new Timeline(this.$refs.timeline, new DataSet(this.events), this.$config.TIMELINE_OPTIONS)
       const now = DateTime.local()
-      this.timeline.setWindow(now.minus({ months: 1 }).toISODate(), now.plus({ months: 1 }).toISODate())
+      this.timeline.setWindow(
+        now.minus(this.$config.INITIAL_WINDOW).toISODate(),
+        now.plus(this.$config.INITIAL_WINDOW).toISODate(),
+      )
       this.timeline.on('rangechange', (args) => {
         this.$emit('rangechange', args)
+      })
+      this.timeline.on('rangechanged', (args) => {
+        const interval = Interval.fromDateTimes(DateTime.fromJSDate(args.start), DateTime.fromJSDate(args.end))
+        const currentTime = interval.divideEqually(2)[0].end
+        this.$emit('rangechanged', { ...args, currentTime })
       })
       this.timeline.on('changed', () => this.selectActiveEvent())
     },
@@ -113,13 +104,16 @@ export default {
       }
     },
     zoomIn() {
-      this.timeline.zoomIn(0.5)
+      this.timeline.zoomIn(this.$config.ZOOM_STEP)
     },
     zoomOut() {
-      this.timeline.zoomOut(0.5)
+      this.timeline.zoomOut(this.$config.ZOOM_STEP)
     },
     goToToday() {
       this.timeline.moveTo(DateTime.local().toJSDate())
+    },
+    setWindow(...args) {
+      this.timeline.setWindow(...args)
     },
   },
 }

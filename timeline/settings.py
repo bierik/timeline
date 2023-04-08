@@ -1,7 +1,10 @@
+import contextlib
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import django_heroku
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-4t0+fq(6892+u&3s=gv48=)9487&oi6e=s&%pn00)-kj^i5g_#"
@@ -18,7 +21,7 @@ INSTALLED_APPS = [
     "django_filters",
     "corsheaders",
     "rest_framework",
-    "rest_framework.authtoken",
+    "knox",
     "django_tus",
     "django_editorjs_fields",
     "sorl.thumbnail",
@@ -52,7 +55,7 @@ SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
 REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication",
+        "knox.auth.TokenAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -117,9 +120,12 @@ USE_TZ = True
 # https://github.com/jazzband/sorl-thumbnail#is-so-slow-in-amazon-s3
 THUMBNAIL_FORCE_OVERWRITE = True
 
+REST_KNOX = {
+    "TOKEN_TTL": timedelta(days=30),
+    "USER_SERIALIZER": "timeline.authentication.serializers.UserSerializer",
+}
+
 django_heroku.settings(locals(), logging=False)
 
-try:
-    from .local_settings import *
-except:
-    pass
+with contextlib.suppress(Exception):
+    from .local_settings import *  # noqa

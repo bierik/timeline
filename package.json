@@ -20,6 +20,8 @@
     "@nuxtjs/proxy": "^2.1.0",
     "core-js": "^3.27.2",
     "debounce-async": "^0.0.2",
+    "emoji-mart": "^5.5.2",
+    "exif-js": "^2.3.0",
     "feather-icons": "4.29.0",
     "keycharm": "^0.4.0",
     "luxon": "^3.2.1",
@@ -33,6 +35,8 @@
     "vis-data": "^7.1.4",
     "vis-timeline": "^7.7.0",
     "vis-util": "^5.0.3",
+    "vue-agile": "^1",
+    "vue-dompurify-html": "^2",
     "vue-feather": "1",
     "vue-toastification": "^1.7.14",
     "xss": "^1.0.14"

@@ -6,7 +6,7 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <TextInput v-model="event.title" class="mb-4 block" label="Titel" />
           <DateInput v-model="event.date" label="Datum" class="mb-4 block" />
-          <TextInput v-model="event.icon" label="Icon" class="mb-4 block" />
+          <EmojiField v-model="event.icon" label="Icon" :errors="errorsForField('icon')" content-class="mb-4 block" />
           <EventField v-model="event.relations" label="Verknüpfungen" class="mb-4" :exclude="excludeFromSearch" />
           <PersonField v-model="event.people" label="Personen" class="mb-4" />
           <div>
@@ -19,7 +19,7 @@
           <Editor v-model="event.description" />
         </label>
         <template #action-before>
-          <ButtonDelete @click.prevent="remove">Löschen</ButtonDelete>
+          <ButtonDelete @click="remove">Löschen</ButtonDelete>
         </template>
       </Form>
     </div>

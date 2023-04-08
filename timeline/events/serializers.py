@@ -11,7 +11,8 @@ from sorl.thumbnail import get_thumbnail as sorl_get_thumbnail
 
 from timeline.events import models
 from timeline.image.models import Image
-from timeline.image.serializers import ImageCreateSerializer, ImageSerializer
+from timeline.image.serializers import ImageCreateSerializer
+from timeline.image.serializers import ImageSerializer
 from timeline.people.serializers import PersonSerializer
 
 
@@ -55,9 +56,7 @@ class EventSerializer(serializers.ModelSerializer):
 
     def get_thumbnail(self, event):
         if event.images.exists():
-            thumbnail = sorl_get_thumbnail(
-                event.images.first().file, "100x100", crop="center"
-            )
+            thumbnail = sorl_get_thumbnail(event.images.first().file, "100x100", crop="center")
             return self.context["request"].build_absolute_uri(thumbnail.url)
         return None
 
@@ -93,18 +92,22 @@ class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
         event.images.exclude(id__in=map(itemgetter("id"), images)).delete()
         existing_image_ids = list(event.images.values_list("id", flat=True))
 
-        new_images = list(
-            filter(lambda image: image["id"] not in existing_image_ids, images)
-        )
+        new_images = list(filter(lambda image: image["id"] not in existing_image_ids, images))
         for file_name in map(itemgetter("filename"), new_images):
             imagePath = Path(settings.TUS_DESTINATION_DIR) / file_name
             with open(imagePath, "rb") as image:
                 width, height = get_image_dimensions(image)
-                event_image = Image.objects.create(
-                    title="title", event=event, width=width, height=height
-                )
+                event_image = Image.objects.create(title="title", event=event, width=width, height=height)
                 event_image.file.save(file_name, File(image))
                 os.remove(imagePath)
 
     def to_representation(self, instance):
         return EventSerializer(instance, context=self.context).data
+
+
+class BulkCreateSerializer(serializers.Serializer):
+    title = serializers.CharField()
+    images = serializers.ListField(child=serializers.CharField())
+    date = serializers.DateField()
+    description = serializers.CharField(allow_null=True, required=False, allow_blank=True)
+    icon = serializers.CharField(allow_null=True, required=False, allow_blank=True)

@@ -5,8 +5,25 @@
         <feather type="plus" size="18" class="mr-1" />
         <span class="hidden sm:block">Hinzufügen</span>
       </nuxt-link>
+      <button class="flex items-center text-white px-4 hover:bg-primary-400 h-full" @click="filterDrawer = true">
+        <feather type="filter" size="18" class="mr-1" />
+        <span class="hidden sm:block">Filter</span>
+      </button>
     </template>
-    <Timeline :events="events" class="timeline" @rangechange="fetchEventsForTimeline" />
+    <MonthSelector :value="monthFilter" class="fixed z-10" @input="setTimelineTime" />
+    <Timeline
+      ref="timeline"
+      :events="events"
+      class="timeline"
+      @rangechanged="setMonthFilter"
+      @rangechange="fetchEventsForTimeline"
+    />
+    <NavigationDrawer v-model="filterDrawer">
+      <div class="p-4">
+        <TextInput class="mb-2" label="Titel" :value="filter.title" @input="applyFilter({ title: $event })" />
+        <PersonField label="Personen" :value="filter.people" @input="applyFilter({ people: $event })" />
+      </div>
+    </NavigationDrawer>
   </Layout>
 </template>
 
@@ -17,20 +34,38 @@ import DateTime from 'luxon/src/datetime'
 export default {
   data() {
     return {
+      monthFilter: DateTime.local(),
+      filterDrawer: false,
       events: [],
+      filter: { title: '', people: [], start: null, end: null },
     }
   },
   methods: {
+    setMonthFilter({ currentTime }) {
+      this.monthFilter = currentTime
+    },
+    setTimelineTime(monthFilter) {
+      this.$refs.timeline.setWindow(
+        monthFilter.startOf('month').toJSDate(),
+        monthFilter.startOf('month').plus(this.$config.RUNTIME_WINDOW_SPAN).toJSDate(),
+      )
+    },
+    applyFilter(filter) {
+      this.filter = { ...this.filter, ...filter }
+      this.fetchEventsForTimeline()
+    },
     fetchEventsDebounced: debounce(function fetchEventsDebounced(params) {
       return this.$axios.$get('/events/', { params })
     }, 200),
-    async fetchEventsForTimeline({ start, end }) {
+    async fetchEventsForTimeline({ start, end } = {}) {
+      this.filter = { ...this.filter, start: start || this.filter.start, end: end || this.filter.end }
       try {
         this.events = (
           await this.fetchEventsDebounced({
-            date_after: DateTime.fromJSDate(start).minus({ months: 1 }).toISODate(),
-            date_before: DateTime.fromJSDate(end).plus({ months: 1 }).toISODate(),
+            date_after: DateTime.fromJSDate(start).minus(this.$config.FETCH_PADDING).toISODate(),
+            date_before: DateTime.fromJSDate(end).plus(this.$config.FETCH_PADDING).toISODate(),
             ordering: '-date',
+            ...this.filter,
           })
         ).results
       } catch (error) {

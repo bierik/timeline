@@ -4,7 +4,7 @@
       <div v-for="image in value" :key="`image-preview-${image.id}`" class="relative">
         <button
           class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          @click.prevent="removeImage(image)"
+          @click="removeImage(image)"
         >
           <feather type="x" />
         </button>

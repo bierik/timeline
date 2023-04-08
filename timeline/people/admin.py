@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from timeline.people import models
 from timeline.image.models import Image
+from timeline.people import models
 
 
 class ImageInline(admin.TabularInline):

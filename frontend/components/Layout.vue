@@ -36,19 +36,32 @@
         </nuxt-link>
         <div class="grow" />
         <slot name="append" />
+        <nuxt-link
+          :to="{ name: 'user' }"
+          class="block mx-4 bg-white w-9 h-9 rounded-full flex items-center justify-center"
+        >
+          {{ userSignature }}
+        </nuxt-link>
       </div>
     </div>
-    <div :class="narrow ? '' : 'py-12'">
+    <div :class="narrow ? '' : 'py-4'">
       <slot />
     </div>
   </div>
 </template>
 <script>
+import first from 'lodash/first'
+
 export default {
   props: {
     narrow: {
       type: Boolean,
       default: () => false,
+    },
+  },
+  computed: {
+    userSignature() {
+      return [first(Array.from(this.$auth.user.first_name)), first(Array.from(this.$auth.user.last_name))].join('')
     },
   },
 }

@@ -15,7 +15,7 @@
           <TUSUpload v-model="person.image" :errors="errorsForField('image')" label="Bild" />
         </div>
         <template #action-before>
-          <ButtonDelete @click.prevent="remove">Löschen</ButtonDelete>
+          <ButtonDelete @click="remove">Löschen</ButtonDelete>
         </template>
       </Form>
     </div>

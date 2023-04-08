@@ -1,7 +1,6 @@
 <template>
   <Layout>
     <div class="container px-4">
-      <h1 class="text-xl mb-4 font-bold">Einstellungen</h1>
       <h2 class="text-md font-bold mb-2">Theme</h2>
       <label class="flex">
         <input v-model="theme" class="mr-1" type="radio" value="sunrise" />
@@ -15,18 +14,12 @@
         <input v-model="theme" class="mr-1" type="radio" value="grass" />
         Grass
       </label>
-      <h2 class="text-md font-bold mb-2">Security</h2>
-      <form class="mb-4 max-w-sm" @submit.prevent="resetPassowrd">
-        <TextInput v-model="passwordResetData.password" type="password" label="Passwort" class="mb-2" />
-        <TextInput
-          v-model="passwordResetData.password_validation"
-          type="password"
-          label="Passwort wiederholen"
-          class="mb-2"
-        />
-        <Button :disabled="!passwordResetValid" type="submit">Zurücksetzen</Button>
-      </form>
-      <Button @click="$auth.logout()">Ausloggen</Button>
+
+      <nuxt-link
+        class="w-20 flex justify-center items-center bg-primary-300 rounded-lg py-2 px-4 text-white leading-tight focus:outline-none focus:bg-primary-400 hover:bg-primary-400"
+        :to="{ name: 'import' }"
+        >Import</nuxt-link
+      >
     </div>
   </Layout>
 </template>
@@ -35,33 +28,14 @@
 export default {
   data() {
     return {
-      chooser: false,
-      theme: localStorage.getItem('theme'),
-      passwordResetData: { password: '', password_validation: '' },
+      theme: localStorage.getItem('theme') || 'sunrise',
     }
-  },
-  computed: {
-    passwordResetValid() {
-      if (!(this.passwordResetData.password || this.passwordResetData.password_validation)) {
-        return false
-      }
-      return this.passwordResetData.password === this.passwordResetData.password_validation
-    },
   },
   watch: {
     theme(theme) {
       localStorage.setItem('theme', theme)
       document.documentElement.removeAttribute('class')
       document.documentElement.classList.add(`theme-${localStorage.getItem('theme')}`)
-    },
-  },
-  methods: {
-    async resetPassowrd() {
-      try {
-        await this.$axios.$post('/auth/change_password/', this.passwordResetData)
-        this.$toast.success('Passwort zurückgesetzt')
-        this.$auth.logout()
-      } catch (error) {}
     },
   },
 }

@@ -1,12 +1,13 @@
 <template>
   <button
     v-bind="$attrs"
+    :type="type"
     class="relative flex justify-center items-center bg-primary-300 rounded-lg py-2 px-4 text-white leading-tight focus:outline-none focus:bg-primary-400 hover:bg-primary-400"
     :disabled="computedDisabled"
     v-on="$listeners"
   >
     <feather v-if="loading" class="absolute" type="loader" size="20" animation="spin" animation-speed="slow" />
-    <div :class="{ invisible: loading }">
+    <div :class="{ invisible: loading }" class="flex items-center">
       <slot />
     </div>
   </button>
@@ -23,6 +24,10 @@ export default {
     disabled: {
       type: Boolean,
       default: () => false,
+    },
+    type: {
+      type: String,
+      default: () => 'button',
     },
   },
   computed: {

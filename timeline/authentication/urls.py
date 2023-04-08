@@ -1,11 +1,15 @@
 from django.urls import path
-from rest_framework.authtoken.views import obtain_auth_token
+from knox import views as knox_views
 
-from timeline.authentication.views import ChangePasswordView, LogoutView, UserView
+from timeline.authentication.views import ChangePasswordView
+from timeline.authentication.views import LoginView
+from timeline.authentication.views import UserView
+
 
 urlpatterns = [
-    path("login/", obtain_auth_token, name="login"),
-    path("logout/", LogoutView.as_view(), name="logout"),
     path("change_password/", ChangePasswordView.as_view(), name="change_password"),
     path("user/", UserView.as_view(), name="user"),
+    path("login/", LoginView.as_view(), name="knox_login"),
+    path("logout/", knox_views.LogoutView.as_view(), name="knox_logout"),
+    path("logoutall/", knox_views.LogoutAllView.as_view(), name="knox_logoutall"),
 ]

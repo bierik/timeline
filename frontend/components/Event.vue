@@ -1,12 +1,8 @@
 <template>
-  <div
-    class="flex flex-col justify-center items-center"
-    :class="{ 'active-event': isActive }"
-    :data-event-id="event.id"
-  >
+  <div class="flex flex-col justify-center items-center" :data-event-id="event.id">
     <MorphDialog :open="isActive">
       <div class="flex flex-col h-full pb-10">
-        <span class="text-xs flex-grow" v-html="event.description_html" />
+        <span v-dompurify-html="event.description_html" class="text-xs flex-grow" />
         <div class="flex">
           <span
             v-for="relation in event.relations"
@@ -64,10 +60,6 @@ export default {
       type: Object,
       required: true,
     },
-    $router: {
-      type: Object,
-      required: true,
-    },
   },
   data() {
     return {
@@ -76,25 +68,25 @@ export default {
   },
   computed: {
     isActive() {
-      return Number.parseInt(this.$router.currentRoute.query.activeEvent) === this.event.id
+      return Number.parseInt(this.$nuxt.$route.query.activeEvent) === this.event.id
     },
   },
   methods: {
     edit() {
-      this.$router.push({
+      this.$nuxt.$router.push({
         name: 'event-id-edit',
         params: { id: this.event.id },
       })
     },
     focusRelation(relation) {
-      this.$router.push({ name: 'event-timeline', query: { activeEvent: relation } })
-      this.$router.push({ name: 'event-timeline', query: { activeEvent: relation } })
+      this.$nuxt.$router.push({ name: 'event-timeline', query: { activeEvent: relation } })
+      this.$nuxt.$router.push({ name: 'event-timeline', query: { activeEvent: relation } })
     },
     openDialog() {
-      this.$router.push({ name: 'event-timeline', query: { activeEvent: this.event.id } })
+      this.$nuxt.$router.push({ name: 'event-timeline', query: { activeEvent: this.event.id } })
     },
     closeDialog() {
-      this.$router.push({ name: 'event-timeline' })
+      this.$nuxt.$router.push({ name: 'event-timeline' })
     },
   },
 }

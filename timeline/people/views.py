@@ -1,7 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 
 from timeline.people import models
-from timeline.people.serializers import PersonSerializer, PersonCreateOrUpdateSerializer
+from timeline.people.serializers import PersonCreateOrUpdateSerializer
+from timeline.people.serializers import PersonSerializer
 from timeline.serializers import SerializerActionMixin
 
 

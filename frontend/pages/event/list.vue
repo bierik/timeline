@@ -5,7 +5,19 @@
         <feather type="plus" size="18" class="mr-1" />
         <span class="hidden sm:block">Hinzufügen</span>
       </nuxt-link>
+      <button class="flex items-center text-white px-4 hover:bg-primary-400 h-full" @click="filterDrawer = true">
+        <feather type="filter" size="18" class="mr-1" />
+        <span class="hidden sm:block">Filter</span>
+      </button>
     </template>
+    <NavigationDrawer v-model="filterDrawer">
+      <div class="p-4">
+        <TextInput class="mb-2" label="Titel" :value="filter.title" @input="applyFilter({ title: $event })" />
+        <DateInput class="mb-2" label="Von" :value="filter.date_after" @input="applyFilter({ date_after: $event })" />
+        <DateInput class="mb-2" label="Bis" :value="filter.date_before" @input="applyFilter({ date_before: $event })" />
+        <PersonField label="Personen" :value="filter.people" @input="applyFilter({ people: $event })" />
+      </div>
+    </NavigationDrawer>
     <div class="container">
       <ul>
         <template v-for="event in events">
@@ -45,18 +57,24 @@
 </template>
 
 <script>
+import debounce from 'debounce-async'
+import isEmpty from 'lodash/isEmpty'
 import isNull from 'lodash/isNull'
-import isUndefined from 'lodash/isUndefined'
+import negate from 'lodash/negate'
+import pickBy from 'lodash/pickBy'
 
 export default {
   data() {
     return {
+      filterDrawer: false,
       events: [],
       nextLink: undefined,
+      filter: { ordering: '-date', people: [], title: '', date_after: null, date_before: null },
     }
   },
-  mounted() {
-    this.infiniteScrollObserver = new IntersectionObserver(this.loadMoreEvents, {
+  async mounted() {
+    await this.performSearch()
+    this.infiniteScrollObserver = new IntersectionObserver(this.nextPage, {
       root: null,
     })
     this.infiniteScrollObserver.observe(this.$refs.infiniteScrollAnchor)
@@ -65,18 +83,34 @@ export default {
     this.infiniteScrollObserver.disconnect()
   },
   methods: {
-    async loadMoreEvents(event) {
+    nextPage(event) {
       if (!event[0].isIntersecting) {
         return
       }
-      if (isUndefined(this.nextLink)) {
-        const response = await this.$axios.$get('/events/', { params: { ordering: '-date' } })
-        this.nextLink = response.next
-        this.events = [...this.events, ...response.results]
-      } else if (!isNull(this.nextLink)) {
-        const response = await this.$axios.$get(this.nextLink)
-        this.nextLink = response.next
-        this.events = [...this.events, ...response.results]
+      if (isNull(this.nextLink)) {
+        return
+      }
+      this.performSearch()
+    },
+    async performSearch() {
+      const response = this.nextLink
+        ? await this.$axios.$get(this.nextLink)
+        : await this.$axios.$get('/events/', { params: pickBy(this.filter, negate(isEmpty)) })
+      this.events = this.nextLink ? [...this.events, ...response.results] : response.results
+      this.nextLink = response.next
+    },
+    applyFilterDebounced: debounce(async function applyFilter(filter) {
+      this.nextLink = undefined
+      this.filter = { ...this.filter, ...filter }
+      await this.performSearch()
+    }, 200),
+    async applyFilter(filter) {
+      try {
+        await this.applyFilterDebounced(filter)
+      } catch (error) {
+        if (error !== 'canceled') {
+          throw error
+        }
       }
     },
   },

@@ -30,7 +30,16 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   css: ['vis-timeline/dist/vis-timeline-graph2d.css', 'photoswipe/dist/photoswipe.css'],
-  plugins: ['~/plugins/filters', '~/plugins/axios', '~/plugins/feather', '~/plugins/theme'],
+  plugins: [
+    '~/plugins/dompurify',
+    '~/plugins/agile',
+    '~/plugins/breakpoints',
+    '~/plugins/config',
+    '~/plugins/filters',
+    '~/plugins/axios',
+    '~/plugins/feather',
+    '~/plugins/theme',
+  ],
   buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts', '@nuxtjs/proxy'],
   modules: ['@nuxtjs/axios', 'vue-toastification/nuxt', '@nuxtjs/auth-next'],
   axios: {
@@ -41,14 +50,13 @@ export default {
       login: '/login',
       logout: '/login',
       callback: false,
-      home: '/person',
+      home: '/event/timeline',
     },
     fullPathRedirect: true,
     strategies: {
       local: {
         token: {
           type: 'Token',
-          maxAge: Infinity,
         },
         endpoints: {
           login: { url: '/auth/login/', method: 'post' },

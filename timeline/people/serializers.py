@@ -7,7 +7,8 @@ from django.core.files.images import get_image_dimensions
 from rest_framework import serializers
 
 from timeline.image.models import Image
-from timeline.image.serializers import ImageCreateSerializer, ImageSerializer
+from timeline.image.serializers import ImageCreateSerializer
+from timeline.image.serializers import ImageSerializer
 from timeline.people import models
 
 
@@ -36,7 +37,7 @@ class PersonCreateOrUpdateSerializer(serializers.ModelSerializer):
     def save(self, *args, **kwargs):
         image = self.validated_data.pop("image")
         person = super().save(**kwargs)
-        if not "filename" in image:
+        if "filename" not in image:
             return
         if hasattr(person, "image"):
             person.image.delete()
@@ -44,9 +45,7 @@ class PersonCreateOrUpdateSerializer(serializers.ModelSerializer):
         image_path = Path(settings.TUS_DESTINATION_DIR) / file_name
         with open(image_path, "rb") as image:
             width, height = get_image_dimensions(image)
-            person_image = Image.objects.create(
-                title="title", person=person, width=width, height=height
-            )
+            person_image = Image.objects.create(title="title", person=person, width=width, height=height)
             person_image.file.save(file_name, File(image))
             os.remove(image_path)
 

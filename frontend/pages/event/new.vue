@@ -6,7 +6,7 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <TextInput v-model="event.title" :errors="errorsForField('title')" class="mb-4 block" label="Titel" />
           <DateInput v-model="event.date" :errors="errorsForField('date')" label="Datum" class="mb-4 block" />
-          <TextInput v-model="event.icon" :errors="errorsForField('icon')" label="Icon" class="mb-4 block" />
+          <EmojiField v-model="event.icon" label="Icon" :errors="errorsForField('icon')" content-class="mb-4 block" />
           <EventField
             v-model="event.relations"
             :errors="errorsForField('relations')"

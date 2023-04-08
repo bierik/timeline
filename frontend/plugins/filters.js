@@ -1,8 +1,12 @@
-import Vue from 'vue'
 import { DateTime } from 'luxon'
+import Vue from 'vue'
 
 function toLocaleDateString(isoDateString) {
-  return DateTime.fromISO(isoDateString).toLocaleString(DateTime.DATE_MED)
+  const datetime = DateTime.fromISO(isoDateString)
+  if (datetime.isValid) {
+    return datetime.toLocaleString(DateTime.DATE_MED)
+  }
+  return isoDateString.toLocaleString(DateTime.DATE_MED)
 }
 
 Vue.filter('toLocaleDateString', toLocaleDateString)
