@@ -49,6 +49,7 @@ export default {
       this.$router.push({ name: 'event-timeline', query: this.$route.query })
     },
     async save() {
+      console.log('bla')
       await this.$axios.$patch(`/events/${this.event.id}/`, this.event)
     },
     cancel() {

@@ -7,7 +7,7 @@
       >
         <feather type="file-plus" class="mr-1" />
         <span>Bilder auswählen</span>
-        <input class="hidden" type="file" multiple @change="loadImages" />
+        <input class="hidden" type="file" multiple accept=".jpg,.jpeg,.png" @change="loadImages" />
       </label>
       <agile
         ref="agile"
@@ -41,7 +41,7 @@
           </div>
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextInput v-model="importedImageGroup.title" label="Titel" class="mb-4" />
-            <TextInput v-model="importedImageGroup.icon" label="Icon" class="mb-4 block" />
+            <EmojiField v-model="importedImageGroup.icon" label="Icon" class="mb-4 block" />
           </div>
           <label>
             <span class="block text-gray-500 font-bold">Beschreibung</span>
@@ -222,5 +222,3 @@ export default {
   },
 }
 </script>
-
-<style></style>

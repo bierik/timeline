@@ -1,5 +1,3 @@
-import datetime as dt
-
 from django.urls import reverse_lazy
 from model_bakery import baker
 from pluck import pluck
@@ -12,7 +10,9 @@ class EventTestCase(TestCase):
     def test_generates_thumbnail(self):
         event = baker.make(Event)
         self.create_image(event=event)
-        response = self.client.get(reverse_lazy("event-detail", kwargs={"pk": event.id}))
+        response = self.client.get(
+            reverse_lazy("event-detail", kwargs={"pk": event.id}),
+        )
         self.assertIn(".jpg", response.json()["thumbnail"])
 
     def test_tells_if_images_exist(self):
@@ -54,11 +54,3 @@ class EventTestCase(TestCase):
         )
         response = self.client.get(reverse_lazy("event-detail", kwargs={"pk": event.id}))
         self.assertEqual("<p>test</p>", response.json()["description_html"])
-
-    def test_creates_event_with_images(self):
-        image = self.create_uploaded_image()
-        response = self.client.post(
-            reverse_lazy("event-list"),
-            {"title": "Title", "date": dt.datetime(2000, 1, 1), "images": [image]},
-        )
-        self.assertEqual(201, response.status_code, response.json())

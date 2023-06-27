@@ -91,7 +91,6 @@ class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
 
         event.images.exclude(id__in=map(itemgetter("id"), images)).delete()
         existing_image_ids = list(event.images.values_list("id", flat=True))
-
         new_images = list(filter(lambda image: image["id"] not in existing_image_ids, images))
         for file_name in map(itemgetter("filename"), new_images):
             imagePath = Path(settings.TUS_DESTINATION_DIR) / file_name

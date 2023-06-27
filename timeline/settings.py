@@ -43,6 +43,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = "timeline.urls"
 STATIC_URL = "/static/"
 
+ATOMIC_REQUESTS = True
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 TUS_UPLOAD_DIR = os.path.join(BASE_DIR, "tus_upload")

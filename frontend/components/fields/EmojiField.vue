@@ -7,10 +7,7 @@
       @click="close"
     />
     <div class="flex items-end" :class="contentClass">
-      <TextInput maxlength="1" class="mr-2 w-14" v-bind="$attrs" v-on="$listeners" />
-      <Button @click="open">
-        <feather type="smile" />
-      </Button>
+      <TextInput readonly maxlength="1" class="mr-2 w-14" v-bind="$attrs" @focus="open" v-on="$listeners" />
     </div>
   </div>
 </template>

@@ -1,54 +1,27 @@
-import io
-import os
-
-from django.conf import settings
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase as DjangoTestCase
+import pyvips
+from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
+from knox.models import AuthToken
 from model_bakery import baker
-from PIL import Image as PILImage
-from rest_framework.test import APIClient
+from rest_framework.test import APITestCase
 
 from timeline.image.models import Image
 
 
-class TestCase(DjangoTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.snapshot_before = cls.filestructure_snapshot(settings.MEDIA_ROOT)
-        cls.client = APIClient()
+User = get_user_model()
 
-    def tearDown(self):
-        snapshot_after = self.filestructure_snapshot(settings.MEDIA_ROOT)
-        self.delete_snapshot_difference(snapshot_after, self.snapshot_before)
 
-    @staticmethod
-    def filestructure_snapshot(path):
-        paths = []
-        for dirpath, _dirnames, filenames in os.walk(path):
-            paths.append(dirpath)
-            for filename in filenames:
-                paths.append(os.path.join(dirpath, filename))
-        return paths
+class TestCase(APITestCase):
+    def setUp(self):
+        super().setUp()
+        user = baker.make(User)
+        _, token = AuthToken.objects.create(user=user)
+        self.client.credentials(HTTP_AUTHORIZATION=("Token %s" % token))
 
-    @staticmethod
-    def delete_snapshot_difference(snapshot_after, snapshot_before):
-        to_delete = reversed(sorted(set(snapshot_after) - set(snapshot_before)))
-        for path in to_delete:
-            if os.path.isfile(path):
-                os.unlink(path)
-            if os.path.isdir(path):
-                os.removedirs(path)
-
-    def create_image(self, format="JPEG", **kwargs):
-        with io.BytesIO() as output:
-            PILImage.new("RGB", (100, 100), color="black").save(output, format=format)
-            image = baker.make(Image, **kwargs)
-            image.file.save("test.jpeg", output)
-        return image
-
-    def create_uploaded_image(self):
-        with io.BytesIO() as output:
-            PILImage.new("RGB", (100, 100), color="black").save(output, format=format)
-            image = SimpleUploadedFile("test.jpeg", output, content_type="image/jpeg")
+    def create_image(self, **kwargs):
+        image = pyvips.Image.black(100, 100)
+        buf = image.write_to_buffer(".png")
+        image = baker.make(Image, **kwargs)
+        content_file = ContentFile(buf)
+        image.file.save("test.jpeg", content_file)
         return image

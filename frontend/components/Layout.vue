@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-col min-h-screen">
     <div class="bg-primary h-12 sticky top-0 z-10">
       <div class="container items-center flex h-full">
         <nuxt-link
@@ -36,7 +36,7 @@
         </nuxt-link>
       </div>
     </div>
-    <div :class="narrow ? '' : 'py-4'">
+    <div :class="narrow ? '' : 'py-4'" class="grow">
       <slot />
     </div>
   </div>

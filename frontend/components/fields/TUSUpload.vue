@@ -14,7 +14,7 @@
     </div>
     <div v-else class="bg-gray-200 w-32 h-32 relative cursor-pointer rounded">
       <feather type="upload" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-      <input class="hidden" type="file" @input="handleImage" />
+      <input class="hidden" type="file" accept=".jpg,.jpeg,.png" @input="handleImage" />
     </div>
   </Field>
 </template>

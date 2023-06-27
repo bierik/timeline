@@ -1,9 +1,9 @@
+import io
 import os
 from pathlib import Path
 
+import pyvips
 from django.conf import settings
-from django.core.files import File
-from django.core.files.images import get_image_dimensions
 from django_filters import rest_framework as filters
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
@@ -53,10 +53,10 @@ class EventViewSet(
             event = models.Event.objects.create(**event_data)
             for image_name in images:
                 imagePath = Path(settings.TUS_DESTINATION_DIR) / image_name
-                with open(imagePath, "rb") as image:
-                    width, height = get_image_dimensions(image)
-                    event_image = Image.objects.create(title="title", event=event, width=width, height=height)
-                    event_image.file.save(image_name, File(image))
+                with pyvips.Image.new_from_file(imagePath) as image:
+                    image = image.autorot()
+                    event_image = Image.objects.create(title="title", event=event, width=image.width, height=image.height)
+                    event_image.file.save(image_name, io.BytesIO(image.write_to_buffer(".jpeg")))
                     os.remove(imagePath)
 
         return Response()
