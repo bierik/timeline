@@ -7,7 +7,7 @@
       @click="close"
     />
     <div class="flex items-end" :class="contentClass">
-      <TextInput class="grow mr-2" v-bind="$attrs" v-on="$listeners" />
+      <TextInput maxlength="1" class="mr-2 w-14" v-bind="$attrs" v-on="$listeners" />
       <Button @click="open">
         <feather type="smile" />
       </Button>

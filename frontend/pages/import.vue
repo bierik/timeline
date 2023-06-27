@@ -3,7 +3,7 @@
     <div class="container px-4">
       <h1 class="text-xl mb-4 font-bold">Bilder importieren</h1>
       <label
-        class="bg-primary-300 h-16 rounded-lg py-2 px-4 text-white leading-tight focus:outline-none flex items-center justify-center"
+        class="cursor-pointer bg-primary-300 h-16 rounded-lg py-2 px-4 text-white leading-tight focus:outline-none flex items-center justify-center hover:bg-primary-400"
       >
         <feather type="file-plus" class="mr-1" />
         <span>Bilder auswählen</span>
@@ -18,6 +18,7 @@
         :speed="0"
         :swipe-distance="Infinity"
         :throttle-delay="0"
+        @after-change="handleSlideChanged"
       >
         <div v-for="importedImageGroup in groupedImportedImages" :key="importedImageGroup.days" class="container">
           <h2 class="text-md mb-4 font-bold">
@@ -49,8 +50,8 @@
         </div>
       </agile>
       <div v-if="hasImportedImages" class="flex">
-        <Button class="mr-2" @click="prev">Zurück</Button>
-        <Button @click="next">Weiter</Button>
+        <Button class="mr-2" :disabled="!hasPrev" @click="prev">Zurück</Button>
+        <Button :disabled="!hasNext" @click="next">Weiter</Button>
         <div class="grow" />
         <Button @click="performImport">Importieren</Button>
       </div>
@@ -64,6 +65,7 @@ import findIndex from 'lodash/findIndex'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import last from 'lodash/last'
+import size from 'lodash/size'
 import DateTime from 'luxon/src/datetime'
 import * as tus from 'tus-js-client'
 import { v4 as uuidv4 } from 'uuid'
@@ -114,6 +116,7 @@ export default {
   data() {
     return {
       importedImages: [],
+      currentSlide: 0,
     }
   },
   computed: {
@@ -140,6 +143,15 @@ export default {
     hasImportedImages() {
       return !isEmpty(this.importedImages)
     },
+    slideCount() {
+      return size(this.groupedImportedImages)
+    },
+    hasNext() {
+      return this.slideCount !== 0 && this.currentSlide < this.slideCount - 1
+    },
+    hasPrev() {
+      return this.currentSlide > 0
+    },
   },
   watch: {
     importedImages() {
@@ -164,6 +176,9 @@ export default {
     },
     removeImage(importedImage) {
       this.importedImages = this.importedImages.filter((i) => i.file.name !== importedImage.file.name)
+    },
+    handleSlideChanged({ currentSlide }) {
+      this.currentSlide = currentSlide
     },
     async performImport() {
       const uploads = Promise.all(

@@ -1,7 +1,7 @@
 <template>
   <Field v-bind="$attrs">
     <div v-if="value" class="relative">
-      <img :src="value.thumbnail" class="w-32 h-32 object-cover" />
+      <img :src="value.thumbnail" class="w-32 h-32 object-cover rounded" />
       <button
         class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
         @click="remove"
@@ -9,10 +9,10 @@
         <feather type="x" />
       </button>
     </div>
-    <div v-else-if="loading" class="bg-gray-200 w-32 h-32 flex items-center justify-center">
+    <div v-else-if="loading" class="bg-gray-200 w-32 h-32 flex items-center justify-center rounded">
       <feather type="loader" animation="spin" />
     </div>
-    <div v-else class="bg-gray-200 w-32 h-32 relative cursor-pointer">
+    <div v-else class="bg-gray-200 w-32 h-32 relative cursor-pointer rounded">
       <feather type="upload" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
       <input class="hidden" type="file" @input="handleImage" />
     </div>
