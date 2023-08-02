@@ -3,21 +3,24 @@
     <div class="container px-4">
       <h1 class="text-xl mb-4 font-bold">Ereignis bearbeiten</h1>
       <Form :errors.sync="errors" class="w-full" :save="save" :cancel="cancel" @success="success">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <TextInput v-model="event.title" class="mb-4 block" label="Titel" />
-          <DateInput v-model="event.date" label="Datum" class="mb-4 block" />
+        <div class="flex gap-4">
+          <TextInput v-model="event.title" class="mb-4 block grow" label="Titel" />
           <EmojiField v-model="event.icon" label="Icon" :errors="errorsForField('icon')" content-class="mb-4 block" />
-          <EventField v-model="event.relations" label="Verknüpfungen" class="mb-4" :exclude="excludeFromSearch" />
-          <PersonField v-model="event.people" label="Personen" class="mb-4" />
-          <div>
-            <span class="block text-gray-500 font-bold">Dateien</span>
-            <MultiTUSUpload v-model="event.images" />
-          </div>
+          <DateInput v-model="event.date" label="Datum" class="mb-4 block grow" />
         </div>
-        <label>
-          <span class="block text-gray-500 font-bold">Beschreibung</span>
-          <Editor v-model="event.description" />
-        </label>
+        <div class="flex gap-4">
+          <EventField v-model="event.relations" label="Verknüpfungen" class="mb-4 grow" :exclude="excludeFromSearch" />
+          <PersonField v-model="event.people" label="Personen" class="mb-4 grow" />
+        </div>
+        <div class="flex gap-4">
+          <MultiTUSUpload v-model="event.images" class="grow mb-4" :errors="errorsForField('images')" label="Bilder" />
+        </div>
+        <div class="flex gap-4">
+          <label class="grow">
+            <span class="block text-gray-500 font-bold">Beschreibung</span>
+            <Editor v-model="event.description" />
+          </label>
+        </div>
         <template #action-before>
           <ButtonDelete @click="remove">Löschen</ButtonDelete>
         </template>

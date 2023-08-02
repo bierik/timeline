@@ -3,16 +3,18 @@
     <div class="container px-4">
       <h1 class="text-xl mb-4 font-bold">Neue Person hinzfügen</h1>
       <Form :errors.sync="errors" :save="save" :cancel="cancel" @success="success">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <TextInput v-model="person.name" :errors="errorsForField('name')" class="mb-4 block" label="Name" />
+        <div class="flex gap-4">
+          <TextInput v-model="person.name" :errors="errorsForField('name')" class="mb-4 block grow" label="Name" />
           <SelectInput
             v-model="person.role"
             :errors="errorsForField('role')"
-            class="mb-4 block"
+            class="mb-4 block grow"
             label="Rolle"
             :options="schema.actions.POST.role.choices"
           />
-          <TUSUpload v-model="person.image" :errors="errorsForField('image')" label="Bild" />
+        </div>
+        <div class="flex gap-4">
+          <TUSUpload v-model="person.image" class="grow" :errors="errorsForField('image')" label="Bild" />
         </div>
       </Form>
     </div>

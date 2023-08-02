@@ -7,7 +7,7 @@
       @click="close"
     />
     <div class="flex items-end" :class="contentClass">
-      <TextInput readonly maxlength="1" class="mr-2 w-14" v-bind="$attrs" @focus="open" v-on="$listeners" />
+      <TextInput readonly maxlength="1" class="w-14" v-bind="$attrs" @focus="open" v-on="$listeners" />
     </div>
   </div>
 </template>

@@ -20,10 +20,11 @@
         :throttle-delay="0"
         @after-change="handleSlideChanged"
       >
-        <div v-for="importedImageGroup in groupedImportedImages" :key="importedImageGroup.days" class="container">
-          <h2 class="text-md mb-4 font-bold">
-            Bilder vom {{ importedImageGroup.dateTimeOriginal | toLocaleDateString }}
-          </h2>
+        <div
+          v-for="importedImageGroup in groupedImportedImagesWithOriginalDate"
+          :key="importedImageGroup.days"
+          class="container"
+        >
           <div class="flex flex-wrap mb-4">
             <div
               v-for="importedImage in importedImageGroup.values"
@@ -39,13 +40,40 @@
               </button>
             </div>
           </div>
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <TextInput v-model="importedImageGroup.title" label="Titel" class="mb-4" />
+          <div class="flex gap-4">
+            <TextInput v-model="importedImageGroup.title" label="Titel" class="mb-4 grow" />
             <EmojiField v-model="importedImageGroup.icon" label="Icon" class="mb-4 block" />
+            <DateInput v-model="importedImageGroup.dateTimeOriginal" label="Datum" class="mb-4 block grow" />
           </div>
           <label>
             <span class="block text-gray-500 font-bold">Beschreibung</span>
             <Editor v-model="importedImageGroup.description" />
+          </label>
+        </div>
+        <div
+          v-for="importedImage in importedImagesWithMissingOriginalDate"
+          :key="importedImage.file.name"
+          class="container"
+        >
+          <div class="flex flex-wrap mb-4">
+            <div class="relative w-32 h-32">
+              <img class="w-32 h-32 object-cover" :src="importedImage.preview" />
+              <button
+                class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                @click="removeImage(importedImage)"
+              >
+                <feather type="x" />
+              </button>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <TextInput v-model="importedImage.title" label="Titel" class="mb-4 grow" />
+            <EmojiField v-model="importedImage.icon" label="Icon" class="mb-4 block" />
+            <DateInput v-model="importedImage.date" label="Datum" class="mb-4 block grow" />
+          </div>
+          <label>
+            <span class="block text-gray-500 font-bold">Beschreibung</span>
+            <Editor v-model="importedImage.description" />
           </label>
         </div>
       </agile>
@@ -65,6 +93,8 @@ import findIndex from 'lodash/findIndex'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import last from 'lodash/last'
+import property from 'lodash/property'
+import reject from 'lodash/reject'
 import size from 'lodash/size'
 import DateTime from 'luxon/src/datetime'
 import * as tus from 'tus-js-client'
@@ -83,7 +113,7 @@ function readFileAsArrayBuffer(file) {
 
 function parseEXIFDateTime(str) {
   if (!str) {
-    return DateTime.local()
+    return null
   }
   const dateTime = DateTime.fromFormat(str, 'yyyy:MM:dd hh:mm:ss')
   return dateTime.isValid ? dateTime : null
@@ -120,15 +150,18 @@ export default {
     }
   },
   computed: {
-    groupedImportedImages() {
+    importedImagesWithMissingOriginalDate() {
+      return reject(this.importedImages, property('dateTimeOriginal'))
+    },
+    groupedImportedImagesWithOriginalDate() {
       const group = []
-      this.importedImages.forEach((importedImage) => {
+      this.importedImages.filter(property('dateTimeOriginal')).forEach((importedImage) => {
         const days = dateTimeToDays(importedImage.dateTimeOriginal)
         const index = findIndex(group, (groupEntry) => groupEntry.days === days)
         if (index < 0) {
           group.push({
             days,
-            dateTimeOriginal: importedImage.dateTimeOriginal,
+            dateTimeOriginal: importedImage.dateTimeOriginal.toISODate(),
             values: [importedImage],
             title: '',
             icon: '',
@@ -144,7 +177,7 @@ export default {
       return !isEmpty(this.importedImages)
     },
     slideCount() {
-      return size(this.groupedImportedImages)
+      return size(this.groupedImportedImagesWithOriginalDate) + size(this.importedImagesWithMissingOriginalDate)
     },
     hasNext() {
       return this.slideCount !== 0 && this.currentSlide < this.slideCount - 1
@@ -181,7 +214,7 @@ export default {
       this.currentSlide = currentSlide
     },
     async performImport() {
-      const uploads = Promise.all(
+      await Promise.all(
         this.importedImages.map((importedImage) => {
           const uploadFilename = randomFilename(importedImage.file.name)
           return new Promise((resolve, reject) => {
@@ -206,7 +239,6 @@ export default {
           })
         }),
       )
-      await uploads
       await this.$axios.$post(
         '/events/bulk_create/',
         this.groupedImportedImages.map((groupedUploadedImage) => ({
