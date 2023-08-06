@@ -1,9 +1,9 @@
 <template>
-  <label class="flex flex-col items-start">
+  <component :is="tag" class="flex flex-col items-start">
     <span class="block text-gray-500 font-bold">{{ label }}</span>
     <slot />
     <span class="text-red-600">{{ errorText }}</span>
-  </label>
+  </component>
 </template>
 
 <script>
@@ -17,6 +17,10 @@ export default {
     label: {
       type: String,
       default: () => '',
+    },
+    tag: {
+      type: String,
+      default: () => 'label',
     },
   },
   computed: {

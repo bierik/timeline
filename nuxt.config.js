@@ -32,7 +32,6 @@ export default {
   css: ['vis-timeline/dist/vis-timeline-graph2d.css', 'photoswipe/dist/photoswipe.css'],
   plugins: [
     '~/plugins/dompurify',
-    '~/plugins/agile',
     '~/plugins/breakpoints',
     '~/plugins/config',
     '~/plugins/filters',

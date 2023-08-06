@@ -39,6 +39,7 @@ export default {
     }
   },
   mounted() {
+    document.body.prepend(this.$refs['emoji-picker-anchor'])
     this.$refs['emoji-picker-anchor'].appendChild(this.picker)
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <Field v-bind="$attrs">
+  <Field tag="div" v-bind="$attrs">
     <div class="flex flex-wrap gap-x-2">
       <div v-for="image in value" :key="`image-preview-${image.id}`" class="relative">
         <button

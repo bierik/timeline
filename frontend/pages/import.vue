@@ -9,18 +9,15 @@
         <span>Bilder auswählen</span>
         <input class="hidden" type="file" multiple accept=".jpg,.jpeg,.png" @change="loadImages" />
       </label>
-      <agile
-        ref="agile"
+      <swiper-container
+        ref="swiper"
         class="mt-8 mb-4"
-        :infinite="false"
-        :dots="false"
-        :nav-buttons="false"
-        :speed="0"
-        :swipe-distance="Infinity"
-        :throttle-delay="0"
-        @after-change="handleSlideChanged"
+        navigation-prev-el="#prev-button"
+        navigation-next-el="#next-button"
+        navigation-disabled-class="!bg-gray-200"
+        speed="1"
       >
-        <div
+        <swiper-slide
           v-for="importedImageGroup in groupedImportedImagesWithOriginalDate"
           :key="importedImageGroup.days"
           class="container"
@@ -49,8 +46,8 @@
             <span class="block text-gray-500 font-bold">Beschreibung</span>
             <Editor v-model="importedImageGroup.description" />
           </label>
-        </div>
-        <div
+        </swiper-slide>
+        <swiper-slide
           v-for="importedImage in importedImagesWithMissingOriginalDate"
           :key="importedImage.file.name"
           class="container"
@@ -69,17 +66,17 @@
           <div class="flex gap-4">
             <TextInput v-model="importedImage.title" label="Titel" class="mb-4 grow" />
             <EmojiField v-model="importedImage.icon" label="Icon" class="mb-4 block" />
-            <DateInput v-model="importedImage.date" label="Datum" class="mb-4 block grow" />
+            <DateInput v-model="importedImage.dateTimeOriginal" label="Datum" class="mb-4 block grow" />
           </div>
           <label>
             <span class="block text-gray-500 font-bold">Beschreibung</span>
             <Editor v-model="importedImage.description" />
           </label>
-        </div>
-      </agile>
-      <div v-if="hasImportedImages" class="flex">
-        <Button class="mr-2" :disabled="!hasPrev" @click="prev">Zurück</Button>
-        <Button :disabled="!hasNext" @click="next">Weiter</Button>
+        </swiper-slide>
+      </swiper-container>
+      <div v-show="hasImportedImages" class="flex">
+        <Button id="prev-button" class="mr-2">Zurück</Button>
+        <Button id="next-button">Weiter</Button>
         <div class="grow" />
         <Button @click="performImport">Importieren</Button>
       </div>
@@ -89,16 +86,21 @@
 
 <script>
 import EXIF from 'exif-js'
+import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import last from 'lodash/last'
+import pick from 'lodash/pick'
 import property from 'lodash/property'
 import reject from 'lodash/reject'
-import size from 'lodash/size'
 import DateTime from 'luxon/src/datetime'
+import { register } from 'swiper/swiper-element-bundle'
+
 import * as tus from 'tus-js-client'
 import { v4 as uuidv4 } from 'uuid'
+
+register()
 
 function readFileAsArrayBuffer(file) {
   return new Promise((resolve, reject) => {
@@ -128,7 +130,6 @@ async function extractCreatedDate(files = []) {
       preview: URL.createObjectURL(new Blob([buffer], { type: file.type })),
       dateTimeOriginal,
       file,
-      uploadFilename: null,
     }
   })
 }
@@ -142,53 +143,47 @@ function randomFilename(filename) {
   return `${uuidv4()}.${extension}`
 }
 
+function extractImagesWithOriginalDate(images) {
+  const group = []
+  images.filter(property('dateTimeOriginal')).forEach((importedImage) => {
+    const days = dateTimeToDays(importedImage.dateTimeOriginal)
+    const index = findIndex(group, (groupEntry) => groupEntry.days === days)
+    if (index < 0) {
+      group.push({
+        days,
+        dateTimeOriginal: importedImage.dateTimeOriginal.toISODate(),
+        values: [importedImage],
+        title: '',
+        icon: '',
+        description: null,
+      })
+    } else {
+      group[index].values.push(importedImage)
+    }
+  })
+  return group
+}
+
+function extractImagesWithMissingOriginalDate(images) {
+  return reject(images, property('dateTimeOriginal')).map((importedImage) => ({
+    ...importedImage,
+    title: '',
+    icon: '',
+    description: null,
+  }))
+}
+
 export default {
   data() {
     return {
       importedImages: [],
-      currentSlide: 0,
+      groupedImportedImagesWithOriginalDate: [],
+      importedImagesWithMissingOriginalDate: [],
     }
   },
   computed: {
-    importedImagesWithMissingOriginalDate() {
-      return reject(this.importedImages, property('dateTimeOriginal'))
-    },
-    groupedImportedImagesWithOriginalDate() {
-      const group = []
-      this.importedImages.filter(property('dateTimeOriginal')).forEach((importedImage) => {
-        const days = dateTimeToDays(importedImage.dateTimeOriginal)
-        const index = findIndex(group, (groupEntry) => groupEntry.days === days)
-        if (index < 0) {
-          group.push({
-            days,
-            dateTimeOriginal: importedImage.dateTimeOriginal.toISODate(),
-            values: [importedImage],
-            title: '',
-            icon: '',
-            description: null,
-          })
-        } else {
-          group[index].values.push(importedImage)
-        }
-      })
-      return group
-    },
     hasImportedImages() {
       return !isEmpty(this.importedImages)
-    },
-    slideCount() {
-      return size(this.groupedImportedImagesWithOriginalDate) + size(this.importedImagesWithMissingOriginalDate)
-    },
-    hasNext() {
-      return this.slideCount !== 0 && this.currentSlide < this.slideCount - 1
-    },
-    hasPrev() {
-      return this.currentSlide > 0
-    },
-  },
-  watch: {
-    importedImages() {
-      this.reloadSlider()
     },
   },
   beforeDestroy() {
@@ -197,24 +192,19 @@ export default {
   methods: {
     async loadImages(event) {
       this.importedImages = await extractCreatedDate(event.target.files)
-    },
-    reloadSlider() {
-      setTimeout(this.$refs.agile.reload, 0)
-    },
-    prev() {
-      this.$refs.agile.goToPrev()
-    },
-    next() {
-      this.$refs.agile.goToNext()
+      this.groupedImportedImagesWithOriginalDate = extractImagesWithOriginalDate(this.importedImages)
+      this.importedImagesWithMissingOriginalDate = extractImagesWithMissingOriginalDate(this.importedImages)
+      setTimeout(() => {
+        this.$refs.swiper.swiper.update()
+      }, 0)
     },
     removeImage(importedImage) {
       this.importedImages = this.importedImages.filter((i) => i.file.name !== importedImage.file.name)
-    },
-    handleSlideChanged({ currentSlide }) {
-      this.currentSlide = currentSlide
+      this.groupedImportedImagesWithOriginalDate = extractImagesWithOriginalDate(this.importedImages)
+      this.importedImagesWithMissingOriginalDate = extractImagesWithMissingOriginalDate(this.importedImages)
     },
     async performImport() {
-      await Promise.all(
+      const uploadedImages = await Promise.all(
         this.importedImages.map((importedImage) => {
           const uploadFilename = randomFilename(importedImage.file.name)
           return new Promise((resolve, reject) => {
@@ -230,8 +220,7 @@ export default {
                 reject(error)
               },
               onSuccess() {
-                importedImage.uploadFilename = uploadFilename
-                resolve()
+                resolve({ filename: importedImage.file.name, uploadFilename })
               },
             })
             upload.options.metadata.filename = uploadFilename
@@ -239,16 +228,21 @@ export default {
           })
         }),
       )
-      await this.$axios.$post(
-        '/events/bulk_create/',
-        this.groupedImportedImages.map((groupedUploadedImage) => ({
-          title: groupedUploadedImage.title,
-          description: groupedUploadedImage.description,
-          icon: groupedUploadedImage.icon,
-          date: groupedUploadedImage.dateTimeOriginal.toISODate(),
-          images: groupedUploadedImage.values.map((uploadedImage) => uploadedImage.uploadFilename),
+      const payload = [
+        ...this.groupedImportedImagesWithOriginalDate.map((groupedUploadedImage) => ({
+          ...pick(groupedUploadedImage, ['title', 'icon', 'description']),
+          date: groupedUploadedImage.dateTimeOriginal,
+          images: groupedUploadedImage.values.map(
+            (uploadedImage) => find(uploadedImages, { filename: uploadedImage.file.name }).uploadFilename,
+          ),
         })),
-      )
+        ...this.importedImagesWithMissingOriginalDate.map((uploadedImage) => ({
+          ...pick(uploadedImage, ['title', 'icon', 'description']),
+          date: uploadedImage.dateTimeOriginal,
+          images: [find(uploadedImages, { filename: uploadedImage.file.name }).uploadFilename],
+        })),
+      ]
+      await this.$axios.$post('/events/bulk_create/', payload)
       this.$router.push({ name: 'event-timeline' })
     },
   },
