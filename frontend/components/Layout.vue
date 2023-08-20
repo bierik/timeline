@@ -7,24 +7,24 @@
           class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
           active-class="bg-primary-400"
         >
-          <feather class="mr-1" size="20" type="calendar" />
-          <span class="hidden sm:block">Timeline</span>
+          <feather size="20" type="calendar" />
+          <span class="hidden sm:block ml-1">Timeline</span>
         </nuxt-link>
         <nuxt-link
           :to="{ name: 'event-list' }"
           class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
           active-class="bg-primary-400"
         >
-          <feather class="mr-1" size="20" type="list" />
-          <span class="hidden sm:block">Ereignisse</span>
+          <feather size="20" type="list" />
+          <span class="hidden sm:block ml-1">Ereignisse</span>
         </nuxt-link>
         <nuxt-link
           to="/person"
           class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
           active-class="bg-primary-400"
         >
-          <feather class="mr-1" size="20" type="user" />
-          <span class="hidden sm:block">Personen</span>
+          <feather size="20" type="user" />
+          <span class="hidden sm:block ml-1">Personen</span>
         </nuxt-link>
         <div class="grow" />
         <slot name="append" />

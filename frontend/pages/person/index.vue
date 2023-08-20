@@ -2,8 +2,8 @@
   <Layout narrow>
     <template #append>
       <nuxt-link to="/person/new" class="flex items-center text-white px-4 hover:bg-primary-400 h-full">
-        <feather type="plus" size="18" class="mr-1" />
-        <span class="hidden sm:block">Hinzufügen</span>
+        <feather type="plus" size="18" />
+        <span class="hidden sm:block ml-1">Hinzufügen</span>
       </nuxt-link>
     </template>
     <div class="container">

@@ -2,16 +2,16 @@
   <Layout narrow>
     <template #append>
       <nuxt-link to="/event/new" class="flex items-center text-white px-4 hover:bg-primary-400 h-full">
-        <feather type="plus" size="18" class="mr-1" />
-        <span class="hidden sm:block">Hinzufügen</span>
+        <feather type="plus" size="18" />
+        <span class="hidden sm:block ml-1">Hinzufügen</span>
       </nuxt-link>
       <nuxt-link class="flex items-center text-white px-4 hover:bg-primary-400 h-full" :to="{ name: 'import' }">
-        <feather type="upload" size="18" class="mr-1" />
-        <span class="hidden sm:block">Import</span>
+        <feather type="upload" size="18" />
+        <span class="hidden sm:block ml-1">Import</span>
       </nuxt-link>
       <button class="flex items-center text-white px-4 hover:bg-primary-400 h-full" @click="filterDrawer = true">
-        <feather type="filter" size="18" class="mr-1" />
-        <span class="hidden sm:block">Filter</span>
+        <feather type="filter" size="18" />
+        <span class="hidden sm:block ml-1">Filter</span>
       </button>
     </template>
     <NavigationDrawer v-model="filterDrawer">
