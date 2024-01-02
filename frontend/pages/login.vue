@@ -1,7 +1,14 @@
 <template>
   <div class="flex flex-col justify-center items-center h-screen">
     <form class="bg-slate-50 p-16 rounded" @submit.prevent="login">
-      <TextInput v-model="credentials.username" autofocus class="mb-4" type="email" label="E-Mail" />
+      <TextInput
+        v-model="credentials.username"
+        autofocus
+        class="mb-4"
+        type="text"
+        autocapitalize="none"
+        label="Benutzername"
+      />
       <TextInput v-model="credentials.password" class="mb-4" type="password" label="Passwort" />
       <Button type="submit" class="w-full">Login</Button>
     </form>

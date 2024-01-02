@@ -108,5 +108,5 @@ class BulkCreateSerializer(serializers.Serializer):
     title = serializers.CharField()
     images = serializers.ListField(child=serializers.CharField())
     date = serializers.DateField()
-    description = serializers.CharField(allow_null=True, required=False, allow_blank=True)
+    description = serializers.JSONField(allow_null=True, required=False)
     icon = serializers.CharField(allow_null=True, required=False, allow_blank=True)
