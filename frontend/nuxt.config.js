@@ -1,8 +1,4 @@
-// eslint-disable-next-line nuxt/no-cjs-in-config
-const path = require('path')
-
 export default {
-  rootDir: path.join(__dirname, 'frontend'),
   ssr: false,
   target: 'static',
   loading: false,

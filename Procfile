@@ -1,2 +1,2 @@
-web: gunicorn timeline.wsgi --log-file -
+web: gunicorn backend.wsgi --log-file -
 release: python manage.py migrate

@@ -26,6 +26,14 @@
           <feather size="20" type="user" />
           <span class="hidden sm:block ml-1">Personen</span>
         </nuxt-link>
+        <nuxt-link
+          to="/role"
+          class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
+          active-class="bg-primary-400"
+        >
+          <feather size="20" type="share-2" />
+          <span class="hidden sm:block ml-1">Rollen</span>
+        </nuxt-link>
         <div class="grow" />
         <slot name="append" />
         <div class="flex items-center">
