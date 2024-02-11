@@ -1,14 +1,25 @@
 <template>
   <Layout narrow>
     <template #append>
-      <nuxt-link to="/event/new" class="flex items-center text-white px-4 hover:bg-primary-400 h-full">
-        <feather type="plus" size="18" />
-        <span class="hidden sm:block ml-1">Hinzufügen</span>
-      </nuxt-link>
-      <nuxt-link class="flex items-center text-white px-4 hover:bg-primary-400 h-full" :to="{ name: 'import' }">
-        <feather type="upload" size="18" />
-        <span class="hidden sm:block ml-1">Import</span>
-      </nuxt-link>
+      <Bottomnav>
+        <template #activator="{ on }">
+          <button class="flex items-center text-white px-4 hover:bg-primary-400 h-full" v-on="on">
+            <feather type="plus" size="18" />
+            <span class="hidden sm:block ml-1">Hinzufügen</span>
+          </button>
+        </template>
+        <div class="bg-white">
+          <nuxt-link to="/event/new" class="flex items-center p-4 h-full">
+            <feather type="plus" size="18" />
+            <span class="ml-1">Hinzufügen</span>
+          </nuxt-link>
+          <hr />
+          <nuxt-link class="flex items-center p-4 h-full" :to="{ name: 'import' }">
+            <feather type="upload" size="18" />
+            <span class="ml-1">Import</span>
+          </nuxt-link>
+        </div>
+      </Bottomnav>
       <button class="flex items-center text-white px-4 hover:bg-primary-400 h-full" @click="filterDrawer = true">
         <feather type="filter" size="18" />
         <span class="hidden sm:block ml-1">Filter</span>

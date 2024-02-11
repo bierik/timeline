@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <div class="bg-primary h-12 sticky top-0 z-10">
-      <div class="container items-center flex h-full">
+    <div class="bg-primary h-12 sticky top-0 z-30">
+      <div class="container items-stretch flex h-full">
         <nuxt-link
           :to="{ name: 'event-timeline' }"
           class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
@@ -28,12 +28,11 @@
         </nuxt-link>
         <div class="grow" />
         <slot name="append" />
-        <nuxt-link
-          :to="{ name: 'user' }"
-          class="block mx-4 bg-white w-9 h-9 rounded-full flex items-center justify-center"
-        >
-          {{ userSignature }}
-        </nuxt-link>
+        <div class="flex items-center">
+          <nuxt-link :to="{ name: 'user' }" class="mx-4 bg-white w-9 h-9 rounded-full flex items-center justify-center">
+            {{ userSignature }}
+          </nuxt-link>
+        </div>
       </div>
     </div>
     <div :class="narrow ? '' : 'py-4'" class="grow">
