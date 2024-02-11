@@ -12,6 +12,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/events/", include("core.events.urls")),
     path("api/people/", include("core.people.urls")),
+    path("api/roles/", include("core.role.urls")),
     path("api/upload/", TusUpload.as_view(), name="tus_upload"),
     path("api/upload/<uuid:resource_id>", TusUpload.as_view(), name="tus_upload_chunks"),
     path("editorjs/", include("django_editorjs_fields.urls")),

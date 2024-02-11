@@ -9,6 +9,7 @@ from core.events.serializers import BulkCreateSerializer
 from core.events.serializers import EventCreateOrUpdateSerializer
 from core.events.serializers import EventSerializer
 from core.image.models import Image
+from core.people.models import Person
 from core.serializers import SerializerActionMixin
 from django.conf import settings
 from django_filters import rest_framework as filters
@@ -17,10 +18,19 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+class AndModelMultipleChoiceFilter(filters.ModelMultipleChoiceFilter):
+    def filter(self, qs, value):
+        if value:
+            qs = super().filter(qs, value)
+            for val in value:
+                qs = qs.filter(**{self.field_name: val})
+        return qs
+
 
 class EventFilter(filters.FilterSet):
     date = filters.DateFromToRangeFilter()
     title = filters.CharFilter(field_name="title", lookup_expr="icontains")
+    people = AndModelMultipleChoiceFilter(queryset=Person.objects.all())
 
     class Meta:
         model = models.Event

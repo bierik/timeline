@@ -3,7 +3,7 @@ from pathlib import Path
 from corsheaders.defaults import default_headers
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent
 ALLOWED_HOSTS = ["localhost"]
 DEBUG = True
 DATABASES = {
@@ -20,6 +20,8 @@ SECURE_SSL_REDIRECT = False
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 CORS_ALLOW_HEADERS = default_headers + (
     "upload-offset",
+    "upload-length",
+    "upload-metadata",
     "tus-resumable",
     "tus-max-size",
     "tus-version",

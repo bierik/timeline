@@ -129,4 +129,4 @@ AUTH_USER_MODEL = "core.User"
 django_heroku.settings(locals(), logging=False)
 
 with contextlib.suppress(Exception):
-    from .local_settings import *  # noqa
+    from local_settings import *  # noqa

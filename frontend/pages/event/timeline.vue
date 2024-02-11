@@ -9,12 +9,12 @@
           </button>
         </template>
         <div class="bg-white">
-          <nuxt-link to="/event/new" class="flex items-center p-4 h-full">
+          <nuxt-link to="/event/new" class="flex items-center p-4 h-full hover:bg-gray-200">
             <feather type="plus" size="18" />
             <span class="ml-1">Hinzufügen</span>
           </nuxt-link>
           <hr />
-          <nuxt-link class="flex items-center p-4 h-full" :to="{ name: 'import' }">
+          <nuxt-link class="flex items-center p-4 h-full hover:bg-gray-200" :to="{ name: 'import' }">
             <feather type="upload" size="18" />
             <span class="ml-1">Import</span>
           </nuxt-link>

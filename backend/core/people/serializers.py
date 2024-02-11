@@ -9,11 +9,14 @@ from django.conf import settings
 from django.core.files import File
 from django.core.files.images import get_image_dimensions
 from rest_framework import serializers
+from core.role.models import Role
+
+from core.role.serializers import RoleSerializer
 
 
 class PersonSerializer(serializers.ModelSerializer):
-    image = ImageSerializer(read_only=True)
-    role_display = serializers.CharField(source="get_role_display", read_only=True)
+    image = ImageSerializer()
+    role = RoleSerializer()
 
     class Meta:
         model = models.Person
@@ -21,13 +24,13 @@ class PersonSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "role",
-            "role_display",
             "image",
         )
 
 
 class PersonCreateOrUpdateSerializer(serializers.ModelSerializer):
     image = ImageCreateSerializer()
+    role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())
 
     class Meta:
         model = models.Person

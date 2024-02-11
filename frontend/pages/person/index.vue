@@ -16,7 +16,7 @@
           <img :src="person.image.thumbnail" class="rounded-full mr-6" />
           <div class="flex flex-col place-content-center h-full">
             <span class="text-xl">{{ person.name }}</span>
-            <small>{{ person.role_display }}</small>
+            <small>{{ person.role.name }}</small>
           </div>
         </nuxt-link>
         <hr :key="`divider-${person.id}`" />

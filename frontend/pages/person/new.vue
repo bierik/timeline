@@ -10,7 +10,7 @@
             :errors="errorsForField('role')"
             class="mb-4 block grow"
             label="Rolle"
-            :options="schema.actions.POST.role.choices"
+            :options="roleChoices"
           />
         </div>
         <div class="flex gap-4">
@@ -27,14 +27,15 @@ import formErrorMixin from '@/components/form/form-error-mixin'
 export default {
   mixins: [formErrorMixin],
   async asyncData({ $axios }) {
-    const schema = await $axios.$options('/people/')
-    return { schema }
+    const roles = await $axios.$get('/roles/')
+    const roleChoices = roles.map(({ id, name }) => ({ value: id, display_name: name }))
+    return { roleChoices }
   },
   data() {
     return {
       person: {
         name: '',
-        role: 1,
+        role: null,
         image: null,
       },
     }

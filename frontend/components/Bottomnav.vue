@@ -2,7 +2,10 @@
   <div>
     <slot name="activator" v-bind="{ on: { click: open } }" />
     <div class="group" :class="isOpen ? '' : 'bottom-nav-close'">
-      <div class="z-30 fixed bottom-0 left-0 right-0 group-[.bottom-nav-close]:translate-y-full transition-transform">
+      <div
+        class="z-30 fixed bottom-0 left-0 right-0 group-[.bottom-nav-close]:translate-y-full transition-transform"
+        @click="close"
+      >
         <slot />
       </div>
       <div

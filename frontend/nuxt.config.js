@@ -35,10 +35,10 @@ export default {
     '~/plugins/feather',
     '~/plugins/theme',
   ],
-  buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts', '@nuxtjs/proxy'],
+  buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts'],
   modules: ['@nuxtjs/axios', 'vue-toastification/nuxt', '@nuxtjs/auth-next'],
   axios: {
-    baseURL: '/api',
+    baseURL: 'http://localhost:8000/api',
   },
   auth: {
     redirect: {
@@ -61,7 +61,6 @@ export default {
       },
     },
   },
-  proxy: ['http://localhost:8000/api', 'http://localhost:8000/media'],
   vue: {
     config: {
       productionTip: false,
@@ -78,6 +77,6 @@ export default {
     transpile: ['vis-data', 'vis-timeline', 'photoswipe'],
   },
   generate: {
-    dir: '../staticfiles',
+    dir: '../backend/staticfiles',
   },
 }
