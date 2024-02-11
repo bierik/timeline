@@ -7,14 +7,14 @@
         class="rounded-full px-3 py-3 flex mb-2 justify-center items-center drop-shadow-lg"
         @click="zoomIn"
       >
-        <feather size="20" type="plus" />
+        <feather size="20" type="zoom-in" />
       </Button>
       <Button
         v-if="timeline"
         class="rounded-full px-3 py-3 flex justify-center items-center mb-2 drop-shadow-lg"
         @click="zoomOut"
       >
-        <feather size="20" type="minus" />
+        <feather size="20" type="zoom-out" />
       </Button>
       <Button
         v-if="timeline"
