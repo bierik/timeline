@@ -16,6 +16,7 @@
         navigation-next-el="#next-button"
         navigation-disabled-class="!bg-gray-200"
         speed="1"
+        @progress="makeProgress"
       >
         <swiper-slide
           v-for="importedImageGroup in groupedImportedImagesWithOriginalDate"
@@ -74,11 +75,21 @@
           </label>
         </swiper-slide>
       </swiper-container>
-      <div v-show="hasImportedImages" class="flex">
-        <Button id="prev-button" class="mr-2">Zurück</Button>
-        <Button id="next-button">Weiter</Button>
-        <div class="grow" />
-        <Button @click="performImport">Importieren</Button>
+      <div v-show="hasImportedImages" class="flex flex-col">
+        <input
+          type="range"
+          min="0"
+          :max="imagesCount"
+          :value="progress"
+          disabled
+          class="w-full h-2 bg-primary-200 rounded-lg mb-4"
+        />
+        <div class="flex">
+          <Button id="prev-button" class="mr-2">Zurück</Button>
+          <Button id="next-button">Weiter</Button>
+          <div class="grow" />
+          <Button @click="performImport">Importieren</Button>
+        </div>
       </div>
     </div>
   </Layout>
@@ -94,6 +105,7 @@ import last from 'lodash/last'
 import pick from 'lodash/pick'
 import property from 'lodash/property'
 import reject from 'lodash/reject'
+import size from 'lodash/size'
 import DateTime from 'luxon/src/datetime'
 import { register } from 'swiper/swiper-element-bundle'
 
@@ -179,17 +191,24 @@ export default {
       importedImages: [],
       groupedImportedImagesWithOriginalDate: [],
       importedImagesWithMissingOriginalDate: [],
+      progress: 0,
     }
   },
   computed: {
     hasImportedImages() {
       return !isEmpty(this.importedImages)
     },
+    imagesCount() {
+      return size(this.groupedImportedImagesWithOriginalDate) + size(this.importedImagesWithMissingOriginalDate)
+    },
   },
   beforeDestroy() {
     this.importedImages.forEach((importedImage) => URL.revokeObjectURL(importedImage.buffer))
   },
   methods: {
+    makeProgress({ detail: [_, progress] }) {
+      this.progress = this.imagesCount * progress
+    },
     async loadImages(event) {
       this.importedImages = await extractCreatedDate(event.target.files)
       this.groupedImportedImagesWithOriginalDate = extractImagesWithOriginalDate(this.importedImages)
@@ -248,3 +267,9 @@ export default {
   },
 }
 </script>
+<style>
+::range-thumb {
+  border-radius: 1px;
+  cursor: pointer;
+}
+</style>
