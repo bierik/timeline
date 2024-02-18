@@ -10,7 +10,7 @@
       <template v-for="person in people">
         <nuxt-link
           :key="person.id"
-          class="flex items-center hover:bg-gray-200 block py-6 px-4"
+          class="flex items-center hover:bg-gray-200 py-6 px-4"
           :to="{ name: 'person-id-edit', params: { id: person.id } }"
         >
           <img :src="person.image.thumbnail" class="rounded-full mr-6" />
