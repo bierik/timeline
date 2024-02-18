@@ -2,12 +2,13 @@
   <div class="flex flex-col justify-center items-center" :data-event-id="event.id">
     <MorphDialog :open="isActive">
       <div class="flex flex-col h-full pb-10">
-        <span v-dompurify-html="event.description_html" class="text-xs flex-grow" />
-        <div class="flex">
+        <span v-dompurify-html="event.description_html" class="text-left text-xs max-h-16 overflow-hidden pr-10" />
+        <div class="grow"></div>
+        <div class="flex mb-2">
           <span
             v-for="relation in event.relations"
             :key="`relation-${relation.id}`"
-            class="bg-primary-400 rounded-md px-2 py-1 text-xs mr-1 whitespace-nowrap overflow-x-hidden overflow-ellipsis"
+            class="hover:bg-primary-200 bg-primary-400 rounded-md px-2 py-1 text-xs mr-1 whitespace-nowrap overflow-x-hidden overflow-ellipsis cursor-pointer"
             @click="focusRelation(relation.id)"
           >
             {{ relation.title }}
@@ -43,7 +44,7 @@
       </button>
     </MorphDialog>
     <div
-      class="rounded-full w-16 h-16 mb-4 flex justify-center items-center text-4xl bg-primary-300 shadow-flat shadow-primary hover:shadow-flat-lg transition-all"
+      class="rounded-full w-16 h-16 mb-4 flex justify-center items-center text-4xl bg-primary-300 shadow-flat shadow-primary hover:shadow-flat-lg transition-all cursor-pointer"
       @click="openDialog"
     >
       {{ event.icon }}

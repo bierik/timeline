@@ -27,6 +27,9 @@ export default {
       isOpen: false,
     }
   },
+  beforeDestroy() {
+    this.unlockModal()
+  },
   methods: {
     close() {
       this.isOpen = false

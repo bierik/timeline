@@ -36,7 +36,7 @@ export default {
           this.$emit('clientError', error)
         } else if (error >= 500) {
           this.$emit('serverError', error)
-          this.$toast.warning('Es ist ein unerwarteter Fehler aufgetreten.')
+          this.$toast.error('Es ist ein unerwarteter Fehler aufgetreten.')
         } else {
           this.$emit('error', error)
           throw error

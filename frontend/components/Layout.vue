@@ -38,7 +38,8 @@
         <slot name="append" />
         <div class="flex items-center">
           <nuxt-link :to="{ name: 'user' }" class="mx-4 bg-white w-9 h-9 rounded-full flex items-center justify-center">
-            {{ userSignature }}
+            <span v-if="hasSignature">{{ userSignature }}</span>
+            <feather v-else size="20" type="user" />
           </nuxt-link>
         </div>
       </div>
@@ -61,6 +62,9 @@ export default {
   computed: {
     userSignature() {
       return [first(Array.from(this.$auth.user.first_name)), first(Array.from(this.$auth.user.last_name))].join('')
+    },
+    hasSignature() {
+      return !!this.userSignature
     },
   },
 }

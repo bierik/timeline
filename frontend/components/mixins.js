@@ -24,6 +24,10 @@ function unlockModal() {
 }
 export function modalable(value) {
   return {
+    methods: {
+      lockModal,
+      unlockModal,
+    },
     watch: {
       [value](v) {
         v ? lockModal() : unlockModal()

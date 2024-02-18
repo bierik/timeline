@@ -61,12 +61,6 @@ export default {
       },
     },
   },
-  vue: {
-    config: {
-      productionTip: false,
-      devtools: true,
-    },
-  },
   googleFonts: {
     families: {
       'Courier Prime': true,

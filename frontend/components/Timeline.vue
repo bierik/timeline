@@ -58,6 +58,7 @@ export default {
           return
         }
         await this.addEvent(activeEvent)
+        this.selectActiveEvent()
         setTimeout(() => {
           this.timeline.focus(Number.parseInt(activeEvent), { zoom: false })
         }, 0)

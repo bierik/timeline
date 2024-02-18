@@ -30,7 +30,7 @@ export default function ({ $config }) {
       },
     },
     height: '100%',
-    showCurrentTime: false,
+    showCurrentTime: true,
     showTooltips: false,
     zoomMax: Duration.fromObject(MAX_ZOOM).toMillis(),
     zoomMin: Duration.fromObject(MIN_ZOOM).toMillis(),

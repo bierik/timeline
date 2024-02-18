@@ -1,5 +1,5 @@
 <template>
-  <Layout narrow>
+  <Layout :narrow="$config.breakpoints.mdAndDown">
     <template #append>
       <Bottomnav>
         <template #activator="{ on }">

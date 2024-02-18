@@ -19,7 +19,7 @@
         @progress="makeProgress"
       >
         <swiper-slide
-          v-for="importedImageGroup in groupedImportedImagesWithOriginalDate"
+          v-for="(importedImageGroup, index) in groupedImportedImagesWithOriginalDate"
           :key="importedImageGroup.days"
           class="container"
         >
@@ -39,9 +39,24 @@
             </div>
           </div>
           <div class="flex gap-4">
-            <TextInput v-model="importedImageGroup.title" label="Titel" class="mb-4 grow" />
-            <EmojiField v-model="importedImageGroup.icon" label="Icon" class="mb-4 block" />
-            <DateInput v-model="importedImageGroup.dateTimeOriginal" label="Datum" class="mb-4 block grow" />
+            <TextInput
+              v-model="importedImageGroup.title"
+              :errors="errorsForFieldAndIndex(index, 'title')"
+              label="Titel"
+              class="mb-4 grow"
+            />
+            <EmojiField
+              v-model="importedImageGroup.icon"
+              :errors="errorsForFieldAndIndex(index, 'icon')"
+              label="Icon"
+              class="mb-4 block"
+            />
+            <DateInput
+              v-model="importedImageGroup.dateTimeOriginal"
+              :errors="errorsForFieldAndIndex(index, 'date')"
+              label="Datum"
+              class="mb-4 block grow"
+            />
           </div>
           <label>
             <span class="block text-gray-500 font-bold">Beschreibung</span>
@@ -49,7 +64,7 @@
           </label>
         </swiper-slide>
         <swiper-slide
-          v-for="importedImage in importedImagesWithMissingOriginalDate"
+          v-for="(importedImage, index) in importedImagesWithMissingOriginalDate"
           :key="importedImage.file.name"
           class="container"
         >
@@ -65,9 +80,24 @@
             </div>
           </div>
           <div class="flex gap-4">
-            <TextInput v-model="importedImage.title" label="Titel" class="mb-4 grow" />
-            <EmojiField v-model="importedImage.icon" label="Icon" class="mb-4 block" />
-            <DateInput v-model="importedImage.dateTimeOriginal" label="Datum" class="mb-4 block grow" />
+            <TextInput
+              v-model="importedImage.title"
+              :errors="errorsForFieldAndIndex(index, 'title', true)"
+              label="Titel"
+              class="mb-4 grow"
+            />
+            <EmojiField
+              v-model="importedImage.icon"
+              :errors="errorsForFieldAndIndex(index, 'title', true)"
+              label="Icon"
+              class="mb-4 block"
+            />
+            <DateInput
+              v-model="importedImage.dateTimeOriginal"
+              :errors="errorsForFieldAndIndex(index, 'title', true)"
+              label="Datum"
+              class="mb-4 block grow"
+            />
           </div>
           <label>
             <span class="block text-gray-500 font-bold">Beschreibung</span>
@@ -76,19 +106,12 @@
         </swiper-slide>
       </swiper-container>
       <div v-show="hasImportedImages" class="flex flex-col">
-        <input
-          type="range"
-          min="0"
-          :max="imagesCount"
-          :value="progress"
-          disabled
-          class="w-full h-2 bg-primary-200 rounded-lg mb-4"
-        />
+        <ProgressLinear class="mb-4" :max="imagesCount" :value="activeStep" />
         <div class="flex">
           <Button id="prev-button" class="mr-2">Zurück</Button>
           <Button id="next-button">Weiter</Button>
           <div class="grow" />
-          <Button @click="performImport">Importieren</Button>
+          <Button :loading="loading" @click="performImport">Importieren</Button>
         </div>
       </div>
     </div>
@@ -191,7 +214,9 @@ export default {
       importedImages: [],
       groupedImportedImagesWithOriginalDate: [],
       importedImagesWithMissingOriginalDate: [],
-      progress: 0,
+      activeStep: 1,
+      loading: false,
+      errors: [],
     }
   },
   computed: {
@@ -206,8 +231,12 @@ export default {
     this.importedImages.forEach((importedImage) => URL.revokeObjectURL(importedImage.buffer))
   },
   methods: {
+    errorsForFieldAndIndex(index, field, offsetIndex = false) {
+      const finalIndex = offsetIndex ? index + size(this.groupedImportedImagesWithOriginalDate) : index
+      return get(this.errors[finalIndex], field)
+    },
     makeProgress({ detail: [_, progress] }) {
-      this.progress = this.imagesCount * progress
+      this.activeStep = Math.min(this.imagesCount, 1 + progress * (this.imagesCount - 1))
     },
     async loadImages(event) {
       this.importedImages = await extractCreatedDate(event.target.files)
@@ -223,46 +252,67 @@ export default {
       this.importedImagesWithMissingOriginalDate = extractImagesWithMissingOriginalDate(this.importedImages)
     },
     async performImport() {
-      const uploadedImages = await Promise.all(
-        this.importedImages.map((importedImage) => {
-          const uploadFilename = randomFilename(importedImage.file.name)
-          return new Promise((resolve, reject) => {
-            const upload = new tus.Upload(importedImage.file, {
-              endpoint: 'api/upload/',
-              retryDelays: [0, 3000, 5000, 10000, 20000],
-              chunkSize: 5242880,
-              metadata: {
-                filename: uploadFilename,
-                filetype: importedImage.file.type,
-              },
-              onError(error) {
-                reject(error)
-              },
-              onSuccess() {
-                resolve({ filename: importedImage.file.name, uploadFilename })
-              },
-            })
-            upload.options.metadata.filename = uploadFilename
-            upload.start()
+      const imagesToUpload = this.importedImages.map((importedImage) => {
+        const uploadFilename = randomFilename(importedImage.file.name)
+        return new Promise((resolve, reject) => {
+          const upload = new tus.Upload(importedImage.file, {
+            endpoint: 'http://localhost:8000/api/upload/',
+            retryDelays: [0, 3000, 5000, 10000, 20000],
+            chunkSize: 5242880,
+            metadata: {
+              filename: uploadFilename,
+              filetype: importedImage.file.type,
+            },
+            onError(error) {
+              reject(error)
+            },
+            onSuccess() {
+              resolve({ filename: importedImage.file.name, uploadFilename })
+            },
           })
-        }),
-      )
-      const payload = [
-        ...this.groupedImportedImagesWithOriginalDate.map((groupedUploadedImage) => ({
-          ...pick(groupedUploadedImage, ['title', 'icon', 'description']),
-          date: groupedUploadedImage.dateTimeOriginal,
-          images: groupedUploadedImage.values.map(
-            (uploadedImage) => find(uploadedImages, { filename: uploadedImage.file.name }).uploadFilename,
-          ),
-        })),
-        ...this.importedImagesWithMissingOriginalDate.map((uploadedImage) => ({
-          ...pick(uploadedImage, ['title', 'icon', 'description']),
-          date: uploadedImage.dateTimeOriginal,
-          images: [find(uploadedImages, { filename: uploadedImage.file.name }).uploadFilename],
-        })),
-      ]
-      await this.$axios.$post('/events/bulk_create/', payload)
-      this.$router.push({ name: 'event-timeline' })
+          upload.options.metadata.filename = uploadFilename
+          upload.start()
+        })
+      })
+      this.loading = true
+      try {
+        const uploadedImages = await Promise.all(imagesToUpload)
+        const payload = [
+          ...this.groupedImportedImagesWithOriginalDate.map((groupedUploadedImage) => ({
+            ...pick(groupedUploadedImage, ['title', 'icon', 'description']),
+            date: groupedUploadedImage.dateTimeOriginal,
+            images: groupedUploadedImage.values.map(
+              (uploadedImage) => find(uploadedImages, { filename: uploadedImage.file.name }).uploadFilename,
+            ),
+          })),
+          ...this.importedImagesWithMissingOriginalDate.map((uploadedImage) => ({
+            ...pick(uploadedImage, ['title', 'icon', 'description']),
+            date: uploadedImage.dateTimeOriginal,
+            images: [find(uploadedImages, { filename: uploadedImage.file.name }).uploadFilename],
+          })),
+        ]
+        try {
+          await this.$axios.$post('/events/bulk_create/', payload)
+          this.$router.push({ name: 'event-timeline' })
+        } catch (error) {
+          const status = get(error, 'response.status')
+          if (status >= 400 && status < 500) {
+            this.errors = error.response.data
+            this.$toast.warning('Überprüfen Sie die Eingabefelder auf Fehler.')
+          } else if (error >= 500) {
+            this.$toast.error('Es ist ein unerwarteter Fehler aufgetreten.')
+          } else {
+            throw error
+          }
+        } finally {
+          this.loading = false
+        }
+      } catch (error) {
+        this.$toast.error('Beim Hochladen der Bilder ist ein unerwarteter Fehler aufgetreten.')
+        return
+      } finally {
+        this.loading = false
+      }
     },
   },
 }
