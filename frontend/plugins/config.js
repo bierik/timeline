@@ -13,7 +13,7 @@ export default function ({ $config }) {
   const RUNTIME_WINDOW_SPAN = $config.breakpoints.mdAndDown ? { weeks: 1 } : { months: 1 }
 
   const TIMELINE_OPTIONS = {
-    locale: 'de-CH',
+    locale: 'de',
     template(item) {
       const eventComponentInstance = new EventComponentConstructor({
         propsData: {

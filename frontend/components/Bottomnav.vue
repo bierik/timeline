@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-import { escapeable, modalable } from '@/components/mixins'
+import { escapeable, modalable } from '@/mixins/modal'
 
 export default {
   name: 'Bottomnav',

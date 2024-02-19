@@ -256,7 +256,7 @@ export default {
         const uploadFilename = randomFilename(importedImage.file.name)
         return new Promise((resolve, reject) => {
           const upload = new tus.Upload(importedImage.file, {
-            endpoint: 'http://localhost:8000/api/upload/',
+            endpoint: 'http://localhost:5002/api/upload/',
             retryDelays: [0, 3000, 5000, 10000, 20000],
             chunkSize: 5242880,
             metadata: {

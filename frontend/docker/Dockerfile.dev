@@ -1,0 +1,18 @@
+FROM node:18.18.2-alpine3.18
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN corepack enable
+
+WORKDIR /app
+
+COPY pnpm-lock.yaml package.json ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+ENV NUXT_HOST=0.0.0.0
+ENV NUXT_PORT=3000
+
+EXPOSE 3000
+
+CMD [ "pnpm", "run", "dev" ]

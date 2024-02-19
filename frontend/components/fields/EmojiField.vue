@@ -13,7 +13,7 @@
 </template>
 <script>
 import { Picker } from 'emoji-mart'
-import { escapeable, modalable } from '@/components/mixins'
+import { escapeable, modalable } from '@/mixins/modal'
 
 export default {
   mixins: [escapeable('close'), modalable('isOpen')],

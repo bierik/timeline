@@ -38,7 +38,7 @@ export default {
   buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts'],
   modules: ['@nuxtjs/axios', 'vue-toastification/nuxt', '@nuxtjs/auth-next'],
   axios: {
-    baseURL: 'http://localhost:8000/api',
+    baseURL: 'http://localhost:5002/api',
   },
   auth: {
     redirect: {
@@ -71,6 +71,6 @@ export default {
     transpile: ['vis-data', 'vis-timeline', 'photoswipe'],
   },
   generate: {
-    dir: '../backend/staticfiles',
+    dir: '/tmp/nuxt_output',
   },
 }

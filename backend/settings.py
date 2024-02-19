@@ -3,13 +3,10 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-import django_heroku
-
-
 BASE_DIR = Path(__file__).resolve().parent
 SECRET_KEY = "django-insecure-4t0+fq(6892+u&3s=gv48=)9487&oi6e=s&%pn00)-kj^i5g_#"
 DEBUG = False
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"]
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -95,6 +92,10 @@ WSGI_APPLICATION = "wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "postgres",
+        "HOST": "db",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
     }
 }
 AUTH_PASSWORD_VALIDATORS = [
@@ -125,8 +126,6 @@ REST_KNOX = {
     "USER_SERIALIZER": "core.authentication.serializers.UserSerializer",
 }
 AUTH_USER_MODEL = "core.User"
-
-django_heroku.settings(locals(), logging=False)
 
 with contextlib.suppress(Exception):
     from local_settings import *  # noqa
