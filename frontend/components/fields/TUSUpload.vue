@@ -80,7 +80,7 @@ export default {
 
       const vm = this
       this.upload = new tus.Upload(image, {
-        endpoint: 'http://localhost:5002/api/upload/',
+        endpoint: '/api/upload/',
         retryDelays: [0, 3000, 5000, 10000, 20000],
         chunkSize: 5242880,
         metadata: {

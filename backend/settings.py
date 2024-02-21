@@ -1,5 +1,4 @@
 import contextlib
-import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -28,6 +27,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -36,14 +36,13 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 ROOT_URLCONF = "urls"
-STATIC_URL = "/static/"
 
 ATOMIC_REQUESTS = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
-TUS_UPLOAD_DIR = os.path.join(BASE_DIR, "tus_upload")
-TUS_DESTINATION_DIR = os.path.join(BASE_DIR, "media", "uploads")
+TUS_UPLOAD_DIR = BASE_DIR / "tus_upload"
+TUS_DESTINATION_DIR = BASE_DIR / "media/uploads"
 TUS_FILE_NAME_FORMAT = "keep"
 TUS_EXISTING_FILE = "error"
 
@@ -69,7 +68,8 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 DEFAULT_FILE_STORAGE = "core.storage_backends.MediaStorage"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 WHITENOISE_ROOT = STATIC_ROOT
 WHITENOISE_MAX_AGE = 31536000
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

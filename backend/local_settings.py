@@ -3,17 +3,8 @@ from pathlib import Path
 from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["backend"]
 DEBUG = True
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "postgres",
-        "HOST": "db",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-    }
-}
 
 SECURE_PROXY_SSL_HEADER = None
 SECURE_SSL_REDIRECT = False
