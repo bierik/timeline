@@ -1,25 +1,36 @@
 version: "3"
 
 services:
-  app:
-    container_name: app
+  web:
+    container_name: web
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./frontend
+      dockerfile: docker/Dockerfile
     ports:
-      - 5002:8000
+      - 5000:80
+    depends_on:
+      - api
+
+  api:
+    container_name: api
+    build:
+      context: ./backend
+      dockerfile: docker/Dockerfile
     environment:
       DJANGO_DATABASE_PASSWORD: postgres
       DJANGO_DATABASE_HOST: db
       DJANGO_DATABASE_USER: postgres
+    env_file:
+      - path: ./.secrets
+        required: true
     depends_on:
       - db
+    volumes:
+      - /tmp/tus:/app/tus
 
   db:
     container_name: db
     image: postgres:16.1-alpine3.18
-    ports:
-      - 5001:5432
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres

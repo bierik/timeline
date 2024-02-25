@@ -6,5 +6,11 @@
         "name": "timeline",
         "path": "."
       }
-    ]
+    ],
+    "settings": {
+      "files.exclude": {
+        "backend": true,
+        "frontend": true,
+      },
+    }
 }

@@ -2,25 +2,34 @@ FROM python:3.12.0-alpine3.18 as builder
 
 WORKDIR /app
 
-RUN apk add --no-cache gcc musl-dev postgresql-dev vips-dev
+RUN apk add --no-cache gcc musl-dev postgresql-dev vips-dev mailcap
 
 COPY poetry.lock pyproject.toml ./
 
 RUN --mount=type=cache,target=/root/.cache \
     python -m pip install poetry==1.3.1 && \
     poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi
+    poetry install --only main --no-interaction --no-ansi
+
+RUN python -m pip install uwsgi
 
 FROM python:3.12.0-alpine3.18
 
 RUN apk add --no-cache postgresql vips
 
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
-
 WORKDIR /app
 
-EXPOSE 8000
-ENTRYPOINT ["/app/docker/entrypoint.sh"]
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY core ./core
+COPY settings.py .
+COPY urls.py .
+COPY wsgi.py .
+COPY manage.py .
+COPY docker/uwsgi.ini .
+COPY docker/entrypoint.sh .
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+EXPOSE 8000
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+CMD ["uwsgi", "--show-config", "/app/uwsgi.ini"]

@@ -1,10 +1,10 @@
 import contextlib
+import sys
 from datetime import timedelta
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 SECRET_KEY = "django-insecure-4t0+fq(6892+u&3s=gv48=)9487&oi6e=s&%pn00)-kj^i5g_#"
-DEBUG = False
 ALLOWED_HOSTS = ["localhost"]
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -15,7 +15,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "django_filters",
-    "corsheaders",
     "rest_framework",
     "knox",
     "django_tus",
@@ -25,9 +24,7 @@ INSTALLED_APPS = [
     "django_cleanup.apps.CleanupConfig",
 ]
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -41,8 +38,8 @@ ATOMIC_REQUESTS = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
-TUS_UPLOAD_DIR = BASE_DIR / "tus_upload"
-TUS_DESTINATION_DIR = BASE_DIR / "media/uploads"
+TUS_UPLOAD_DIR = BASE_DIR / "tus/tus_intermediate"
+TUS_DESTINATION_DIR = BASE_DIR / "tus/tus_destination"
 TUS_FILE_NAME_FORMAT = "keep"
 TUS_EXISTING_FILE = "error"
 
@@ -70,9 +67,6 @@ DEFAULT_FILE_STORAGE = "core.storage_backends.MediaStorage"
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-WHITENOISE_ROOT = STATIC_ROOT
-WHITENOISE_MAX_AGE = 31536000
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -80,7 +74,6 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
-                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
@@ -126,6 +119,37 @@ REST_KNOX = {
     "USER_SERIALIZER": "core.authentication.serializers.UserSerializer",
 }
 AUTH_USER_MODEL = "core.User"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} {levelname} {name} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "level": "ERROR",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+            "stream": sys.stderr,
+        },
+    },
+    "loggers": {
+        "": {
+            "handlers": ["console"],
+            "level": "WARNING",
+        },
+        "django": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+    },
+}
+
 
 with contextlib.suppress(Exception):
     from local_settings import *  # noqa

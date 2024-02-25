@@ -216,20 +216,6 @@ files = [
 ]
 
 [[package]]
-name = "django-cors-headers"
-version = "3.14.0"
-description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "django_cors_headers-3.14.0-py3-none-any.whl", hash = "sha256:684180013cc7277bdd8702b80a3c5a4b3fcae4abb2bf134dceb9f5dfe300228e"},
-    {file = "django_cors_headers-3.14.0.tar.gz", hash = "sha256:5fbd58a6fb4119d975754b2bc090f35ec160a8373f276612c675b00e8a138739"},
-]
-
-[package.dependencies]
-Django = ">=3.2"
-
-[[package]]
 name = "django-editorjs-fields"
 version = "0.2.7"
 description = "Django plugin for using Editor.js"
@@ -313,15 +299,19 @@ version = "0.5.0"
 description = "Django app implementing server side of tus v1.0.0 powering resumable file uploads for django projects"
 optional = false
 python-versions = ">=3.5"
-files = [
-    {file = "django-tus-0.5.0.tar.gz", hash = "sha256:9b9e8c69a9304993d840856403af1c76497408f4d9132571b974a7c0a0889310"},
-    {file = "django_tus-0.5.0-py2.py3-none-any.whl", hash = "sha256:f1470e467735b74b008bd4758c113441fec8b45b26b3bd340415a8a61c9bf280"},
-]
+files = []
+develop = false
 
 [package.dependencies]
 django = ">=2.2"
 django-appconf = "*"
 pathvalidate = "2.3.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/alican/django-tus"
+reference = "2aac2e7c0e6bac79a1cb07721947a48d9cc40ec8"
+resolved_reference = "2aac2e7c0e6bac79a1cb07721947a48d9cc40ec8"
 
 [[package]]
 name = "djangorestframework"
@@ -697,21 +687,7 @@ secure = ["certifi", "cryptography (>=1.9)", "idna (>=2.0.0)", "pyopenssl (>=17.
 socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
 zstd = ["zstandard (>=0.18.0)"]
 
-[[package]]
-name = "whitenoise"
-version = "6.6.0"
-description = "Radically simplified static file serving for WSGI applications"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "whitenoise-6.6.0-py3-none-any.whl", hash = "sha256:b1f9db9bf67dc183484d760b99f4080185633136a273a03f6436034a41064146"},
-    {file = "whitenoise-6.6.0.tar.gz", hash = "sha256:8998f7370973447fac1e8ef6e8ded2c5209a7b1f67c1012866dbcd09681c3251"},
-]
-
-[package.extras]
-brotli = ["Brotli"]
-
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "77e0447be7c1616e1f294e72adb61f811c4394655f746a08f38ebb8e0791aa9f"
+content-hash = "92114ab3c466236c66dd1d0442d2f299f8b5b50efce5dee04935551ef1ca84f7"

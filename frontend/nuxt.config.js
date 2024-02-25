@@ -40,7 +40,7 @@ export default {
   axios: {
     baseURL: '/api',
   },
-  proxy: ['http://backend:8000/api'],
+  proxy: ['http://backend:5002/api'],
   auth: {
     redirect: {
       login: '/login',
@@ -70,8 +70,5 @@ export default {
   build: {
     target: 'modern',
     transpile: ['vis-data', 'vis-timeline', 'photoswipe'],
-  },
-  generate: {
-    dir: '/tmp/nuxt_output',
   },
 }
