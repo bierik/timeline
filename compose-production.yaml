@@ -3,19 +3,25 @@ version: "3"
 services:
   web:
     container_name: web
+    image: docker.io/bierik/timeline-web
     build:
       context: ./frontend
       dockerfile: docker/Dockerfile
+      platforms:
+        - linux/amd64
     ports:
-      - 5000:80
+      - 80:80
     depends_on:
       - api
 
   api:
     container_name: api
+    image: docker.io/bierik/timeline-api
     build:
       context: ./backend
       dockerfile: docker/Dockerfile
+      platforms:
+        - linux/amd64
     environment:
       DJANGO_DATABASE_PASSWORD: postgres
       DJANGO_DATABASE_HOST: db
