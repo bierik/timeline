@@ -5,7 +5,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 SECRET_KEY = "django-insecure-4t0+fq(6892+u&3s=gv48=)9487&oi6e=s&%pn00)-kj^i5g_#"
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["maxi-timeline.app"]
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",

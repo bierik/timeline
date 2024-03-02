@@ -36,11 +36,11 @@ export default {
     '~/plugins/theme',
   ],
   buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts'],
-  modules: ['@nuxtjs/axios', 'vue-toastification/nuxt', '@nuxtjs/auth-next', '@nuxtjs/proxy'],
+  modules: ['@nuxtjs/axios', 'vue-toastification/nuxt', '@nuxtjs/auth-next', ['@nuxtjs/proxy', { xfwd: true }]],
   axios: {
     baseURL: '/api',
   },
-  proxy: ['http://backend:5002/api'],
+  proxy: ['http://backend:8000/api', 'http://backend:8000/media'],
   auth: {
     redirect: {
       login: '/login',
