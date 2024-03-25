@@ -1,5 +1,5 @@
 upstream api {
-    server maxi-timeline-api:8000;
+    server maxi-timeline-backend:8000;
 }
 
 map $sent_http_content_type $expires {

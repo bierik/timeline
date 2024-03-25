@@ -82,7 +82,7 @@ export default {
       this.upload = new tus.Upload(image, {
         endpoint: '/api/upload/',
         retryDelays: [0, 3000, 5000, 10000, 20000],
-        chunkSize: 5242880,
+        chunkSize: 1000000,
         metadata: {
           filename: image.name,
           filetype: image.type,

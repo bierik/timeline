@@ -216,6 +216,27 @@ files = [
 ]
 
 [[package]]
+name = "django-configurations"
+version = "2.5"
+description = "A helper for organizing Django settings."
+optional = false
+python-versions = ">=3.8, <4.0"
+files = [
+    {file = "django-configurations-2.5.tar.gz", hash = "sha256:63fa252c40dc88ea17b8b90f5f4a31a2726e586acb1ff0edc74c228c61f19e5d"},
+    {file = "django_configurations-2.5-py3-none-any.whl", hash = "sha256:cf063b99ad30013df49eaa971bd8543deffb008ff080cf3a92955dbccfe81a5c"},
+]
+
+[package.dependencies]
+django = ">=3.2"
+
+[package.extras]
+cache = ["django-cache-url"]
+database = ["dj-database-url"]
+email = ["dj-email-url"]
+search = ["dj-search-url"]
+testing = ["dj-database-url", "dj-email-url", "dj-search-url", "django-cache-url (>=1.0.0)"]
+
+[[package]]
 name = "django-editorjs-fields"
 version = "0.2.7"
 description = "Django plugin for using Editor.js"
@@ -690,4 +711,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "92114ab3c466236c66dd1d0442d2f299f8b5b50efce5dee04935551ef1ca84f7"
+content-hash = "3c18eb33e0c9b8260abcee0c0af0d7f77fa3a9f1cb88fe574b426dc5c5949eb4"

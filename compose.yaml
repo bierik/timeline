@@ -23,10 +23,6 @@ services:
       - ./backend:/app
     ports:
       - 5002:8000
-    environment:
-      DJANGO_DATABASE_PASSWORD: postgres
-      DJANGO_DATABASE_HOST: db
-      DJANGO_DATABASE_USER: postgres
     depends_on:
       - db
     stdin_open: true

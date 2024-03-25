@@ -2,42 +2,17 @@ version: "3"
 
 services:
   web:
-    container_name: web
     image: docker.io/bierik/timeline-web
     build:
       context: ./frontend
       dockerfile: docker/Dockerfile
       platforms:
         - linux/amd64
-    ports:
-      - 80:80
-    depends_on:
-      - api
 
   api:
-    container_name: api
     image: docker.io/bierik/timeline-api
     build:
       context: ./backend
       dockerfile: docker/Dockerfile
       platforms:
         - linux/amd64
-    environment:
-      DJANGO_DATABASE_PASSWORD: postgres
-      DJANGO_DATABASE_HOST: db
-      DJANGO_DATABASE_USER: postgres
-    env_file:
-      - path: ./.secrets
-        required: true
-    depends_on:
-      - db
-    volumes:
-      - /tmp/tus:/app/tus
-
-  db:
-    container_name: db
-    image: postgres:16.1-alpine3.18
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
