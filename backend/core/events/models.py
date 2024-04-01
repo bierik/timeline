@@ -6,7 +6,7 @@ from django_extensions.db.models import TimeStampedModel
 class Event(TimeStampedModel):
     title = models.CharField(verbose_name=_("Titel"), max_length=255)
     date = models.DateField(verbose_name=_("Datum"))
-    description = models.TextField(verbose_name=_("Beschreibung"), null=True)
+    description = models.TextField(verbose_name=_("Beschreibung"), null=True, blank=True)
     icon = models.CharField(verbose_name=_("Icon"), max_length=255, blank=True)
     relations = models.ManyToManyField(
         "Event",

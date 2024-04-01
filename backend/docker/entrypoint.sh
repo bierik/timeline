@@ -6,6 +6,9 @@ set -o nounset
 export PGPASSWORD="${DJANGO_DATABASE_PASSWORD:-postgres}"
 export PGHOST="${DJANGO_DATABASE_HOST:-db}"
 export PGUSER="${DJANGO_DATABASE_USER:-postgres}"
+export PGPORT="${DJANGO_DATABASE_PORT:-5432}"
+export PGDATABASE="${DJANGO_DATABASE_NAME:-postgres}"
+
 until psql -w -c '\l'; do
   >&2 echo "Postgres is unavailable - sleeping"
   sleep 1

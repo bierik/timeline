@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-screen">
+  <div class="flex flex-col min-h-dvh">
     <div class="bg-primary h-12 sticky top-0 z-30">
       <div class="container items-stretch flex h-full">
         <nuxt-link
@@ -37,7 +37,7 @@
         <div class="grow" />
         <slot name="append" />
         <div class="flex items-center">
-          <nuxt-link :to="{ name: 'user' }" class="mx-4 bg-white w-9 h-9 rounded-full flex items-center justify-center">
+          <nuxt-link :to="{ name: 'user' }" class="mx-4 bg-white w-7 h-7 rounded-full flex items-center justify-center">
             <span v-if="hasSignature">{{ userSignature }}</span>
             <feather v-else size="20" type="user" />
           </nuxt-link>

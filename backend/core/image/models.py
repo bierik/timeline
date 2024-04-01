@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django_cleanup.signals import cleanup_pre_delete
 from django_extensions.db.models import TimeStampedModel
-from sorl.thumbnail import ImageField
+from sorl.thumbnail import ImageField, delete
 
 
 class Image(TimeStampedModel):
@@ -31,3 +32,10 @@ class Image(TimeStampedModel):
         ordering = ["created"]
         verbose_name = _("Bild")
         verbose_name_plural = _("Bilder")
+
+
+def cleanup_thumbnails(**kwargs):
+    delete(kwargs["file"])
+
+
+cleanup_pre_delete.connect(cleanup_thumbnails)

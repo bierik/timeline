@@ -23,13 +23,9 @@
           :key="importedImageGroup.days"
           class="container"
         >
-          <div class="flex flex-wrap mb-4">
-            <div
-              v-for="importedImage in importedImageGroup.values"
-              :key="importedImage.file.name"
-              class="relative w-32 h-32"
-            >
-              <img class="w-32 h-32 object-cover rounded" :src="importedImage.preview" />
+          <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-2 w-full">
+            <div v-for="importedImage in importedImageGroup.values" :key="importedImage.file.name" class="relative">
+              <img class="w-full h-full object-cover rounded aspect-square" :src="importedImage.preview" />
               <button
                 class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 @click="removeImage(importedImage)"
@@ -38,7 +34,7 @@
               </button>
             </div>
           </div>
-          <div class="flex gap-4">
+          <div class="flex gap-x-4 flex-wrap">
             <TextInput
               v-model="importedImageGroup.title"
               :errors="errorsForFieldAndIndex(index, 'title')"
@@ -55,7 +51,7 @@
               v-model="importedImageGroup.dateTimeOriginal"
               :errors="errorsForFieldAndIndex(index, 'date')"
               label="Datum"
-              class="mb-4 block grow"
+              class="mb-4 block grow basis-full md:basis-0"
             />
           </div>
           <label>
@@ -68,9 +64,9 @@
           :key="importedImage.file.name"
           class="container"
         >
-          <div class="flex flex-wrap mb-4">
-            <div class="relative w-32 h-32">
-              <img class="w-32 h-32 object-cover rounded" :src="importedImage.preview" />
+          <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-2 w-full">
+            <div class="relative">
+              <img class="w-full h-full aspect-square object-cover rounded" :src="importedImage.preview" />
               <button
                 class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 @click="removeImage(importedImage)"
@@ -79,7 +75,7 @@
               </button>
             </div>
           </div>
-          <div class="flex gap-4">
+          <div class="flex gap-x-4 flex-wrap">
             <TextInput
               v-model="importedImage.title"
               :errors="errorsForFieldAndIndex(index, 'title', true)"
@@ -96,7 +92,7 @@
               v-model="importedImage.dateTimeOriginal"
               :errors="errorsForFieldAndIndex(index, 'title', true)"
               label="Datum"
-              class="mb-4 block grow"
+              class="mb-4 block grow basis-full md:basis-0"
             />
           </div>
           <label>
@@ -258,7 +254,7 @@ export default {
           const upload = new tus.Upload(importedImage.file, {
             endpoint: '/api/upload/',
             retryDelays: [0, 3000, 5000, 10000, 20000],
-            chunkSize: 5242880,
+            chunkSize: 1000000,
             metadata: {
               filename: uploadFilename,
               filetype: importedImage.file.type,

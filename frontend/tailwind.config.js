@@ -1,4 +1,5 @@
 const config = {
+  safelist: ['overflow-hidden'],
   theme: {
     container: {
       center: true,

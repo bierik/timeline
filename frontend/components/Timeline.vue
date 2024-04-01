@@ -4,14 +4,14 @@
     <div class="flex flex-col fixed bottom-0 right-0 pr-5 pb-20">
       <Button
         v-if="timeline"
-        class="rounded-full px-3 py-3 flex mb-2 justify-center items-center drop-shadow-lg"
+        class="rounded-full px-3 py-3 mb-2 justify-center items-center drop-shadow-lg hidden md:flex"
         @click="zoomIn"
       >
         <feather size="20" type="zoom-in" />
       </Button>
       <Button
         v-if="timeline"
-        class="rounded-full px-3 py-3 flex justify-center items-center mb-2 drop-shadow-lg"
+        class="rounded-full px-3 py-3 justify-center items-center mb-2 drop-shadow-lg hidden md:flex"
         @click="zoomOut"
       >
         <feather size="20" type="zoom-out" />
@@ -47,18 +47,19 @@ export default {
   },
   watch: {
     events(events) {
-      this.timeline.itemsData.clear()
-      this.timeline.itemsData.add(events)
+      this.timeline.itemsData.update(events)
     },
     $route: {
       async handler({ query: { activeEvent } }) {
         await this.initTimeline()
         if (!activeEvent) {
           this.timeline.setSelection([])
+          this.timeline.setOptions({ horizontalScroll: true })
           return
         }
         await this.addEvent(activeEvent)
         this.selectActiveEvent()
+        this.timeline.setOptions({ horizontalScroll: false })
         setTimeout(() => {
           this.timeline.focus(Number.parseInt(activeEvent), { zoom: false })
         }, 0)

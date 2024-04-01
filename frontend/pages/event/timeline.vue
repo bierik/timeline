@@ -94,6 +94,6 @@ export default {
 </script>
 <style>
 .timeline {
-  height: calc(100vh - 3rem);
+  height: calc(100dvh - 3rem);
 }
 </style>

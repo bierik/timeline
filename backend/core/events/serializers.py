@@ -1,10 +1,10 @@
+import io
 import os
 from operator import itemgetter
 from pathlib import Path
 
+import pyvips
 from django.conf import settings
-from django.core.files import File
-from django.core.files.images import get_image_dimensions
 from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail as sorl_get_thumbnail
 
@@ -87,10 +87,10 @@ class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
         new_images = list(filter(lambda image: image["id"] not in existing_image_ids, images))
         for file_name in map(itemgetter("filename"), new_images):
             imagePath = Path(settings.TUS_DESTINATION_DIR) / file_name
-            with open(imagePath, "rb") as image:
-                width, height = get_image_dimensions(image)
-                event_image = Image.objects.create(title="title", event=event, width=width, height=height)
-                event_image.file.save(file_name, File(image))
+            with pyvips.Image.new_from_file(imagePath) as image:
+                image = image.autorot()
+                event_image = Image.objects.create(title="title", event=event, width=image.width, height=image.height)
+                event_image.file.save(file_name, io.BytesIO(image.write_to_buffer(".jpeg")))
                 os.remove(imagePath)
 
     def to_representation(self, instance):

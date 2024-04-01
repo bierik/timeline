@@ -12,5 +12,6 @@
         "backend": true,
         "frontend": true,
       },
+      "ruff.enable": true,
     }
 }

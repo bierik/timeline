@@ -19,7 +19,7 @@ export default {
     },
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { name: 'viewport', content: 'width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no' },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
@@ -33,14 +33,26 @@ export default {
     '~/plugins/filters',
     '~/plugins/axios',
     '~/plugins/feather',
+    '~/plugins/vuex-persist',
     '~/plugins/theme',
   ],
-  buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/pwa', '@nuxtjs/google-fonts'],
-  modules: ['@nuxtjs/axios', 'vue-toastification/nuxt', '@nuxtjs/auth-next', ['@nuxtjs/proxy', { xfwd: true }]],
+  buildModules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts'],
+  modules: [
+    '@nuxtjs/pwa',
+    '@nuxtjs/axios',
+    'vue-toastification/nuxt',
+    '@nuxtjs/auth-next',
+    ['@nuxtjs/proxy', { xfwd: true }],
+  ],
   axios: {
     baseURL: '/api',
   },
-  proxy: ['http://backend:8000/api', 'http://backend:8000/media'],
+  proxy: [
+    'http://backend:8000/api',
+    'http://backend:8000/media',
+    'http://backend:8000/admin',
+    'http://backend:8000/static',
+  ],
   auth: {
     redirect: {
       login: '/login',
@@ -65,6 +77,20 @@ export default {
   googleFonts: {
     families: {
       'Courier Prime': true,
+    },
+  },
+  pwa: {
+    meta: {
+      lang: 'de',
+      nativeUI: true,
+      theme_color: '#ffffff',
+    },
+    manifest: {
+      lang: 'de',
+      useWebmanifestExtension: true,
+    },
+    icon: {
+      purpose: 'any',
     },
   },
   build: {

@@ -38,7 +38,7 @@ export default {
         return this.value.toFormat('yyyy')
       },
       set(year) {
-        if (!/^20\d{2}$/.test(year)) {
+        if (!/^\d{4}$/.test(year)) {
           return
         }
         this.$emit('input', this.value.set({ year }))

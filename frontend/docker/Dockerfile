@@ -12,12 +12,14 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 
 COPY ./assets ./assets
+COPY ./static ./static
 COPY ./components ./components
 COPY ./layouts ./layout
 COPY ./mixins ./mixins
 COPY ./pages ./pages
 COPY ./plugins ./plugins
 COPY ./store ./store
+COPY ./lib ./lib
 COPY ./tailwind.config.js .
 COPY ./nuxt.config.js .
 RUN pnpm run build
@@ -25,6 +27,7 @@ RUN pnpm run build
 FROM nginx:stable-alpine
 
 COPY ./docker/default.conf.template /etc/nginx/templates/default.conf.template
+COPY ./docker/nginx.conf /etc/nginx/nginx.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80

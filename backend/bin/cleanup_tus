@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Define the directories
+TUS_DESTINATION_DIR="/app/tus/tus_destination"
+TUS_INTERMEDIATE_DIR="/app/tus/tus_intermediate"
+
+# Delete files older than one week in tus_destination directory
+find "$TUS_DESTINATION_DIR" -type f -mtime +1 -exec rm -f {} +
+
+# Delete files older than one week in tus_intermediate directory
+find "$TUS_INTERMEDIATE_DIR" -type f -mtime +1 -exec rm -f {} +

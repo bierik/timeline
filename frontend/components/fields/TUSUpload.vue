@@ -1,8 +1,8 @@
 <template>
   <Field v-bind="$attrs" tag="div">
-    <div class="flex flex-wrap gap-x-2 gap-y-2">
-      <div v-for="(image, index) in files" :key="image.name" class="relative">
-        <img :src="image.thumbnail" class="w-32 h-32 object-cover rounded" />
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-2 w-full">
+      <div v-for="(image, index) in files" :key="image.name" class="relative aspect-square">
+        <img :src="image.thumbnail" class="object-cover rounded w-full h-full" />
         <div v-if="image.loading" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex">
           <feather type="loader" animation="spin" />
         </div>
@@ -15,7 +15,7 @@
         </button>
       </div>
 
-      <label class="bg-gray-200 w-32 h-32 relative cursor-pointer rounded">
+      <label class="bg-gray-200 relative cursor-pointer rounded aspect-square">
         <feather type="upload" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
         <input class="hidden" :multiple="multiple" type="file" accept=".jpg,.jpeg,.png" @input="handleFiles" />
       </label>
@@ -27,6 +27,7 @@
 import differenceBy from 'lodash/differenceBy'
 import first from 'lodash/first'
 import isEmpty from 'lodash/isEmpty'
+import reject from 'lodash/reject'
 import * as tus from 'tus-js-client'
 import fieldMixin from '@/components/fields/field-mixin'
 import { readImage, randomFilename } from '@/lib/file'
@@ -55,7 +56,7 @@ export default {
   },
   computed: {
     files() {
-      return this.multiple ? [...this.value, ...this.uploadedFiles] : [this.value].flat()
+      return this.multiple ? [...this.value, ...this.uploadedFiles] : reject([this.value].flat(), isEmpty)
     },
   },
   methods: {

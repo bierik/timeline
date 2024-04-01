@@ -24,7 +24,6 @@
 <script>
 export default {
   async asyncData({ $axios }) {
-    const bla = 1
     const roles = await $axios.$get('/roles/')
     return { roles }
   },

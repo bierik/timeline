@@ -3,8 +3,13 @@
     <div class="container px-4">
       <h1 class="text-xl mb-4 font-bold">Ereignis bearbeiten</h1>
       <Form :errors.sync="errors" class="w-full" :save="save" :cancel="cancel" @success="success">
-        <div class="flex gap-4">
-          <TextInput v-model="person.name" :errors="errorsForField('name')" class="mb-4 block grow" label="Name" />
+        <div class="flex gap-x-4 flex-wrap">
+          <TextInput
+            v-model="person.name"
+            :errors="errorsForField('name')"
+            class="mb-4 block grow basis-full md:basis-0"
+            label="Name"
+          />
           <SelectInput
             v-model="person.role"
             :errors="errorsForField('role')"
@@ -13,9 +18,7 @@
             :options="roleChoices"
           />
         </div>
-        <div class="flex gap-4">
-          <TUSUpload v-model="person.image" class="grow" :errors="errorsForField('image')" label="Bild" />
-        </div>
+        <TUSUpload v-model="person.image" class="grow" :errors="errorsForField('image')" label="Bild" />
         <template #action-before>
           <ButtonDelete @click="remove">Löschen</ButtonDelete>
         </template>

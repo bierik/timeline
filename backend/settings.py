@@ -64,7 +64,7 @@ class Base(Configuration):
     AWS_S3_SIGNATURE_VERSION = "s3v4"
     AWS_S3_CUSTOM_DOMAIN = "%s.s3.amazonaws.com" % AWS_STORAGE_BUCKET_NAME
     AWS_S3_OBJECT_PARAMETERS = {
-        "CacheControl": "max-age=86400",
+        "CacheControl": "max-age=31536000",
     }
     DEFAULT_FILE_STORAGE = "core.storage_backends.MediaStorage"
 
@@ -88,16 +88,20 @@ class Base(Configuration):
 
     @property
     def DATABASES(self):
-        return {
-            "default": {
-                "ENGINE": "django.db.backends.postgresql_psycopg2",
-                "NAME": os.environ.get("DJANGO_DATABASE_NAME", "postgres"),
-                "HOST": os.environ.get("DJANGO_DATABASE_HOST", "db"),
-                "USER": os.environ.get("DJANGO_DATABASE_USER", "postgres"),
-                "PASSWORD": os.environ.get("DJANGO_DATABASE_PASSWORD", "postgres"),
-                "ATOMIC_REQUESTS": True,
-            }
+        options = {}
+        if os.environ.get("DJANGO_DATABASE_REQUIRE_SSL", False):
+            options["sslmode"] = "require"
+        config = {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": os.environ.get("DJANGO_DATABASE_NAME", "postgres"),
+            "HOST": os.environ.get("DJANGO_DATABASE_HOST", "db"),
+            "USER": os.environ.get("DJANGO_DATABASE_USER", "postgres"),
+            "PASSWORD": os.environ.get("DJANGO_DATABASE_PASSWORD", "postgres"),
+            "PORT": os.environ.get("DJANGO_DATABASE_PORT", "5432"),
+            "ATOMIC_REQUESTS": True,
+            "OPTIONS": options,
         }
+        return {"default": config}
 
     AUTH_PASSWORD_VALIDATORS = [
         {

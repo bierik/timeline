@@ -9,9 +9,8 @@ COPY poetry.lock pyproject.toml ./
 RUN --mount=type=cache,target=/root/.cache \
     python -m pip install poetry==1.3.1 && \
     poetry config virtualenvs.create false && \
-    poetry install --only main --no-interaction --no-ansi
-
-RUN python -m pip install uwsgi
+    poetry install --only main --no-interaction --no-ansi \
+    && python -m pip install uwsgi
 
 FROM python:3.12.0-alpine3.18
 
@@ -22,6 +21,7 @@ WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY core ./core
+COPY bin ./bin
 COPY settings.py .
 COPY urls.py .
 COPY wsgi.py .

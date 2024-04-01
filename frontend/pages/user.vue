@@ -3,15 +3,15 @@
     <div class="container px-4">
       <h2 class="text-md font-bold mb-2">Theme</h2>
       <label class="flex">
-        <input v-model="theme" class="mr-1" type="radio" value="sunrise" />
+        <input v-model="themeModel" class="mr-1" type="radio" value="sunrise" />
         Sunrise
       </label>
       <label class="flex">
-        <input v-model="theme" class="mr-1" type="radio" value="ocean" />
+        <input v-model="themeModel" class="mr-1" type="radio" value="ocean" />
         Ocean
       </label>
       <label class="flex mb-6">
-        <input v-model="theme" class="mr-1" type="radio" value="grass" />
+        <input v-model="themeModel" class="mr-1" type="radio" value="grass" />
         Grass
       </label>
 
@@ -32,29 +32,33 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 export default {
   data() {
     return {
       passwordResetData: { password: '', password_validation: '' },
-      theme: localStorage.getItem('theme') || 'sunrise',
     }
   },
   computed: {
+    ...mapState('theme', ['theme']),
     passwordResetValid() {
       if (!(this.passwordResetData.password || this.passwordResetData.password_validation)) {
         return false
       }
       return this.passwordResetData.password === this.passwordResetData.password_validation
     },
-  },
-  watch: {
-    theme(theme) {
-      localStorage.setItem('theme', theme)
-      document.documentElement.removeAttribute('class')
-      document.documentElement.classList.add(`theme-${localStorage.getItem('theme')}`)
+    themeModel: {
+      get() {
+        return this.theme
+      },
+      set(theme) {
+        this.setTheme(theme)
+      },
     },
   },
   methods: {
+    ...mapMutations('theme', ['setTheme']),
     async resetPassowrd() {
       try {
         await this.$axios.$post('/auth/change_password/', this.passwordResetData)

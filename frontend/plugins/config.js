@@ -35,7 +35,7 @@ export default function ({ $config }) {
     zoomMax: Duration.fromObject(MAX_ZOOM).toMillis(),
     zoomMin: Duration.fromObject(MIN_ZOOM).toMillis(),
     horizontalScroll: true,
-    zoomable: false,
+    zoomable: $config.breakpoints.mdAndDown,
   }
 
   Object.assign($config, {

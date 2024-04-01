@@ -1,5 +1,5 @@
 <template>
-  <div :id="holderId" />
+  <div :id="holderId" class="bg-gray-200 border-2 border-gray-200 rounded-lg w-full py-4 text-gray-700" />
 </template>
 
 <script>
@@ -34,6 +34,7 @@ export default {
       this.editor.model.document.on('change:data', () => {
         this.$emit('input', this.editor.getData())
       })
+      this.editor.setData(this.value || '')
     },
     async destroy() {
       if (await this.editor) {
