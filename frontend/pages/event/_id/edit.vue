@@ -13,7 +13,13 @@
           <PersonField v-model="event.people" label="Personen" class="mb-4 grow" />
         </div>
         <div class="flex gap-4">
-          <MultiTUSUpload v-model="event.images" class="grow mb-4" :errors="errorsForField('images')" label="Bilder" />
+          <TUSUpload
+            v-model="event.images"
+            multiple
+            class="grow mb-4"
+            :errors="errorsForField('images')"
+            label="Bilder"
+          />
         </div>
         <div class="flex gap-4">
           <label class="grow">
@@ -30,6 +36,8 @@
 </template>
 
 <script>
+import omit from 'lodash/omit'
+import partialRight from 'lodash/partialRight'
 import formErrorMixin from '@/components/form/form-error-mixin'
 
 export default {
@@ -52,7 +60,8 @@ export default {
       this.$router.push({ name: 'event-timeline', query: this.$route.query })
     },
     async save() {
-      await this.$axios.$patch(`/events/${this.event.id}/`, this.event)
+      const images = this.event.images.map(partialRight(omit, 'thumbnail'))
+      await this.$axios.$patch(`/events/${this.event.id}/`, { ...this.event, images })
     },
     cancel() {
       this.$router.push({ name: 'event-timeline', query: this.$route.query })

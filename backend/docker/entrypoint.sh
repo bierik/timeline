@@ -3,9 +3,10 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-
-export PGPASSWORD=$DJANGO_DATABASE_PASSWORD
-until psql -h $DJANGO_DATABASE_HOST -U $DJANGO_DATABASE_USER -w -c '\l'; do
+export PGPASSWORD="${DJANGO_DATABASE_PASSWORD:-postgres}"
+export PGHOST="${DJANGO_DATABASE_HOST:-db}"
+export PGUSER="${DJANGO_DATABASE_USER:-postgres}"
+until psql -w -c '\l'; do
   >&2 echo "Postgres is unavailable - sleeping"
   sleep 1
 done

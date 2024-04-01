@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import omit from 'lodash/omit'
 import formErrorMixin from '@/components/form/form-error-mixin'
 
 export default {
@@ -42,7 +43,10 @@ export default {
       this.$router.push({ name: 'person', query: this.$route.query })
     },
     async save() {
-      await this.$axios.$patch(`/people/${this.person.id}/`, this.person)
+      await this.$axios.$patch(`/people/${this.person.id}/`, {
+        ...this.person,
+        image: omit(this.person.image, 'thumbnail'),
+      })
     },
     cancel() {
       this.$router.push({ name: 'person', query: this.$route.query })

@@ -1,110 +1,103 @@
 <template>
-  <Field v-bind="$attrs">
-    <div v-if="value" class="relative">
-      <img :src="value.thumbnail" class="w-32 h-32 object-cover rounded" />
-      <button
-        class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        @click="remove"
-      >
-        <feather type="x" />
-      </button>
-    </div>
-    <div v-else-if="loading" class="bg-gray-200 w-32 h-32 flex items-center justify-center rounded">
-      <feather type="loader" animation="spin" />
-    </div>
-    <div v-else class="bg-gray-200 w-32 h-32 relative cursor-pointer rounded">
-      <feather type="upload" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-      <input class="hidden" type="file" accept=".jpg,.jpeg,.png" @input="handleImage" />
+  <Field v-bind="$attrs" tag="div">
+    <div class="flex flex-wrap gap-x-2 gap-y-2">
+      <div v-for="(image, index) in files" :key="image.name" class="relative">
+        <img :src="image.thumbnail" class="w-32 h-32 object-cover rounded" />
+        <div v-if="image.loading" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex">
+          <feather type="loader" animation="spin" />
+        </div>
+        <button
+          v-else
+          class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          @click.stop.prevent="remove(index)"
+        >
+          <feather type="x" />
+        </button>
+      </div>
+
+      <label class="bg-gray-200 w-32 h-32 relative cursor-pointer rounded">
+        <feather type="upload" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+        <input class="hidden" :multiple="multiple" type="file" accept=".jpg,.jpeg,.png" @input="handleFiles" />
+      </label>
     </div>
   </Field>
 </template>
 
 <script>
+import differenceBy from 'lodash/differenceBy'
 import first from 'lodash/first'
-import last from 'lodash/last'
+import isEmpty from 'lodash/isEmpty'
 import * as tus from 'tus-js-client'
-import { v4 as uuidv4 } from 'uuid'
 import fieldMixin from '@/components/fields/field-mixin'
+import { readImage, randomFilename } from '@/lib/file'
+
+function createPendingFile(file) {
+  file.loading = true
+  return file
+}
 
 export default {
   mixins: [fieldMixin],
+  props: {
+    multiple: {
+      type: Boolean,
+      default: () => false,
+    },
+    value: {
+      type: [Array, Object, File],
+      default: () => [],
+    },
+  },
   data() {
     return {
-      bytesUploaded: 0,
-      bytesTotal: 0,
-      upload: null,
-      error: null,
-      image: null,
-      preview: null,
-      loading: false,
+      uploadedFiles: [],
     }
   },
   computed: {
-    errorMessages() {
-      return [this.error].filter(Boolean)
-    },
-    progress() {
-      const fraction = (this.bytesUploaded / this.bytesTotal) * 100
-      return Number.isNaN(fraction) ? 0 : fraction
+    files() {
+      return this.multiple ? [...this.value, ...this.uploadedFiles] : [this.value].flat()
     },
   },
   methods: {
-    remove() {
-      this.$emit('input', null)
-    },
-    randomFilename(filename) {
-      const extension = last(filename.split('.'))
-      return `${uuidv4()}.${extension}`
-    },
-    handleImage(event) {
-      const image = first(event.target.files)
-      this.loading = true
-      this.error = null
-      this.bytesUploaded = 0
-      this.bytesTotal = 0
-
-      if (!image) {
+    async handleFiles(event) {
+      if (isEmpty(event.target.files)) {
         return
       }
-
-      const reader = new FileReader()
-      reader.onload = () => {
-        this.preview = reader.result
-        this.$emit('input', {
-          id: Date.now(),
-          filename: this.upload.options.metadata.filename,
-          thumbnail: reader.result,
+      this.uploadedFiles = (await Promise.all(differenceBy(event.target.files, this.files, 'name').map(readImage))).map(
+        createPendingFile,
+      )
+      const uploads = this.uploadedFiles.map((file, index) => {
+        const filename = randomFilename(file)
+        file.filename = filename
+        file.id = Date.now()
+        return new Promise((resolve) => {
+          const upload = new tus.Upload(file, {
+            endpoint: '/api/upload/',
+            retryDelays: [0, 3000, 5000, 10000, 20000],
+            chunkSize: 1000000,
+            metadata: {
+              filename,
+              filetype: file.type,
+            },
+            onSuccess: () => {
+              file.loading = false
+              this.$set(this.uploadedFiles, index, file)
+              resolve()
+            },
+          })
+          upload.options.metadata.filename = filename
+          upload.start()
         })
-      }
-      reader.readAsDataURL(image)
-
-      const vm = this
-      this.upload = new tus.Upload(image, {
-        endpoint: '/api/upload/',
-        retryDelays: [0, 3000, 5000, 10000, 20000],
-        chunkSize: 1000000,
-        metadata: {
-          filename: image.name,
-          filetype: image.type,
-        },
-        onError(error) {
-          vm.error = error
-        },
-        onProgress(bytesUploaded, bytesTotal) {
-          vm.bytesUploaded = bytesUploaded
-          vm.bytesTotal = bytesTotal
-        },
-        onSuccess() {
-          vm.loading = false
-        },
       })
-      this.upload.findPreviousUploads().then((previousUploads) => {
-        if (previousUploads.length) {
-          this.upload.resumeFromPreviousUpload(previousUploads[0])
-        }
-      })
-      this.upload.options.metadata.filename = this.randomFilename(this.upload.options.metadata.filename)
-      this.upload.start()
+      await Promise.all(uploads)
+      this.$emit('input', this.multiple ? [...this.value, ...this.uploadedFiles] : first(this.uploadedFiles))
+      this.uploadedFiles = []
+    },
+    remove(indexToRemove) {
+      this.$emit(
+        'input',
+        this.files.filter((_, index) => index !== indexToRemove),
+      )
     },
   },
 }

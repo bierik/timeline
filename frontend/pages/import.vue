@@ -29,7 +29,7 @@
               :key="importedImage.file.name"
               class="relative w-32 h-32"
             >
-              <img class="w-32 h-32 object-cover" :src="importedImage.preview" />
+              <img class="w-32 h-32 object-cover rounded" :src="importedImage.preview" />
               <button
                 class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 @click="removeImage(importedImage)"
