@@ -237,17 +237,6 @@ search = ["dj-search-url"]
 testing = ["dj-database-url", "dj-email-url", "dj-search-url", "django-cache-url (>=1.0.0)"]
 
 [[package]]
-name = "django-editorjs-fields"
-version = "0.2.7"
-description = "Django plugin for using Editor.js"
-optional = false
-python-versions = ">=3.6,<4.0"
-files = [
-    {file = "django-editorjs-fields-0.2.7.tar.gz", hash = "sha256:f31d8db403c2a0b0e8a24b320c826a76861b92853f8a911695114dc74344e8aa"},
-    {file = "django_editorjs_fields-0.2.7-py3-none-any.whl", hash = "sha256:2f3f139330ec1a024ed15ad9bd00deb123141eeabca7a3dd4ab8bbb1756ba991"},
-]
-
-[[package]]
 name = "django-extensions"
 version = "3.2.3"
 description = "Extensions for Django"
@@ -711,4 +700,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "3c18eb33e0c9b8260abcee0c0af0d7f77fa3a9f1cb88fe574b426dc5c5949eb4"
+content-hash = "a43306b3839e5092b3f6859e98b577176e3193f36a054ba32a59c731872f8a42"

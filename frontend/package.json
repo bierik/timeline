@@ -13,7 +13,7 @@
   },
   "prettier": "@4tw/prettier-config",
   "dependencies": {
-    "@editorjs/editorjs": "2.26.4",
+    "@ckeditor/ckeditor5-build-inline": "^41.2.1",
     "@egjs/hammerjs": "^2.0.17",
     "@nuxtjs/auth-next": "5.0.0-1667386184.dfbbb54",
     "@nuxtjs/axios": "^5.13.6",

@@ -2,7 +2,7 @@
   <div class="flex flex-col justify-center items-center" :data-event-id="event.id">
     <MorphDialog :open="isActive">
       <div class="flex flex-col h-full pb-10">
-        <span v-dompurify-html="event.description_html" class="text-left text-xs max-h-16 overflow-hidden pr-10" />
+        <span v-dompurify-html="event.description" class="text-left text-xs max-h-16 overflow-hidden pr-10" />
         <div class="grow"></div>
         <div class="flex mb-2">
           <span

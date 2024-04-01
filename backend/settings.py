@@ -8,9 +8,7 @@ from configurations import Configuration, values
 
 class Base(Configuration):
     BASE_DIR = Path(__file__).resolve().parent
-    SECRET_KEY = values.Value(
-        "django-insecure-4t0+fq(6892+u&3s=gv48=)9487&oi6e=s&%pn00)-kj^i5g_#"
-    )
+    SECRET_KEY = values.Value("django-insecure-4t0+fq(6892+u&3s=gv48=)9487&oi6e=s&%pn00)-kj^i5g_#")
     ALLOWED_HOSTS = ["maxi-timeline.app"]
     INSTALLED_APPS = [
         "django.contrib.admin",
@@ -24,7 +22,6 @@ class Base(Configuration):
         "rest_framework",
         "knox",
         "django_tus",
-        "django_editorjs_fields",
         "sorl.thumbnail",
         "core",
         "django_cleanup.apps.CleanupConfig",

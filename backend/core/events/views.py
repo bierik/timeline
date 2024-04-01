@@ -18,6 +18,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+
 class AndModelMultipleChoiceFilter(filters.ModelMultipleChoiceFilter):
     def filter(self, qs, value):
         if value:

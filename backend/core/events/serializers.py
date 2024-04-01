@@ -2,17 +2,16 @@ import os
 from operator import itemgetter
 from pathlib import Path
 
-from core.events import models
-from core.image.models import Image
-from core.image.serializers import ImageCreateSerializer
-from core.image.serializers import ImageSerializer
-from core.people.serializers import PersonSerializer
 from django.conf import settings
 from django.core.files import File
 from django.core.files.images import get_image_dimensions
-from django_editorjs_fields.templatetags.editorjs import editorjs
 from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail as sorl_get_thumbnail
+
+from core.events import models
+from core.image.models import Image
+from core.image.serializers import ImageCreateSerializer, ImageSerializer
+from core.people.serializers import PersonSerializer
 
 
 class EventRelatedSerializer(serializers.ModelSerializer):
@@ -25,7 +24,6 @@ class EventSerializer(serializers.ModelSerializer):
     start = serializers.DateField(source="date")
     images = ImageSerializer(many=True)
     has_images = serializers.SerializerMethodField()
-    description_html = serializers.SerializerMethodField()
     relations = serializers.SerializerMethodField()
     thumbnail = serializers.SerializerMethodField()
     people = PersonSerializer(many=True)
@@ -35,7 +33,6 @@ class EventSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "title",
-            "description_html",
             "description",
             "icon",
             "start",
@@ -49,9 +46,6 @@ class EventSerializer(serializers.ModelSerializer):
 
     def get_has_images(self, event):
         return event.images.exists()
-
-    def get_description_html(self, event):
-        return editorjs(event.description)
 
     def get_thumbnail(self, event):
         if event.images.exists():
@@ -107,5 +101,5 @@ class BulkCreateSerializer(serializers.Serializer):
     title = serializers.CharField()
     images = serializers.ListField(child=serializers.CharField())
     date = serializers.DateField()
-    description = serializers.JSONField(allow_null=True, required=False)
+    description = serializers.CharField(allow_null=True, allow_blank=True, required=False)
     icon = serializers.CharField(allow_null=True, required=False, allow_blank=True)

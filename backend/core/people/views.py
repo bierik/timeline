@@ -15,5 +15,3 @@ class PersonViewSet(
         "partial_update": PersonCreateOrUpdateSerializer,
     }
     queryset = models.Person.objects.all()
-
-

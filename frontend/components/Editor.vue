@@ -1,37 +1,46 @@
 <template>
-  <div :id="holderId" class="bg-gray-200 border-2 border-gray-200 rounded-lg w-full py-4 text-gray-700 flex flex-col" />
+  <div :id="holderId" />
 </template>
 
 <script>
-import EditorJS from '@editorjs/editorjs'
+import BalloonEditor from '@ckeditor/ckeditor5-build-inline'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
   props: {
     value: {
-      type: Object,
-      default: null,
+      type: String,
+      default: '',
     },
   },
   data() {
     return {
-      editor: null,
+      editor: Promise.resolve(null),
       holderId: `editor_${uuidv4()}`,
     }
   },
-  mounted() {
-    if (this.editor) {
-      this.editor.destroy()
-      this.editor = null
-    }
-    this.editor = new EditorJS({
-      holder: this.holderId,
-      data: this.value,
-      onChange: async (api) => {
-        const content = await api.saver.save()
-        this.$emit('input', content)
-      },
-    })
+  async beforeDestroy() {
+    await this.destroy()
+  },
+  async mounted() {
+    await this.init()
+  },
+  methods: {
+    async init() {
+      await this.destroy()
+      this.editor = await BalloonEditor.create(document.getElementById(this.holderId), {
+        toolbar: ['bold', 'italic'],
+      })
+      this.editor.model.document.on('change:data', () => {
+        this.$emit('input', this.editor.getData())
+      })
+    },
+    async destroy() {
+      if (await this.editor) {
+        await this.editor.destroy()
+        this.editor = Promise.resolve(null)
+      }
+    },
   },
 }
 </script>
