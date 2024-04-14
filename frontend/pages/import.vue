@@ -159,7 +159,7 @@ async function extractCreatedDate(files = []) {
     return {
       buffer,
       preview: URL.createObjectURL(new Blob([buffer], { type: file.type })),
-      dateTimeOriginal,
+      dateTimeOriginal: dateTimeOriginal || DateTime.fromMillis(file.lastModified),
       file,
     }
   })
