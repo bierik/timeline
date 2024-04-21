@@ -26,8 +26,8 @@ export default {
       this.$toast.success('Rolle erstellt')
       this.$router.push({ name: 'role' })
     },
-    async save() {
-      await this.$axios.$post('/roles/', this.role)
+    save() {
+      return this.$axios.$post('/roles/', this.role)
     },
     cancel() {
       this.$router.push({ name: 'role' })

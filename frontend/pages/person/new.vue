@@ -49,8 +49,8 @@ export default {
       this.$toast.success('Person erstellt')
       this.$router.push({ name: 'person' })
     },
-    async save() {
-      await this.$axios.$post('/people/', { ...this.person, image: omit(this.person.image, 'thumbnail') })
+    save() {
+      return this.$axios.$post('/people/', { ...this.person, image: omit(this.person.image, 'thumbnail') })
     },
     cancel() {
       this.$router.push({ name: 'person' })

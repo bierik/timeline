@@ -1,7 +1,7 @@
 <template>
   <button
     v-bind="$attrs"
-    class="bg-gray-500 rounded-lg py-2 px-4 text-white leading-tight focus:outline-none focus:bg-gray-400 hover:bg-gray-400"
+    class="bg-gray-500 rounded-lg py-2 px-4 text-white leading-tight focus:outline-none focus:bg-gray-400 hover:bg-gray-400 flex items-center justify-center"
     v-on="$listeners"
   >
     <slot />

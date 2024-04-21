@@ -3,20 +3,23 @@ import os
 from pathlib import Path
 
 import pyvips
-from core.events import models
-from core.events.pagination import CursorPagination
-from core.events.serializers import BulkCreateSerializer
-from core.events.serializers import EventCreateOrUpdateSerializer
-from core.events.serializers import EventSerializer
-from core.image.models import Image
-from core.people.models import Person
-from core.serializers import SerializerActionMixin
 from django.conf import settings
 from django_filters import rest_framework as filters
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+
+from core.events import models
+from core.events.pagination import CursorPagination
+from core.events.serializers import (
+    BulkCreateSerializer,
+    EventCreateOrUpdateSerializer,
+    EventSerializer,
+)
+from core.image.models import Image
+from core.people.models import Person
+from core.serializers import SerializerActionMixin
 
 
 class AndModelMultipleChoiceFilter(filters.ModelMultipleChoiceFilter):
@@ -60,12 +63,21 @@ class EventViewSet(
 
         for event_data in serializer.validated_data:
             images = event_data.pop("images", [])
+            relations = event_data.pop("relations", [])
+            people = event_data.pop("people", [])
             event = models.Event.objects.create(**event_data)
+            event.relations.add(*relations)
+            event.people.add(*people)
             for image_name in images:
                 imagePath = Path(settings.TUS_DESTINATION_DIR) / image_name
                 with pyvips.Image.new_from_file(imagePath) as image:
                     image = image.autorot()
-                    event_image = Image.objects.create(title="title", event=event, width=image.width, height=image.height)
+                    event_image = Image.objects.create(
+                        title="title",
+                        event=event,
+                        width=image.width,
+                        height=image.height,
+                    )
                     event_image.file.save(image_name, io.BytesIO(image.write_to_buffer(".jpeg")))
                     os.remove(imagePath)
 

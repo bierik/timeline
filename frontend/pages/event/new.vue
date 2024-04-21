@@ -55,13 +55,13 @@ export default {
     }
   },
   methods: {
-    success() {
+    success({ id }) {
       this.$toast.success('Ereignis erstellt')
-      this.$router.push('/')
+      this.$router.push({ name: 'event-timeline', query: { activeEvent: id } })
     },
-    async save() {
+    save() {
       const images = this.event.images.map(partialRight(omit, 'thumbnail'))
-      await this.$axios.$post('/events/', { ...this.event, images })
+      return this.$axios.$post('/events/', { ...this.event, images })
     },
     cancel() {
       this.$router.push('/')

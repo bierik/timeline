@@ -31,7 +31,7 @@
           class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
           active-class="bg-primary-400"
         >
-          <feather size="20" type="share-2" />
+          <feather size="20" type="link" />
           <span class="hidden sm:block ml-1">Rollen</span>
         </nuxt-link>
         <div class="grow" />

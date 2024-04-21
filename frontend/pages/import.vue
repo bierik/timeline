@@ -3,7 +3,7 @@
     <div class="container px-4">
       <h1 class="text-xl mb-4 font-bold">Bilder importieren</h1>
       <label
-        class="cursor-pointer bg-primary-300 h-16 rounded-lg py-2 px-4 text-white leading-tight focus:outline-none flex items-center justify-center hover:bg-primary-400"
+        class="cursor-pointer bg-primary-500 focus:bg-primary-400 hover:bg-primary-400 h-16 rounded-lg py-2 px-4 text-white leading-tight focus:outline-none flex items-center justify-center"
       >
         <feather type="file-plus" class="mr-1" />
         <span>Bilder auswählen</span>
@@ -11,7 +11,8 @@
       </label>
       <swiper-container
         ref="swiper"
-        class="mt-8 mb-4"
+        class="pt-8 pb-28"
+        auto-height="true"
         navigation-prev-el="#prev-button"
         navigation-next-el="#next-button"
         navigation-disabled-class="!bg-gray-200"
@@ -34,7 +35,7 @@
               </button>
             </div>
           </div>
-          <div class="flex gap-x-4 flex-wrap">
+          <div class="flex gap-x-4 flex-wrap pt-4">
             <TextInput
               v-model="importedImageGroup.title"
               :errors="errorsForFieldAndIndex(index, 'title')"
@@ -52,6 +53,18 @@
               :errors="errorsForFieldAndIndex(index, 'date')"
               label="Datum"
               class="mb-4 block grow basis-full md:basis-0"
+            />
+            <EventField
+              v-model="importedImageGroup.relations"
+              :errors="errorsForFieldAndIndex(index, 'relations')"
+              label="Verknüpfungen"
+              class="mb-4 grow basis-full"
+            />
+            <PersonField
+              v-model="importedImageGroup.people"
+              :errors="errorsForFieldAndIndex(index, 'people')"
+              label="Personen"
+              class="mb-4 grow basis-full"
             />
           </div>
           <label>
@@ -75,7 +88,7 @@
               </button>
             </div>
           </div>
-          <div class="flex gap-x-4 flex-wrap">
+          <div class="flex gap-x-4 flex-wrap pt-4">
             <TextInput
               v-model="importedImage.title"
               :errors="errorsForFieldAndIndex(index, 'title', true)"
@@ -94,6 +107,18 @@
               label="Datum"
               class="mb-4 block grow basis-full md:basis-0"
             />
+            <EventField
+              v-model="importedImage.relations"
+              :errors="errorsForFieldAndIndex(index, 'relations')"
+              label="Verknüpfungen"
+              class="mb-4 grow basis-full"
+            />
+            <PersonField
+              v-model="importedImage.people"
+              :errors="errorsForFieldAndIndex(index, 'people')"
+              label="Personen"
+              class="mb-4 grow basis-full"
+            />
           </div>
           <label>
             <span class="block text-gray-500 font-bold">Beschreibung</span>
@@ -101,13 +126,15 @@
           </label>
         </swiper-slide>
       </swiper-container>
-      <div v-show="hasImportedImages" class="flex flex-col">
-        <ProgressLinear class="mb-4" :max="imagesCount" :value="activeStep" />
-        <div class="flex">
-          <Button id="prev-button" class="mr-2">Zurück</Button>
-          <Button id="next-button">Weiter</Button>
-          <div class="grow" />
-          <Button :loading="loading" @click="performImport">Importieren</Button>
+      <div v-show="hasImportedImages" class="fixed bottom-0 left-0 right-0 bg-primary-50 z-10">
+        <div class="container p-4 flex flex-col">
+          <ProgressLinear class="mb-4" :max="imagesCount" :value="activeStep" />
+          <div class="flex">
+            <Button id="prev-button" class="mr-2">Zurück</Button>
+            <Button id="next-button">Weiter</Button>
+            <div class="grow" />
+            <Button :loading="loading" @click="performImport">Importieren</Button>
+          </div>
         </div>
       </div>
     </div>
@@ -187,6 +214,8 @@ function extractImagesWithOriginalDate(images) {
         title: '',
         icon: '',
         description: null,
+        relations: [],
+        people: [],
       })
     } else {
       group[index].values.push(importedImage)
@@ -201,6 +230,8 @@ function extractImagesWithMissingOriginalDate(images) {
     title: '',
     icon: '',
     description: null,
+    relations: [],
+    people: [],
   }))
 }
 
@@ -275,14 +306,14 @@ export default {
         const uploadedImages = await Promise.all(imagesToUpload)
         const payload = [
           ...this.groupedImportedImagesWithOriginalDate.map((groupedUploadedImage) => ({
-            ...pick(groupedUploadedImage, ['title', 'icon', 'description']),
+            ...pick(groupedUploadedImage, ['title', 'icon', 'description', 'relations', 'people']),
             date: groupedUploadedImage.dateTimeOriginal,
             images: groupedUploadedImage.values.map(
               (uploadedImage) => find(uploadedImages, { filename: uploadedImage.file.name }).uploadFilename,
             ),
           })),
           ...this.importedImagesWithMissingOriginalDate.map((uploadedImage) => ({
-            ...pick(uploadedImage, ['title', 'icon', 'description']),
+            ...pick(uploadedImage, ['title', 'icon', 'description', 'relations', 'people']),
             date: uploadedImage.dateTimeOriginal,
             images: [find(uploadedImages, { filename: uploadedImage.file.name }).uploadFilename],
           })),

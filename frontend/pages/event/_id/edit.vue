@@ -2,7 +2,15 @@
   <Layout>
     <div class="container px-4">
       <h1 class="text-xl mb-4 font-bold">Ereignis bearbeiten</h1>
-      <Form :errors.sync="errors" class="w-full" :save="save" :cancel="cancel" @success="success">
+      <Form
+        :errors.sync="errors"
+        class="w-full"
+        :save="save"
+        :cancel="cancel"
+        :remove="remove"
+        @success-remove="successRemove"
+        @success="success"
+      >
         <div class="flex gap-x-4 flex-wrap">
           <TextInput v-model="event.title" class="mb-4 block grow" label="Titel" />
           <EmojiField v-model="event.icon" label="Icon" :errors="errorsForField('icon')" content-class="mb-4 block" />
@@ -23,9 +31,6 @@
           <span class="block text-gray-500 font-bold">Beschreibung</span>
           <Editor v-model="event.description" />
         </label>
-        <template #action-before>
-          <ButtonDelete @click="remove">Löschen</ButtonDelete>
-        </template>
       </Form>
     </div>
   </Layout>
@@ -55,22 +60,20 @@ export default {
       this.$toast.success('Ereignis bearbeitet')
       this.$router.push({ name: 'event-timeline', query: this.$route.query })
     },
-    async save() {
+    save() {
       const images = this.event.images.map(partialRight(omit, 'thumbnail'))
-      await this.$axios.$patch(`/events/${this.event.id}/`, { ...this.event, images })
+      return this.$axios.$patch(`/events/${this.event.id}/`, { ...this.event, images })
     },
     cancel() {
       this.$router.push({ name: 'event-timeline', query: this.$route.query })
     },
-    async remove() {
-      try {
-        if (window.confirm('Ereignis wirklich löschen?')) {
-          await this.$axios.$delete(`/events/${this.event.id}/`)
-          this.$router.push({ name: 'event-timeline' })
-          this.$toast.success('Ereignis gelöscht')
-        }
-      } catch (e) {
-        this.$toast.error(JSON.stringify(e.response.data))
+    successRemove() {
+      this.$router.push({ name: 'event-timeline' })
+      this.$toast.success('Ereignis gelöscht')
+    },
+    remove() {
+      if (window.confirm('Ereignis wirklich löschen?')) {
+        return this.$axios.$delete(`/events/${this.event.id}/`)
       }
     },
   },

@@ -103,3 +103,5 @@ class BulkCreateSerializer(serializers.Serializer):
     date = serializers.DateField()
     description = serializers.CharField(allow_null=True, allow_blank=True, required=False)
     icon = serializers.CharField(allow_null=True, required=False, allow_blank=True)
+    relations = serializers.ListField(child=serializers.IntegerField(), required=False)
+    people = serializers.ListField(child=serializers.IntegerField(), required=False)

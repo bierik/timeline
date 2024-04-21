@@ -3,7 +3,7 @@
     <div
       ref="emoji-picker-anchor"
       :class="isOpen ? '' : 'hidden'"
-      class="z-10 bg-black/60 emoji-picker-anchor flex items-center justify-center fixed inset-0"
+      class="z-40 bg-black/60 emoji-picker-anchor flex items-center justify-center fixed inset-0"
       @click="close"
     />
     <div class="flex items-end" :class="contentClass">

@@ -44,7 +44,7 @@
             <li class="flex items-center justify-between py-6 px-4">
               <div class="text-7xl">{{ event.icon }}</div>
               <div class="flex flex-col place-content-center h-full flex-grow px-8">
-                <span class="text-xl">{{ event.title }}</span>
+                <span class="text-xl break-all">{{ event.title }}</span>
                 <small>{{ event.date | toLocaleDateString }}</small>
                 <div>
                   <nuxt-link

@@ -1,11 +1,20 @@
 <template>
-  <form @submit.prevent="_save" @reset.prevent="cancel">
+  <form class="pb-20" @submit.prevent="_save" @reset.prevent="cancel">
     <slot />
-    <div class="flex pt-4">
-      <Button type="submit" :loading="loading" class="mr-2">Speichern</Button>
-      <ButtonSecondary type="reset">Abbrechen</ButtonSecondary>
-      <div class="grow" />
-      <slot name="action-before" />
+    <div class="fixed bottom-0 left-0 right-0 bg-primary-50">
+      <div class="container flex p-4">
+        <slot name="action-before" />
+        <ButtonDelete v-if="!disableRemove" @click="_remove" />
+        <div class="grow" />
+        <ButtonSecondary class="mr-2" type="reset">
+          <feather class="inline-block md:!hidden" size="20" type="x" />
+          <span class="hidden md:block">Abbrechen</span>
+        </ButtonSecondary>
+        <Button type="submit" :loading="loading">
+          <feather class="inline-block md:!hidden" size="20" type="check" />
+          <span class="hidden md:block">Speichern</span>
+        </Button>
+      </div>
     </div>
   </form>
 </template>
