@@ -56,9 +56,9 @@ export default {
     this.event.people = this.event.people.map((person) => person.id)
   },
   methods: {
-    success() {
+    success({ id }) {
       this.$toast.success('Ereignis bearbeitet')
-      this.$router.push({ name: 'event-timeline', query: this.$route.query })
+      this.$router.push({ name: 'event-timeline', query: { activeEvent: id } })
     },
     save() {
       const images = this.event.images.map(partialRight(omit, 'thumbnail'))

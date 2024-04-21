@@ -69,16 +69,6 @@ class EventViewSet(
             event.relations.add(*relations)
             event.people.add(*people)
             for image_name in images:
-                imagePath = Path(settings.TUS_DESTINATION_DIR) / image_name
-                with pyvips.Image.new_from_file(imagePath) as image:
-                    image = image.autorot()
-                    event_image = Image.objects.create(
-                        title="title",
-                        event=event,
-                        width=image.width,
-                        height=image.height,
-                    )
-                    event_image.file.save(image_name, io.BytesIO(image.write_to_buffer(".jpeg")))
-                    os.remove(imagePath)
+                event.add_image(image_name)
 
         return Response()

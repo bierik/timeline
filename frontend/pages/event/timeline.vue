@@ -67,6 +67,7 @@ export default {
     },
     applyFilter(filter) {
       this.filter = { ...this.filter, ...filter }
+      this.$refs.timeline.reset()
       this.fetchEventsForTimeline()
     },
     fetchEventsDebounced: debounce(function fetchEventsDebounced(params) {

@@ -45,8 +45,6 @@ export default {
         src: image.image,
         width: image.dimensions.width,
         height: image.dimensions.height,
-        alt: `${image.title} — ${image.description}`,
-        title: image.title,
         description: image.description,
       }))
     },
@@ -59,18 +57,6 @@ export default {
         pswpModule: () => import('photoswipe/dist/photoswipe.esm.js'),
       }
       this.gallery = new PhotoSwipeLightbox(options)
-      this.gallery.on('uiRegister', () => {
-        this.gallery.pswp.ui.registerElement({
-          name: 'caption',
-          isButton: false,
-          appendTo: 'root',
-          onInit: (el, pswp) => {
-            this.gallery.pswp.on('change', () => {
-              el.innerHTML = this.buildCaption(pswp.currSlide.data)
-            })
-          },
-        })
-      })
       this.gallery.init()
     },
   },

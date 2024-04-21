@@ -13,7 +13,7 @@
           class="flex items-center hover:bg-gray-200 py-6 px-4"
           :to="{ name: 'person-id-edit', params: { id: person.id } }"
         >
-          <img :src="person.image.thumbnail" class="rounded-full mr-6" />
+          <Gallery :images="[person.image]" :thumbnail="person.image.thumbnail" class="rounded-full mr-6" />
           <div class="flex flex-col place-content-center h-full">
             <span class="text-xl">{{ person.name }}</span>
             <small>{{ person.role.name }}</small>

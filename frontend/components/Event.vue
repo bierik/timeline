@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-center items-center" :data-event-id="event.id">
     <MorphDialog :open="isActive">
-      <div class="flex flex-col h-full pb-10">
+      <div class="flex flex-col h-full pb-10 min-h-16">
         <span v-dompurify-html="event.description" class="text-left text-xs pr-10 max-h-[50dvh] overflow-y-auto" />
         <div class="grow"></div>
         <div class="flex mb-2">
@@ -18,7 +18,7 @@
           <span
             v-for="person in event.people"
             :key="`person-${person.id}`"
-            class="flex items-center bg-primary-400 rounded-l-full p-1 pr-2 text-xs mr-1 whitespace-nowrap overflow-x-hidden overflow-ellipsis"
+            class="flex items-center bg-primary-400 rounded-full p-1 pr-3 text-xs mr-1 whitespace-nowrap overflow-x-hidden overflow-ellipsis"
           >
             <img class="w-6 h-6 rounded-full mr-2" :src="person.image.thumbnail" />
             {{ person.name }}

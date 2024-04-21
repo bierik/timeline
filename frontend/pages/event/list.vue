@@ -41,11 +41,14 @@
             class="hover:bg-gray-200 block"
             :to="{ name: 'event-id-edit', params: { id: event.id } }"
           >
-            <li class="flex items-center justify-between py-6 px-4">
-              <div class="text-7xl">{{ event.icon }}</div>
-              <div class="flex flex-col place-content-center h-full flex-grow px-8">
-                <span class="text-xl break-all">{{ event.title }}</span>
-                <small>{{ event.date | toLocaleDateString }}</small>
+            <li class="flex items-center justify-between p-4">
+              <div class="text-3xl">{{ event.icon }}</div>
+              <div
+                class="flex flex-col place-content-center h-full flex-grow"
+                :class="{ 'pl-4': !!event.icon, 'pr-4': !!event.has_images }"
+              >
+                <span class="text-md break-all">{{ event.title }}</span>
+                <small class="text-xs">{{ event.date | toLocaleDateString }}</small>
                 <div>
                   <nuxt-link
                     class="underline text-blue-400 inline-flex items-center"
@@ -59,7 +62,7 @@
                 v-if="event.has_images"
                 :images="event.images"
                 :thumbnail="event.thumbnail"
-                class="rounded-full"
+                class="rounded-full h-20"
               />
             </li>
           </nuxt-link>

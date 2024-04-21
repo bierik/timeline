@@ -117,6 +117,9 @@ export default {
     setWindow(...args) {
       this.timeline.setWindow(...args)
     },
+    reset() {
+      this.timeline.itemsData.clear()
+    },
   },
 }
 </script>
