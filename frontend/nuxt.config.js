@@ -40,7 +40,12 @@ export default {
   modules: [
     '@nuxtjs/pwa',
     '@nuxtjs/axios',
-    'vue-toastification/nuxt',
+    [
+      'vue-toastification/nuxt',
+      {
+        timeout: 2500,
+      },
+    ],
     '@nuxtjs/auth-next',
     ['@nuxtjs/proxy', { xfwd: true }],
   ],

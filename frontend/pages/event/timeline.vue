@@ -1,6 +1,10 @@
 <template>
   <Layout narrow>
     <template #append>
+      <button class="flex items-center text-white px-4 hover:bg-primary-400 h-full" @click="filterDrawer = true">
+        <feather type="filter" size="18" />
+        <span class="hidden sm:block ml-1">Filter</span>
+      </button>
       <Bottomnav>
         <template #activator="{ on }">
           <button class="flex items-center text-white px-4 hover:bg-primary-400 h-full" v-on="on">
@@ -20,10 +24,6 @@
           </nuxt-link>
         </div>
       </Bottomnav>
-      <button class="flex items-center text-white px-4 hover:bg-primary-400 h-full" @click="filterDrawer = true">
-        <feather type="filter" size="18" />
-        <span class="hidden sm:block ml-1">Filter</span>
-      </button>
     </template>
     <MonthSelector :value="monthFilter" class="fixed z-10" @input="setTimelineTime" />
     <Timeline

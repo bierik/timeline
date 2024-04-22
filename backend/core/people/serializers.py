@@ -1,16 +1,16 @@
+import io
 import os
 from pathlib import Path
 
-from core.image.models import Image
-from core.image.serializers import ImageCreateSerializer
-from core.image.serializers import ImageSerializer
-from core.people import models
+import pyvips
 from django.conf import settings
 from django.core.files import File
-from django.core.files.images import get_image_dimensions
 from rest_framework import serializers
-from core.role.models import Role
 
+from core.image.models import Image
+from core.image.serializers import ImageCreateSerializer, ImageSerializer
+from core.people import models
+from core.role.models import Role
 from core.role.serializers import RoleSerializer
 
 
@@ -45,10 +45,18 @@ class PersonCreateOrUpdateSerializer(serializers.ModelSerializer):
             person.image.delete()
         file_name = image["filename"]
         image_path = Path(settings.TUS_DESTINATION_DIR) / file_name
-        with open(image_path, "rb") as image:
-            width, height = get_image_dimensions(image)
-            person_image = Image.objects.create(title="title", person=person, width=width, height=height)
-            person_image.file.save(file_name, File(image))
+        with pyvips.Image.new_from_file(image_path) as image:
+            image = image.autorot()
+            person_image = Image.objects.create(
+                title="title",
+                person=person,
+                width=image.width,
+                height=image.height,
+            )
+            person_image.file.save(
+                file_name,
+                io.BytesIO(image.write_to_buffer(".jpeg", **{"Q": 80, "strip": True})),
+            )
             os.remove(image_path)
 
     def to_representation(self, instance):

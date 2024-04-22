@@ -14,9 +14,7 @@ from core.image.models import Image
 class Event(TimeStampedModel):
     title = models.CharField(verbose_name=_("Titel"), max_length=255)
     date = models.DateField(verbose_name=_("Datum"))
-    description = models.TextField(
-        verbose_name=_("Beschreibung"), null=True, blank=True
-    )
+    description = models.TextField(verbose_name=_("Beschreibung"), null=True, blank=True)
     icon = models.CharField(verbose_name=_("Icon"), max_length=255, blank=True)
     relations = models.ManyToManyField(
         "Event",
@@ -34,14 +32,12 @@ class Event(TimeStampedModel):
         return self.title
 
     def add_image(self, name):
-        imagePath = Path(settings.TUS_DESTINATION_DIR) / name
-        with pyvips.Image.new_from_file(imagePath) as image:
+        image_path = Path(settings.TUS_DESTINATION_DIR) / name
+        with pyvips.Image.new_from_file(image_path) as image:
             image = image.autorot()
-            event_image = Image.objects.create(
-                title="title", event=self, width=image.width, height=image.height
-            )
+            event_image = Image.objects.create(title="title", event=self, width=image.width, height=image.height)
             event_image.file.save(
                 name,
                 io.BytesIO(image.write_to_buffer(".jpeg", **{"Q": 80, "strip": True})),
             )
-            os.remove(imagePath)
+            os.remove(image_path)

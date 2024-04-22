@@ -19,20 +19,13 @@
           <span class="hidden sm:block ml-1">Ereignisse</span>
         </nuxt-link>
         <nuxt-link
-          to="/person"
+          :to="{ name: 'person' }"
+          :exact="false"
           class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
-          active-class="bg-primary-400"
+          :class="{ 'bg-primary-400': ['/person', '/role'].includes($route.fullPath) }"
         >
           <feather size="20" type="user" />
           <span class="hidden sm:block ml-1">Personen</span>
-        </nuxt-link>
-        <nuxt-link
-          to="/role"
-          class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
-          active-class="bg-primary-400"
-        >
-          <feather size="20" type="link" />
-          <span class="hidden sm:block ml-1">Rollen</span>
         </nuxt-link>
         <div class="grow" />
         <slot name="append" />
@@ -61,7 +54,10 @@ export default {
   },
   computed: {
     userSignature() {
-      return [first(Array.from(this.$auth.user.first_name)), first(Array.from(this.$auth.user.last_name))].join('')
+      return [
+        first(Array.from(this.$auth.user.first_name || '')),
+        first(Array.from(this.$auth.user.last_name || '')),
+      ].join('')
     },
     hasSignature() {
       return !!this.userSignature

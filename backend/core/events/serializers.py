@@ -49,9 +49,7 @@ class EventSerializer(serializers.ModelSerializer):
 
     def get_thumbnail(self, event):
         if event.images.exists():
-            thumbnail = sorl_get_thumbnail(
-                event.images.first().file, "100x100", crop="center"
-            )
+            thumbnail = sorl_get_thumbnail(event.images.first().file, "100x100", crop="center")
             return self.context["request"].build_absolute_uri(thumbnail.url)
         return None
 
@@ -86,9 +84,7 @@ class EventCreateOrUpdateSerializer(serializers.ModelSerializer):
 
         event.images.exclude(id__in=map(itemgetter("id"), images)).delete()
         existing_image_ids = list(event.images.values_list("id", flat=True))
-        new_images = list(
-            filter(lambda image: image["id"] not in existing_image_ids, images)
-        )
+        new_images = list(filter(lambda image: image["id"] not in existing_image_ids, images))
         for file_name in map(itemgetter("filename"), new_images):
             event.add_image(file_name)
 
@@ -100,9 +96,7 @@ class BulkCreateSerializer(serializers.Serializer):
     title = serializers.CharField()
     images = serializers.ListField(child=serializers.CharField())
     date = serializers.DateField()
-    description = serializers.CharField(
-        allow_null=True, allow_blank=True, required=False
-    )
+    description = serializers.CharField(allow_null=True, allow_blank=True, required=False)
     icon = serializers.CharField(allow_null=True, required=False, allow_blank=True)
     relations = serializers.ListField(child=serializers.IntegerField(), required=False)
     people = serializers.ListField(child=serializers.IntegerField(), required=False)
