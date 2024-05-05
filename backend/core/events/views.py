@@ -1,9 +1,3 @@
-import io
-import os
-from pathlib import Path
-
-import pyvips
-from django.conf import settings
 from django_filters import rest_framework as filters
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
@@ -17,7 +11,6 @@ from core.events.serializers import (
     EventCreateOrUpdateSerializer,
     EventSerializer,
 )
-from core.image.models import Image
 from core.people.models import Person
 from core.serializers import SerializerActionMixin
 
@@ -50,7 +43,7 @@ class EventViewSet(
         "create": EventCreateOrUpdateSerializer,
         "partial_update": EventCreateOrUpdateSerializer,
     }
-    queryset = models.Event.objects.all()
+    queryset = models.Event.objects.prefetch_related("images", "relations", "people").all()
     filter_backends = (filters.DjangoFilterBackend, OrderingFilter)
     filterset_class = EventFilter
     pagination_class = CursorPagination

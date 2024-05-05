@@ -35,39 +35,36 @@
     </NavigationDrawer>
     <div class="container">
       <ul>
-        <template v-for="event in events">
+        <li v-for="event in events" :key="event.id">
           <nuxt-link
-            :key="event.id"
-            class="hover:bg-gray-200 block"
+            class="hover:bg-gray-200 flex items-center justify-between p-4"
             :to="{ name: 'event-id-edit', params: { id: event.id } }"
           >
-            <li class="flex items-center justify-between p-4">
-              <div class="text-3xl">{{ event.icon }}</div>
-              <div
-                class="flex flex-col place-content-center h-full flex-grow"
-                :class="{ 'pl-4': !!event.icon, 'pr-4': !!event.has_images }"
-              >
-                <span class="text-md break-all">{{ event.title }}</span>
-                <small class="text-xs">{{ event.date | toLocaleDateString }}</small>
-                <div>
-                  <nuxt-link
-                    class="underline text-blue-400 inline-flex items-center"
-                    :to="{ name: 'event-timeline', query: { activeEvent: event.id } }"
-                  >
-                    <feather class="mr-1" size="15" type="map-pin" /> <small>Timeline</small>
-                  </nuxt-link>
-                </div>
+            <div class="text-3xl">{{ event.icon }}</div>
+            <div
+              class="flex flex-col place-content-center h-full flex-grow"
+              :class="{ 'pl-4': !!event.icon, 'pr-4': !!event.has_images }"
+            >
+              <span class="text-md break-all">{{ event.title }}</span>
+              <small class="text-xs">{{ event.date | toLocaleDateString }}</small>
+              <div>
+                <nuxt-link
+                  class="underline text-blue-400 inline-flex items-center"
+                  :to="{ name: 'event-timeline', query: { activeEvent: event.id } }"
+                >
+                  <feather class="mr-1" size="15" type="map-pin" /> <small>Timeline</small>
+                </nuxt-link>
               </div>
-              <Gallery
-                v-if="event.has_images"
-                :images="event.images"
-                :thumbnail="event.thumbnail"
-                class="rounded-full h-20"
-              />
-            </li>
+            </div>
+            <Gallery
+              v-if="event.has_images"
+              :images="event.images"
+              :thumbnail="event.thumbnail"
+              class="rounded-full h-20 w-20"
+            />
           </nuxt-link>
-          <hr :key="`divider-${event.id}`" />
-        </template>
+          <hr />
+        </li>
       </ul>
       <div ref="infiniteScrollAnchor" class="invisible" />
     </div>

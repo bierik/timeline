@@ -1,5 +1,5 @@
 <template>
-  <img :src="thumbnail" class="cursor-zoom-in" @click.prevent.stop="openGallery" />
+  <img width="100" height="100" :src="thumbnail" class="cursor-zoom-in" @click.prevent.stop="openGallery" />
 </template>
 
 <script>

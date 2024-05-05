@@ -1,8 +1,8 @@
-from core.people import models
-from core.people.serializers import PersonCreateOrUpdateSerializer
-from core.people.serializers import PersonSerializer
-from core.serializers import SerializerActionMixin
 from rest_framework.viewsets import ModelViewSet
+
+from core.people import models
+from core.people.serializers import PersonCreateOrUpdateSerializer, PersonSerializer
+from core.serializers import SerializerActionMixin
 
 
 class PersonViewSet(
@@ -14,4 +14,4 @@ class PersonViewSet(
         "create": PersonCreateOrUpdateSerializer,
         "partial_update": PersonCreateOrUpdateSerializer,
     }
-    queryset = models.Person.objects.all()
+    queryset = models.Person.objects.select_related("image").all()

@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import BalloonEditor from '@ckeditor/ckeditor5-build-inline'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
@@ -28,6 +27,7 @@ export default {
   methods: {
     async init() {
       await this.destroy()
+      const { default: BalloonEditor } = await import('@ckeditor/ckeditor5-build-inline')
       this.editor = await BalloonEditor.create(document.getElementById(this.holderId), {
         toolbar: ['bold', 'italic'],
       })

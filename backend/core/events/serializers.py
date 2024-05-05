@@ -1,15 +1,9 @@
-import io
-import os
 from operator import itemgetter
-from pathlib import Path
 
-import pyvips
-from django.conf import settings
 from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail as sorl_get_thumbnail
 
 from core.events import models
-from core.image.models import Image
 from core.image.serializers import ImageCreateSerializer, ImageSerializer
 from core.people.serializers import PersonSerializer
 

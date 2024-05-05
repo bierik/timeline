@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pyvips
 from django.conf import settings
-from django.core.files import File
 from rest_framework import serializers
 
 from core.image.models import Image

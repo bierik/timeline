@@ -2,7 +2,7 @@
   <Field v-bind="$attrs" tag="div">
     <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-2 w-full">
       <div v-for="(image, index) in files" :key="image.name" class="relative aspect-square">
-        <img :src="image.thumbnail" class="object-cover rounded w-full h-full" />
+        <img :src="image.thumbnail" width="100" height="100" class="object-cover rounded w-full h-full" />
         <div v-if="image.loading" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex">
           <feather type="loader" animation="spin" />
         </div>

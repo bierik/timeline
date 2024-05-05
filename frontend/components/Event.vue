@@ -20,7 +20,7 @@
             :key="`person-${person.id}`"
             class="flex items-center bg-primary-400 rounded-full p-1 pr-3 text-xs mr-1 whitespace-nowrap overflow-x-hidden overflow-ellipsis"
           >
-            <img class="w-6 h-6 rounded-full mr-2" :src="person.image.thumbnail" />
+            <img width="100" height="100" class="w-6 h-6 rounded-full mr-2" :src="person.image.thumbnail" />
             {{ person.name }}
           </span>
         </div>
