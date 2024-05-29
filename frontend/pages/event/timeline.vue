@@ -47,20 +47,11 @@ import debounce from 'debounce-async'
 import DateTime from 'luxon/src/datetime'
 
 export default {
-  async asyncData({ $axios, $config }) {
-    const events = (
-      await $axios.$get('/events/', {
-        params: {
-          date_after: DateTime.now().minus($config.FETCH_PADDING).toISODate(),
-          date_before: DateTime.now().plus($config.FETCH_PADDING).toISODate(),
-          ordering: '-date',
-        },
-      })
-    ).results
+  data() {
     return {
+      events: [],
       monthFilter: DateTime.local(),
       filterDrawer: false,
-      events,
       filter: { title: '', people: [], start: null, end: null },
     }
   },
