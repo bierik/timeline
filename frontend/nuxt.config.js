@@ -73,6 +73,7 @@ export default {
       local: {
         token: {
           type: 'Token',
+          maxAge: 0,
         },
         endpoints: {
           login: { url: '/auth/login/', method: 'post' },

@@ -127,7 +127,7 @@ class Base(Configuration):
     THUMBNAIL_FORCE_OVERWRITE = True
 
     REST_KNOX = {
-        "TOKEN_TTL": timedelta(days=30),
+        "TOKEN_TTL": None,
         "USER_SERIALIZER": "core.authentication.serializers.UserSerializer",
     }
     AUTH_USER_MODEL = "core.User"
