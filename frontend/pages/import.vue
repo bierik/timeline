@@ -1,17 +1,23 @@
 <template>
   <Layout>
     <div class="container px-4">
-      <h1 class="text-xl mb-4 font-bold">Bilder importieren</h1>
+      <h1 class="mb-4 text-xl font-bold">Bilder importieren</h1>
       <label
-        class="cursor-pointer bg-primary-500 focus:bg-primary-400 hover:bg-primary-400 h-16 rounded-lg py-2 px-4 text-white leading-tight focus:outline-none flex items-center justify-center"
+        class="flex h-16 cursor-pointer items-center justify-center rounded-lg bg-primary-500 px-4 py-2 leading-tight text-white hover:bg-primary-400 focus:bg-primary-400 focus:outline-none"
       >
-        <feather type="file-plus" class="mr-1" />
+        <Icon name="feather:file-plus" class="mr-1" />
         <span>Bilder auswählen</span>
-        <input class="hidden" type="file" multiple accept=".jpg,.jpeg,.png" @change="loadImages" />
+        <input
+          class="hidden"
+          type="file"
+          multiple
+          accept=".jpg,.jpeg,.png"
+          @change="loadImages"
+        />
       </label>
       <swiper-container
         ref="swiper"
-        class="pt-8 pb-28"
+        class="pb-28 pt-8"
         auto-height="true"
         navigation-prev-el="#prev-button"
         navigation-next-el="#next-button"
@@ -20,22 +26,33 @@
         @progress="makeProgress"
       >
         <swiper-slide
-          v-for="(importedImageGroup, index) in groupedImportedImagesWithOriginalDate"
+          v-for="(
+            importedImageGroup, index
+          ) in groupedImportedImagesWithOriginalDate"
           :key="importedImageGroup.days"
           class="container"
         >
-          <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-2 w-full">
-            <div v-for="importedImage in importedImageGroup.values" :key="importedImage.file.name" class="relative">
-              <img class="w-full h-full object-cover rounded aspect-square" :src="importedImage.preview" />
+          <div
+            class="grid w-full grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-4"
+          >
+            <div
+              v-for="importedImage in importedImageGroup.values"
+              :key="importedImage.file.name"
+              class="relative"
+            >
+              <img
+                class="aspect-square size-full rounded object-cover"
+                :src="importedImage.preview"
+              />
               <button
-                class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-1"
                 @click="removeImage(importedImage)"
               >
-                <feather type="x" />
+                <Icon name="feather:x" />
               </button>
             </div>
           </div>
-          <div class="flex gap-x-4 flex-wrap pt-4">
+          <div class="flex flex-wrap gap-x-4 pt-4">
             <TextInput
               v-model="importedImageGroup.title"
               :errors="errorsForFieldAndIndex(index, 'title')"
@@ -68,27 +85,34 @@
             />
           </div>
           <label>
-            <span class="block text-gray-500 font-bold">Beschreibung</span>
+            <span class="block font-bold text-gray-500">Beschreibung</span>
             <Editor v-model="importedImageGroup.description" />
           </label>
         </swiper-slide>
         <swiper-slide
-          v-for="(importedImage, index) in importedImagesWithMissingOriginalDate"
+          v-for="(
+            importedImage, index
+          ) in importedImagesWithMissingOriginalDate"
           :key="importedImage.file.name"
           class="container"
         >
-          <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-2 w-full">
+          <div
+            class="grid w-full grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-4"
+          >
             <div class="relative">
-              <img class="w-full h-full aspect-square object-cover rounded" :src="importedImage.preview" />
+              <img
+                class="aspect-square size-full rounded object-cover"
+                :src="importedImage.preview"
+              />
               <button
-                class="bg-white flex rounded-full p-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-1"
                 @click="removeImage(importedImage)"
               >
-                <feather type="x" />
+                <Icon name="feather:x" />
               </button>
             </div>
           </div>
-          <div class="flex gap-x-4 flex-wrap pt-4">
+          <div class="flex flex-wrap gap-x-4 pt-4">
             <TextInput
               v-model="importedImage.title"
               :errors="errorsForFieldAndIndex(index, 'title', true)"
@@ -121,19 +145,24 @@
             />
           </div>
           <label>
-            <span class="block text-gray-500 font-bold">Beschreibung</span>
+            <span class="block font-bold text-gray-500">Beschreibung</span>
             <Editor v-model="importedImage.description" />
           </label>
         </swiper-slide>
       </swiper-container>
-      <div v-show="hasImportedImages" class="fixed bottom-0 left-0 right-0 bg-primary-50 z-10">
-        <div class="container p-4 flex flex-col">
+      <div
+        v-show="hasImportedImages"
+        class="fixed inset-x-0 bottom-0 z-10 bg-primary-50"
+      >
+        <div class="container flex flex-col p-4">
           <ProgressLinear class="mb-4" :max="imagesCount" :value="activeStep" />
           <div class="flex">
             <Button id="prev-button" class="mr-2">Zurück</Button>
             <Button id="next-button">Weiter</Button>
             <div class="grow" />
-            <Button :loading="loading" @click="performImport">Importieren</Button>
+            <Button :loading="loading" @click="performImport"
+              >Importieren</Button
+            >
           </div>
         </div>
       </div>
@@ -142,100 +171,105 @@
 </template>
 
 <script>
-import EXIF from 'exif-js'
-import find from 'lodash/find'
-import findIndex from 'lodash/findIndex'
-import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
-import last from 'lodash/last'
-import pick from 'lodash/pick'
-import property from 'lodash/property'
-import reject from 'lodash/reject'
-import size from 'lodash/size'
-import DateTime from 'luxon/src/datetime'
-import { register } from 'swiper/swiper-element-bundle'
+import EXIF from "exif-js";
+import find from "lodash/find";
+import findIndex from "lodash/findIndex";
+import get from "lodash/get";
+import isEmpty from "lodash/isEmpty";
+import last from "lodash/last";
+import pick from "lodash/pick";
+import property from "lodash/property";
+import reject from "lodash/reject";
+import size from "lodash/size";
+import { DateTime } from "luxon";
+import { register } from "swiper/element-bundle";
 
-import * as tus from 'tus-js-client'
-import { v4 as uuidv4 } from 'uuid'
+import * as tus from "tus-js-client";
+import { v4 as uuidv4 } from "uuid";
 
-register()
+register();
 
 function readFileAsArrayBuffer(file) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = () => {
-      resolve([file, reader.result])
-    }
-    reader.onerror = reject
-    reader.readAsArrayBuffer(file)
-  })
+      resolve([file, reader.result]);
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
 }
 
 function parseEXIFDateTime(str) {
   if (!str) {
-    return null
+    return null;
   }
-  const dateTime = DateTime.fromFormat(str, 'yyyy:MM:dd hh:mm:ss')
-  return dateTime.isValid ? dateTime : null
+  const dateTime = DateTime.fromFormat(str, "yyyy:MM:dd hh:mm:ss");
+  return dateTime.isValid ? dateTime : null;
 }
 
 async function extractCreatedDate(files = []) {
-  const arrayBuffers = await Promise.all(Array.from(files).map((f) => readFileAsArrayBuffer(f)))
+  const arrayBuffers = await Promise.all(
+    Array.from(files).map((f) => readFileAsArrayBuffer(f))
+  );
   return arrayBuffers.map(([file, buffer]) => {
-    const dateTimeOriginal = parseEXIFDateTime(get(EXIF.readFromBinaryFile(buffer), 'DateTimeOriginal'))
+    const dateTimeOriginal = parseEXIFDateTime(
+      get(EXIF.readFromBinaryFile(buffer), "DateTimeOriginal")
+    );
     return {
       buffer,
       preview: URL.createObjectURL(new Blob([buffer], { type: file.type })),
-      dateTimeOriginal: dateTimeOriginal || DateTime.fromMillis(file.lastModified),
+      dateTimeOriginal:
+        dateTimeOriginal || DateTime.fromMillis(file.lastModified),
       file,
-    }
-  })
+    };
+  });
 }
 
 function dateTimeToDays(datetime) {
-  return Math.floor(datetime.toSeconds() / 60 / 60 / 24)
+  return Math.floor(datetime.toSeconds() / 60 / 60 / 24);
 }
 
 function randomFilename(filename) {
-  const extension = last(filename.split('.'))
-  return `${uuidv4()}.${extension}`
+  const extension = last(filename.split("."));
+  return `${uuidv4()}.${extension}`;
 }
 
 function extractImagesWithOriginalDate(images) {
-  const group = []
-  images.filter(property('dateTimeOriginal')).forEach((importedImage) => {
-    const days = dateTimeToDays(importedImage.dateTimeOriginal)
-    const index = findIndex(group, (groupEntry) => groupEntry.days === days)
+  const group = [];
+  images.filter(property("dateTimeOriginal")).forEach((importedImage) => {
+    const days = dateTimeToDays(importedImage.dateTimeOriginal);
+    const index = findIndex(group, (groupEntry) => groupEntry.days === days);
     if (index < 0) {
       group.push({
         days,
         dateTimeOriginal: importedImage.dateTimeOriginal.toISODate(),
         values: [importedImage],
-        title: '',
-        icon: '',
+        title: "",
+        icon: "",
         description: null,
         relations: [],
         people: [],
-      })
+      });
     } else {
-      group[index].values.push(importedImage)
+      group[index].values.push(importedImage);
     }
-  })
-  return group
+  });
+  return group;
 }
 
 function extractImagesWithMissingOriginalDate(images) {
-  return reject(images, property('dateTimeOriginal')).map((importedImage) => ({
+  return reject(images, property("dateTimeOriginal")).map((importedImage) => ({
     ...importedImage,
-    title: '',
-    icon: '',
+    title: "",
+    icon: "",
     description: null,
     relations: [],
     people: [],
-  }))
+  }));
 }
 
-export default {
+export default defineNuxtComponent({
   data() {
     return {
       importedImages: [],
@@ -244,46 +278,62 @@ export default {
       activeStep: 1,
       loading: false,
       errors: [],
-    }
+    };
   },
   computed: {
     hasImportedImages() {
-      return !isEmpty(this.importedImages)
+      return !isEmpty(this.importedImages);
     },
     imagesCount() {
-      return size(this.groupedImportedImagesWithOriginalDate) + size(this.importedImagesWithMissingOriginalDate)
+      return (
+        size(this.groupedImportedImagesWithOriginalDate) +
+        size(this.importedImagesWithMissingOriginalDate)
+      );
     },
   },
-  beforeDestroy() {
-    this.importedImages.forEach((importedImage) => URL.revokeObjectURL(importedImage.buffer))
+  beforeUnmount() {
+    this.importedImages.forEach((importedImage) =>
+      URL.revokeObjectURL(importedImage.buffer)
+    );
   },
   methods: {
     errorsForFieldAndIndex(index, field, offsetIndex = false) {
-      const finalIndex = offsetIndex ? index + size(this.groupedImportedImagesWithOriginalDate) : index
-      return get(this.errors[finalIndex], field)
+      const finalIndex = offsetIndex
+        ? index + size(this.groupedImportedImagesWithOriginalDate)
+        : index;
+      return get(this.errors[finalIndex], field);
     },
     makeProgress({ detail: [_, progress] }) {
-      this.activeStep = Math.min(this.imagesCount, 1 + progress * (this.imagesCount - 1))
+      this.activeStep = Math.min(
+        this.imagesCount,
+        1 + progress * (this.imagesCount - 1)
+      );
     },
     async loadImages(event) {
-      this.importedImages = await extractCreatedDate(event.target.files)
-      this.groupedImportedImagesWithOriginalDate = extractImagesWithOriginalDate(this.importedImages)
-      this.importedImagesWithMissingOriginalDate = extractImagesWithMissingOriginalDate(this.importedImages)
+      this.importedImages = await extractCreatedDate(event.target.files);
+      this.groupedImportedImagesWithOriginalDate =
+        extractImagesWithOriginalDate(this.importedImages);
+      this.importedImagesWithMissingOriginalDate =
+        extractImagesWithMissingOriginalDate(this.importedImages);
       setTimeout(() => {
-        this.$refs.swiper.swiper.update()
-      }, 0)
+        this.$refs.swiper.swiper.update();
+      }, 0);
     },
     removeImage(importedImage) {
-      this.importedImages = this.importedImages.filter((i) => i.file.name !== importedImage.file.name)
-      this.groupedImportedImagesWithOriginalDate = extractImagesWithOriginalDate(this.importedImages)
-      this.importedImagesWithMissingOriginalDate = extractImagesWithMissingOriginalDate(this.importedImages)
+      this.importedImages = this.importedImages.filter(
+        (i) => i.file.name !== importedImage.file.name
+      );
+      this.groupedImportedImagesWithOriginalDate =
+        extractImagesWithOriginalDate(this.importedImages);
+      this.importedImagesWithMissingOriginalDate =
+        extractImagesWithMissingOriginalDate(this.importedImages);
     },
     async performImport() {
       const imagesToUpload = this.importedImages.map((importedImage) => {
-        const uploadFilename = randomFilename(importedImage.file.name)
+        const uploadFilename = randomFilename(importedImage.file.name);
         return new Promise((resolve, reject) => {
           const upload = new tus.Upload(importedImage.file, {
-            endpoint: '/api/upload/',
+            endpoint: "/api/upload/",
             retryDelays: [0, 3000, 5000, 10000, 20000],
             chunkSize: 1000000,
             metadata: {
@@ -291,58 +341,81 @@ export default {
               filetype: importedImage.file.type,
             },
             onError(error) {
-              reject(error)
+              reject(error);
             },
             onSuccess() {
-              resolve({ filename: importedImage.file.name, uploadFilename })
+              resolve({ filename: importedImage.file.name, uploadFilename });
             },
-          })
-          upload.options.metadata.filename = uploadFilename
-          upload.start()
-        })
-      })
-      this.loading = true
+          });
+          upload.options.metadata.filename = uploadFilename;
+          upload.start();
+        });
+      });
+      this.loading = true;
       try {
-        const uploadedImages = await Promise.all(imagesToUpload)
+        const uploadedImages = await Promise.all(imagesToUpload);
         const payload = [
-          ...this.groupedImportedImagesWithOriginalDate.map((groupedUploadedImage) => ({
-            ...pick(groupedUploadedImage, ['title', 'icon', 'description', 'relations', 'people']),
-            date: groupedUploadedImage.dateTimeOriginal,
-            images: groupedUploadedImage.values.map(
-              (uploadedImage) => find(uploadedImages, { filename: uploadedImage.file.name }).uploadFilename,
-            ),
-          })),
-          ...this.importedImagesWithMissingOriginalDate.map((uploadedImage) => ({
-            ...pick(uploadedImage, ['title', 'icon', 'description', 'relations', 'people']),
-            date: uploadedImage.dateTimeOriginal,
-            images: [find(uploadedImages, { filename: uploadedImage.file.name }).uploadFilename],
-          })),
-        ]
+          ...this.groupedImportedImagesWithOriginalDate.map(
+            (groupedUploadedImage) => ({
+              ...pick(groupedUploadedImage, [
+                "title",
+                "icon",
+                "description",
+                "relations",
+                "people",
+              ]),
+              date: groupedUploadedImage.dateTimeOriginal,
+              images: groupedUploadedImage.values.map(
+                (uploadedImage) =>
+                  find(uploadedImages, { filename: uploadedImage.file.name })
+                    .uploadFilename
+              ),
+            })
+          ),
+          ...this.importedImagesWithMissingOriginalDate.map(
+            (uploadedImage) => ({
+              ...pick(uploadedImage, [
+                "title",
+                "icon",
+                "description",
+                "relations",
+                "people",
+              ]),
+              date: uploadedImage.dateTimeOriginal,
+              images: [
+                find(uploadedImages, { filename: uploadedImage.file.name })
+                  .uploadFilename,
+              ],
+            })
+          ),
+        ];
         try {
-          await this.$axios.$post('/events/bulk_create/', payload)
-          this.$router.push({ name: 'event-timeline' })
+          await this.$axios.post("/events/bulk_create/", payload);
+          this.$router.push({ name: "index" });
         } catch (error) {
-          const status = get(error, 'response.status')
+          const status = get(error, "response.status");
           if (status >= 400 && status < 500) {
-            this.errors = error.response.data
-            this.$toast.warning('Überprüfen Sie die Eingabefelder auf Fehler.')
+            this.errors = error.response.data;
+            this.$toast.warning("Überprüfen Sie die Eingabefelder auf Fehler.");
           } else if (error >= 500) {
-            this.$toast.error('Es ist ein unerwarteter Fehler aufgetreten.')
+            this.$toast.error("Es ist ein unerwarteter Fehler aufgetreten.");
           } else {
-            throw error
+            throw error;
           }
         } finally {
-          this.loading = false
+          this.loading = false;
         }
       } catch (error) {
-        this.$toast.error('Beim Hochladen der Bilder ist ein unerwarteter Fehler aufgetreten.')
-        return
+        this.$toast.error(
+          "Beim Hochladen der Bilder ist ein unerwarteter Fehler aufgetreten."
+        );
+        return;
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
   },
-}
+});
 </script>
 <style>
 ::range-thumb {

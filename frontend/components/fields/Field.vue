@@ -1,6 +1,6 @@
 <template>
   <component :is="tag" class="flex flex-col items-start">
-    <span class="block text-gray-500 font-bold">{{ label }}</span>
+    <span class="block font-bold text-gray-500">{{ label }}</span>
     <slot />
     <span class="text-red-600">{{ errorText }}</span>
   </component>
@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'Field',
+  name: "Field",
   props: {
     errors: {
       type: Array,
@@ -16,17 +16,17 @@ export default {
     },
     label: {
       type: String,
-      default: () => '',
+      default: () => "",
     },
     tag: {
       type: String,
-      default: () => 'label',
+      default: () => "label",
     },
   },
   computed: {
     errorText() {
-      return this.errors.join('')
+      return this.errors.join("");
     },
   },
-}
+};
 </script>

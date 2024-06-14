@@ -1,17 +1,21 @@
 <template>
   <form class="pb-20" @submit.prevent="_save" @reset.prevent="cancel">
     <slot />
-    <div class="fixed bottom-0 left-0 right-0 bg-primary-50">
+    <div class="fixed inset-x-0 bottom-0 bg-primary-50">
       <div class="container flex p-4">
         <slot name="action-before" />
         <ButtonDelete v-if="!disableRemove" @click="_remove" />
         <div class="grow" />
         <ButtonSecondary class="mr-2" type="reset">
-          <feather class="inline-block md:!hidden" size="20" type="x" />
+          <Icon class="inline-block md:!hidden" size="20" name="feather:x" />
           <span class="hidden md:block">Abbrechen</span>
         </ButtonSecondary>
         <Button type="submit" :loading="loading">
-          <feather class="inline-block md:!hidden" size="20" type="check" />
+          <Icon
+            class="inline-block md:!hidden"
+            size="20"
+            name="feather:check"
+          />
           <span class="hidden md:block">Speichern</span>
         </Button>
       </div>
@@ -20,9 +24,9 @@
 </template>
 
 <script>
-import formMixin from '@/components/form/form-mixin'
+import formMixin from "@/components/form/form-mixin";
 export default {
-  name: 'Form',
+  name: "SubmitForm",
   mixins: [formMixin],
-}
+};
 </script>

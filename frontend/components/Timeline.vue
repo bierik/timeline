@@ -1,39 +1,38 @@
 <template>
   <div class="relative">
     <div ref="timeline" class="h-full" />
-    <div class="flex flex-col fixed bottom-0 right-0 pr-5 pb-20">
+    <div class="fixed bottom-0 right-0 flex flex-col pb-20 pr-5">
       <Button
         v-if="timeline"
-        class="rounded-full px-3 py-3 mb-2 justify-center items-center drop-shadow-lg hidden md:flex"
+        class="mb-2 hidden items-center justify-center rounded-full p-3 drop-shadow-lg md:flex"
         @click="zoomIn"
       >
-        <feather size="20" type="zoom-in" />
+        <Icon size="20" name="feather:zoom-in" />
       </Button>
       <Button
         v-if="timeline"
-        class="rounded-full px-3 py-3 justify-center items-center mb-2 drop-shadow-lg hidden md:flex"
+        class="mb-2 hidden items-center justify-center rounded-full p-3 drop-shadow-lg md:flex"
         @click="zoomOut"
       >
-        <feather size="20" type="zoom-out" />
+        <Icon size="20" name="feather:zoom-out" />
       </Button>
       <Button
         v-if="timeline"
-        class="rounded-full px-3 py-3 flex justify-center items-center drop-shadow-lg"
+        class="flex items-center justify-center rounded-full p-3 drop-shadow-lg"
         @click="goToToday"
       >
-        <feather size="20" type="calendar" />
+        <Icon size="20" name="feather:calendar" />
       </Button>
     </div>
   </div>
 </template>
 
 <script>
-import DateTime from 'luxon/src/datetime'
-import Interval from 'luxon/src/interval'
-import { DataSet } from 'vis-data/esnext'
-import { Timeline } from 'vis-timeline/esnext'
+import { DateTime, Interval } from "luxon";
+import { DataSet } from "vis-data";
+import { Timeline } from "vis-timeline";
 
-export default {
+export default defineNuxtComponent({
   props: {
     events: {
       type: Array,
@@ -43,83 +42,96 @@ export default {
   data() {
     return {
       timeline: null,
-    }
+    };
   },
   watch: {
     events(events) {
-      this.timeline.itemsData.update(events)
+      this.timeline.itemsData.update(events);
     },
-    $route: {
-      async handler({ query: { activeEvent } }) {
-        await this.initTimeline()
+    "$route.query.activeEvent": {
+      async handler(activeEvent) {
         if (!activeEvent) {
-          this.timeline.setSelection([])
-          this.timeline.setOptions({ horizontalScroll: true })
-          return
+          this.timeline.setSelection([]);
+          this.timeline.setOptions({ horizontalScroll: true });
+          return;
         }
-        await this.addEvent(activeEvent)
-        this.selectActiveEvent()
-        this.timeline.setOptions({ horizontalScroll: false })
+        await this.addEvent(activeEvent);
+        this.selectActiveEvent();
+        this.timeline.setOptions({ horizontalScroll: false });
         setTimeout(() => {
-          this.timeline.focus(Number.parseInt(activeEvent), { zoom: false })
-        }, 0)
+          this.timeline.focus(Number.parseInt(activeEvent), { zoom: false });
+        }, 0);
       },
-      immediate: true,
     },
+  },
+  mounted() {
+    this.initTimeline();
   },
   methods: {
     async initTimeline() {
-      await this.$nextTick()
+      await this.$nextTick();
       if (this.timeline) {
-        return
+        return;
       }
-      this.timeline = new Timeline(this.$refs.timeline, new DataSet(this.events), this.$config.TIMELINE_OPTIONS)
-      const now = DateTime.local()
+      this.timeline = new Timeline(
+        this.$refs.timeline,
+        new DataSet(this.events),
+        this.$config.TIMELINE_OPTIONS
+      );
+      this.timeline.setOptions({
+        zoomable: this.$config.device.isTouchDevice,
+      });
+      const now = DateTime.local();
       this.timeline.setWindow(
         now.minus(this.$config.INITIAL_WINDOW).toISODate(),
-        now.plus(this.$config.INITIAL_WINDOW).toISODate(),
-      )
-      this.timeline.on('rangechange', (args) => {
-        this.$emit('rangechange', args)
-      })
-      this.timeline.on('rangechanged', (args) => {
-        const interval = Interval.fromDateTimes(DateTime.fromJSDate(args.start), DateTime.fromJSDate(args.end))
-        const currentTime = interval.divideEqually(2)[0].end
-        this.$emit('rangechanged', { ...args, currentTime })
-      })
-      this.timeline.on('changed', () => this.selectActiveEvent())
+        now.plus(this.$config.INITIAL_WINDOW).toISODate()
+      );
+      this.timeline.on("rangechange", (args) => {
+        this.$emit("rangechange", args);
+      });
+      this.timeline.on("rangechanged", (args) => {
+        const interval = Interval.fromDateTimes(
+          DateTime.fromJSDate(args.start),
+          DateTime.fromJSDate(args.end)
+        );
+        const currentTime = interval.divideEqually(2)[0].end;
+        this.$emit("rangechanged", { ...args, currentTime });
+      });
+      this.timeline.on("changed", () => this.selectActiveEvent());
     },
     hasEvent(id) {
-      return this.timeline.itemsData.getIds().includes(Number.parseInt(id))
+      return this.timeline.itemsData.getIds().includes(Number.parseInt(id));
     },
     async addEvent(id) {
       if (this.hasEvent(id)) {
-        return
+        return;
       }
-      const event = await this.$axios.$get(`/events/${id}/`)
-      this.timeline.itemsData.add(event)
+      const { data: event } = await this.$axios.get(`/events/${id}/`);
+      this.timeline.itemsData.add(event);
     },
     selectActiveEvent() {
-      const eventEl = document.querySelector(`[data-event-id="${this.$route.query.activeEvent}"]`)
+      const eventEl = document.querySelector(
+        `[data-event-id="${this.$route.query.activeEvent}"]`
+      );
       if (eventEl) {
-        eventEl.closest('.vis-item').classList.add('vis-selected')
+        eventEl.closest(".vis-item").classList.add("vis-selected");
       }
     },
     zoomIn() {
-      this.timeline.zoomIn(this.$config.ZOOM_STEP)
+      this.timeline.zoomIn(this.$config.ZOOM_STEP);
     },
     zoomOut() {
-      this.timeline.zoomOut(this.$config.ZOOM_STEP)
+      this.timeline.zoomOut(this.$config.ZOOM_STEP);
     },
     goToToday() {
-      this.timeline.moveTo(DateTime.local().toJSDate())
+      this.timeline.moveTo(DateTime.local().toJSDate());
     },
     setWindow(...args) {
-      this.timeline.setWindow(...args)
+      this.timeline.setWindow(...args);
     },
     reset() {
-      this.timeline.itemsData.clear()
+      this.timeline.itemsData.clear();
     },
   },
-}
+});
 </script>

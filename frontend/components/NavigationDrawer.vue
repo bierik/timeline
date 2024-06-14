@@ -1,33 +1,33 @@
 <template>
-  <div class="group" :class="value ? '' : 'navigation-drawer-close'">
+  <div class="group" :class="modelValue ? '' : 'navigation-drawer-close'">
     <div
-      class="bg-white z-50 fixed inset-y-0 right-0 group-[.navigation-drawer-close]:translate-x-full transition-transform"
+      class="fixed inset-y-0 right-0 z-50 bg-white transition-transform group-[.navigation-drawer-close]:translate-x-full"
     >
       <slot />
     </div>
     <div
-      class="transition-opacity z-40 fixed inset-0 bg-black opacity-60 group-[.navigation-drawer-close]:opacity-0"
-      :class="value ? '' : 'pointer-events-none'"
+      class="fixed inset-0 z-40 bg-black opacity-60 transition-opacity group-[.navigation-drawer-close]:opacity-0"
+      :class="modelValue ? '' : 'pointer-events-none'"
       @click="close"
     />
   </div>
 </template>
 
 <script>
-import { escapeable, modalable } from '@/mixins/modal'
+import { escapeable, modalable } from "@/mixins/modal";
 
-export default {
-  mixins: [escapeable('close'), modalable('value')],
+export default defineNuxtComponent({
+  mixins: [escapeable("close"), modalable("modelValue")],
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
       default: () => false,
     },
   },
   methods: {
     close() {
-      this.$emit('input', false)
+      this.$emit("update:model-value", false);
     },
   },
-}
+});
 </script>

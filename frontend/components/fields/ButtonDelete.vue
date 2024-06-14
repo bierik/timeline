@@ -1,16 +1,15 @@
 <template>
   <button
     v-bind="$attrs"
-    class="bg-red-500 rounded-lg py-2 px-4 text-white leading-tight focus:outline-none focus:bg-red-400 hover:bg-red-400 flex items-center justify-center"
+    class="flex items-center justify-center rounded-lg bg-red-500 px-4 py-2 leading-tight text-white hover:bg-red-400 focus:bg-red-400 focus:outline-none"
     type="button"
-    v-on="$listeners"
   >
-    <feather size="20" type="trash" />
+    <Icon size="20" name="feather:trash" />
   </button>
 </template>
 
 <script>
 export default {
   inheritAttrs: false,
-}
+};
 </script>

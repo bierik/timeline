@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col justify-center items-center h-screen">
-    <form class="bg-slate-50 p-16 rounded" @submit.prevent="login">
+  <div class="flex h-screen flex-col items-center justify-center">
+    <form class="rounded bg-slate-50 p-16" @submit.prevent="login">
       <TextInput
         v-model="credentials.username"
         autofocus
@@ -9,33 +9,43 @@
         autocapitalize="none"
         label="Benutzername"
       />
-      <TextInput v-model="credentials.password" class="mb-4" type="password" label="Passwort" />
+      <TextInput
+        v-model="credentials.password"
+        class="mb-4"
+        type="password"
+        label="Passwort"
+      />
       <Button type="submit" class="w-full">Login</Button>
     </form>
   </div>
 </template>
 
 <script>
-import get from 'lodash/get'
+import get from "lodash/get";
+import { useAuthStore } from "@/store/auth";
 
-export default {
+export default defineNuxtComponent({
   data() {
     return {
       credentials: {},
-    }
+    };
   },
   methods: {
     async login() {
+      const authStore = useAuthStore();
       try {
-        await this.$auth.loginWith('local', { data: this.credentials })
+        await authStore.login(this.credentials);
+        this.$router.push({ name: "index" });
       } catch (error) {
-        const status = get(error, 'response.status')
+        const status = get(error, "response.status");
         if (status >= 400 && status < 500) {
-          this.$toast.warning('Die Zugangsdaten stimmen nicht')
-          this.credentials.password = ''
+          this.$toast.warning("Die Zugangsdaten stimmen nicht");
+          this.credentials.password = "";
+        } else {
+          throw error;
         }
       }
     },
   },
-}
+});
 </script>

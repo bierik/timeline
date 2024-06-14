@@ -1,12 +1,17 @@
-import { DateTime } from 'luxon'
-import Vue from 'vue'
+import { DateTime } from "luxon";
 
 function toLocaleDateString(isoDateString) {
-  const datetime = DateTime.fromISO(isoDateString)
+  const datetime = DateTime.fromISO(isoDateString);
   if (datetime.isValid) {
-    return datetime.toLocaleString(DateTime.DATE_MED)
+    return datetime.toLocaleString(DateTime.DATE_MED);
   }
-  return isoDateString.toLocaleString(DateTime.DATE_MED)
+  return isoDateString.toLocaleString(DateTime.DATE_MED);
 }
 
-Vue.filter('toLocaleDateString', toLocaleDateString)
+export default defineNuxtPlugin(() => {
+  return {
+    provide: {
+      toLocaleDateString: toLocaleDateString,
+    },
+  };
+});

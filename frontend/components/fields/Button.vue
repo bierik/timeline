@@ -2,12 +2,22 @@
   <button
     v-bind="$attrs"
     :type="type"
-    class="relative flex justify-center items-center rounded-lg py-2 px-4 text-white leading-tight focus:outline-none"
+    class="relative flex items-center justify-center rounded-lg px-4 py-2 leading-tight text-white focus:outline-none"
     :disabled="computedDisabled"
-    :class="disabled ? 'bg-gray-200' : 'bg-primary-500 focus:bg-primary-400 hover:bg-primary-400'"
-    v-on="$listeners"
+    :class="
+      disabled
+        ? 'bg-gray-200'
+        : 'bg-primary-500 focus:bg-primary-400 hover:bg-primary-400'
+    "
   >
-    <feather v-if="loading" class="absolute" type="loader" size="20" animation="spin" animation-speed="slow" />
+    <Icon
+      v-if="loading"
+      class="absolute"
+      name="feather:loader"
+      size="20"
+      animation="spin"
+      animation-speed="slow"
+    />
     <div :class="{ invisible: loading }" class="flex items-center">
       <slot />
     </div>
@@ -28,13 +38,13 @@ export default {
     },
     type: {
       type: String,
-      default: () => 'button',
+      default: () => "button",
     },
   },
   computed: {
     computedDisabled() {
-      return this.loading || this.disabled
+      return this.loading || this.disabled;
     },
   },
-}
+};
 </script>

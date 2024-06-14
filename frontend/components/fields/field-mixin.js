@@ -1,22 +1,22 @@
 export default {
   inheritAttrs: false,
   props: {
-    value: {
+    modelValue: {
       required: true,
     },
     targetClass: {
       type: String,
-      default: () => '',
+      default: () => "",
     },
   },
   computed: {
-    modelValue: {
+    value: {
       get() {
-        return this.value
+        return this.modelValue;
       },
-      set(modelValue) {
-        this.$emit('input', modelValue)
+      set(value) {
+        this.$emit("update:model-value", value);
       },
     },
   },
-}
+};

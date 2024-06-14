@@ -1,4 +1,4 @@
-FROM python:3.12.0-alpine3.18 as builder
+FROM python:3.12.4-alpine3.20 as builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ RUN --mount=type=cache,target=/root/.cache \
     poetry install --only main --no-interaction --no-ansi \
     && python -m pip install uwsgi
 
-FROM python:3.12.0-alpine3.18
+FROM python:3.12.4-alpine3.20
 
 RUN apk add --no-cache postgresql vips
 

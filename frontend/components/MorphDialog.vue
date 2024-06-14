@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded-xl p-2 bg-primary-300 shadow-flat absolute bottom-20 scale-0 origin-bottom opacity-0 transition-all duration-300 w-[90vw] max-w-96 max-h-[90dvh] whitespace-normal drop-shadow-xl"
+    class="absolute bottom-20 max-h-[90dvh] w-[90vw] max-w-96 origin-bottom scale-0 whitespace-normal rounded-xl bg-primary-300 p-2 opacity-0 shadow-flat drop-shadow-xl transition-all duration-300"
     :class="activeClass"
     style="z-index: -1"
   >
@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'MorphDialog',
+  name: "MorphDialog",
   props: {
     open: {
       type: Boolean,
@@ -19,8 +19,8 @@ export default {
   },
   computed: {
     activeClass() {
-      return this.open ? 'scale-100 opacity-100' : ''
+      return this.open ? "scale-100 opacity-100" : "";
     },
   },
-}
+};
 </script>

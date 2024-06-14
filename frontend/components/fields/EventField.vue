@@ -1,17 +1,17 @@
 <template>
-  <div>
+  <div v-bind="$attrs">
     <TextInput
       v-model="query"
-      v-bind="$attrs"
+      v-bind="omit($attrs, 'class')"
       placeholder="Nach Ereignissen suchen"
       target-class="rounded-bl-none rounded-br-none"
     />
-    <div class="border-l-2 border-r-2 border-b-2 rounded-bl-md rounded-br-md">
+    <div class="rounded-b-md border-x-2 border-b-2">
       <template v-if="items.length">
         <label
           v-for="(item, index) in items"
           :key="`relation-${item.id}`"
-          class="p-4 block hover:bg-gray-50"
+          class="block p-4 hover:bg-gray-50"
           :class="{ 'border-b-2': index !== items.length - 1 }"
         >
           <input v-model="selectedItems" type="checkbox" :value="item.id" />
@@ -24,11 +24,13 @@
 </template>
 
 <script>
-import debounceAsync from 'debounce-async'
-import isNumber from 'lodash/isNumber'
-import uniqBy from 'lodash/uniqBy'
+import debounce from "lodash/debounce";
+import isNumber from "lodash/isNumber";
+import uniqBy from "lodash/uniqBy";
+import omit from "lodash/omit";
+import pick from "lodash/pick";
 
-export default {
+export default defineNuxtComponent({
   inheritAttrs: false,
   props: {
     exclude: {
@@ -44,65 +46,78 @@ export default {
     return {
       loading: false,
       items: this.value,
-      query: '',
+      query: "",
       itemsCache: this.value,
-    }
+    };
   },
   computed: {
     selectedItems: {
       get() {
-        return this.value.map((value) => (isNumber(value) ? value : value.id))
+        return this.value.map((value) => (isNumber(value) ? value : value.id));
       },
       set(selectedItems) {
-        this.$emit('input', selectedItems)
+        this.$emit("update:model-value", selectedItems);
       },
     },
   },
   watch: {
     query() {
       if (!this.query) {
-        this.items = this.itemsCache
+        this.items = this.itemsCache;
       } else {
-        this.search()
+        this.search();
       }
     },
   },
   mounted() {
     this.$emit(
-      'input',
-      this.value.map((value) => (isNumber(value) ? value : value.id)),
-    )
+      "update:model-value",
+      this.value.map((value) => (isNumber(value) ? value : value.id))
+    );
   },
   methods: {
+    omit,
+    pick,
     async search() {
       if (!this.query) {
-        return
+        return;
       }
       try {
-        await this.debouncedSearch()
+        await this.debouncedSearch();
       } catch (error) {
-        if (error !== 'canceled') {
-          throw error
+        if (error !== "canceled") {
+          throw error;
         }
       }
     },
     selectItem() {
-      this.query = ''
+      this.query = "";
     },
-    debouncedSearch: debounceAsync(async function debouncedSearch() {
-      this.loading = true
-      try {
-        this.items = uniqBy(
-          [...this.itemsCache, ...(await this.$axios.$get('/events/', { params: { title: this.query } })).results],
-          'id',
-        ).filter((item) => item.id !== this.exclude)
-      } catch (e) {
-        this.items = []
-        throw e
-      } finally {
-        this.loading = false
-      }
-    }, 400),
+    debouncedSearch: debounce(
+      async function debouncedSearch() {
+        this.loading = true;
+        try {
+          this.items = uniqBy(
+            [
+              ...this.itemsCache,
+              ...(
+                await this.$axios.get("/events/", {
+                  params: { title: this.query },
+                })
+              ).data.results,
+            ],
+            "id"
+          ).filter((item) => item.id !== this.exclude);
+        } catch (e) {
+          this.items = [];
+          throw e;
+        } finally {
+          this.loading = false;
+        }
+      },
+      400,
+      { leading: true, trailing: false }
+    ),
   },
-}
+});
 </script>

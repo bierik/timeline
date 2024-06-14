@@ -1,25 +1,37 @@
 <template>
-  <Layout :narrow="$config.breakpoints.mdAndDown">
+  <Layout>
     <template #append>
-      <button class="flex items-center text-white px-4 hover:bg-primary-400 h-full" @click="filterDrawer = true">
-        <feather type="filter" size="18" />
-        <span class="hidden sm:block ml-1">Filter</span>
+      <button
+        class="flex h-full items-center px-4 text-white hover:bg-primary-400"
+        @click="filterDrawer = true"
+      >
+        <Icon name="feather:filter" size="18" />
+        <span class="ml-1 hidden sm:block">Filter</span>
       </button>
       <Bottomnav>
         <template #activator="{ on }">
-          <button class="flex items-center text-white px-4 hover:bg-primary-400 h-full" v-on="on">
-            <feather type="plus" size="18" />
-            <span class="hidden sm:block ml-1">Hinzufügen</span>
+          <button
+            class="flex h-full items-center px-4 text-white hover:bg-primary-400"
+            v-on="on"
+          >
+            <Icon name="feather:plus" size="18" />
+            <span class="ml-1 hidden sm:block">Hinzufügen</span>
           </button>
         </template>
         <div class="bg-white">
-          <nuxt-link to="/event/new" class="flex items-center p-4 h-full hover:bg-gray-200">
-            <feather type="plus" size="18" />
+          <nuxt-link
+            to="/event/new"
+            class="flex h-full items-center p-4 hover:bg-gray-200"
+          >
+            <Icon name="feather:plus" size="18" />
             <span class="ml-1">Hinzufügen</span>
           </nuxt-link>
           <hr />
-          <nuxt-link class="flex items-center p-4 h-full hover:bg-gray-200" :to="{ name: 'import' }">
-            <feather type="upload" size="18" />
+          <nuxt-link
+            class="flex h-full items-center p-4 hover:bg-gray-200"
+            :to="{ name: 'import' }"
+          >
+            <Icon name="feather:upload" size="18" />
             <span class="ml-1">Import</span>
           </nuxt-link>
         </div>
@@ -27,32 +39,57 @@
     </template>
     <NavigationDrawer v-model="filterDrawer">
       <div class="p-4">
-        <TextInput class="mb-2" label="Titel" :value="filter.title" @input="applyFilter({ title: $event })" />
-        <DateInput class="mb-2" label="Von" :value="filter.date_after" @input="applyFilter({ date_after: $event })" />
-        <DateInput class="mb-2" label="Bis" :value="filter.date_before" @input="applyFilter({ date_before: $event })" />
-        <PersonField label="Personen" :value="filter.people" @input="applyFilter({ people: $event })" />
+        <TextInput
+          class="mb-2"
+          label="Titel"
+          :model-value="filter.title"
+          @update:model-value="applyFilter({ title: $event })"
+        />
+        <DateInput
+          class="mb-2"
+          label="Von"
+          :model-value="filter.date_after"
+          @update:model-value="applyFilter({ date_after: $event })"
+        />
+        <DateInput
+          class="mb-2"
+          label="Bis"
+          :model-value="filter.date_before"
+          @update:model-value="applyFilter({ date_before: $event })"
+        />
+        <PersonField
+          label="Personen"
+          :model-value="filter.people"
+          @update:model-value="applyFilter({ people: $event })"
+        />
       </div>
     </NavigationDrawer>
     <div class="container">
       <ul>
         <li v-for="event in events" :key="event.id">
           <nuxt-link
-            class="hover:bg-gray-200 flex items-center justify-between p-4"
+            class="flex items-center justify-between p-4 hover:bg-gray-200"
             :to="{ name: 'event-id-edit', params: { id: event.id } }"
           >
             <div class="text-3xl">{{ event.icon }}</div>
             <div
-              class="flex flex-col place-content-center h-full flex-grow"
+              class="flex h-full grow flex-col place-content-center"
               :class="{ 'pl-4': !!event.icon, 'pr-4': !!event.has_images }"
             >
-              <span class="text-md break-all">{{ event.title }}</span>
-              <small class="text-xs">{{ event.date | toLocaleDateString }}</small>
+              <span class="break-all">{{ event.title }}</span>
+              <small class="text-xs">{{
+                $toLocaleDateString(event.date)
+              }}</small>
               <div>
                 <nuxt-link
-                  class="underline text-blue-400 inline-flex items-center"
-                  :to="{ name: 'event-timeline', query: { activeEvent: event.id } }"
+                  class="inline-flex items-center text-blue-400 underline"
+                  :to="{
+                    name: 'index',
+                    query: { activeEvent: event.id },
+                  }"
                 >
-                  <feather class="mr-1" size="15" type="map-pin" /> <small>Timeline</small>
+                  <Icon class="mr-1" size="15" name="feather:map-pin" />
+                  <small>Timeline</small>
                 </nuxt-link>
               </div>
             </div>
@@ -60,7 +97,7 @@
               v-if="event.has_images"
               :images="event.images"
               :thumbnail="event.thumbnail"
-              class="rounded-full h-20 w-20"
+              class="size-20 rounded-full"
             />
           </nuxt-link>
           <hr />
@@ -72,62 +109,78 @@
 </template>
 
 <script>
-import debounce from 'debounce-async'
-import isEmpty from 'lodash/isEmpty'
-import isNull from 'lodash/isNull'
-import negate from 'lodash/negate'
-import pickBy from 'lodash/pickBy'
+import debounce from "lodash/debounce";
+import isEmpty from "lodash/isEmpty";
+import isNull from "lodash/isNull";
+import negate from "lodash/negate";
+import pickBy from "lodash/pickBy";
 
-export default {
+export default defineNuxtComponent({
   data() {
     return {
       filterDrawer: false,
       events: [],
       nextLink: undefined,
-      filter: { ordering: '-date', people: [], title: '', date_after: null, date_before: null },
-    }
+      filter: {
+        ordering: "-date",
+        people: [],
+        title: "",
+        date_after: null,
+        date_before: null,
+      },
+    };
   },
   async mounted() {
-    await this.performSearch()
+    await this.performSearch();
     this.infiniteScrollObserver = new IntersectionObserver(this.nextPage, {
       root: null,
-    })
-    this.infiniteScrollObserver.observe(this.$refs.infiniteScrollAnchor)
+    });
+    this.infiniteScrollObserver.observe(this.$refs.infiniteScrollAnchor);
   },
-  beforeDestroy() {
-    this.infiniteScrollObserver.disconnect()
+  beforeUnmount() {
+    this.infiniteScrollObserver.disconnect();
   },
   methods: {
     nextPage(event) {
       if (!event[0].isIntersecting) {
-        return
+        return;
       }
       if (isNull(this.nextLink)) {
-        return
+        return;
       }
-      this.performSearch()
+      this.performSearch();
     },
     async performSearch() {
       const response = this.nextLink
-        ? await this.$axios.$get(this.nextLink)
-        : await this.$axios.$get('/events/', { params: pickBy(this.filter, negate(isEmpty)) })
-      this.events = this.nextLink ? [...this.events, ...response.results] : response.results
-      this.nextLink = response.next
+        ? (await this.$axios.get(this.nextLink)).data
+        : (
+            await this.$axios.get("/events/", {
+              params: pickBy(this.filter, negate(isEmpty)),
+            })
+          ).data;
+      this.events = this.nextLink
+        ? [...this.events, ...response.results]
+        : response.results;
+      this.nextLink = response.next;
     },
-    applyFilterDebounced: debounce(async function applyFilter(filter) {
-      this.nextLink = undefined
-      this.filter = { ...this.filter, ...filter }
-      await this.performSearch()
-    }, 200),
+    applyFilterDebounced: debounce(
+      async function applyFilter(filter) {
+        this.nextLink = undefined;
+        this.filter = { ...this.filter, ...filter };
+        await this.performSearch();
+      },
+      200,
+      { leading: true, trailing: false }
+    ),
     async applyFilter(filter) {
       try {
-        await this.applyFilterDebounced(filter)
+        await this.applyFilterDebounced(filter);
       } catch (error) {
-        if (error !== 'canceled') {
-          throw error
+        if (error !== "canceled") {
+          throw error;
         }
       }
     },
   },
-}
+});
 </script>

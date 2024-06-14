@@ -1,47 +1,51 @@
 <template>
-  <div :id="holderId" class="bg-gray-200 border-2 border-gray-200 rounded-lg w-full py-4 text-gray-700" />
+  <div
+    :id="$options.holderId"
+    class="w-full rounded-lg border-2 border-gray-200 bg-gray-200 py-4 text-gray-700"
+  />
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from "uuid";
 
-export default {
+export default defineNuxtComponent({
   props: {
-    value: {
+    modelValue: {
       type: String,
-      default: '',
+      default: "",
     },
   },
-  data() {
-    return {
-      editor: Promise.resolve(null),
-      holderId: `editor_${uuidv4()}`,
-    }
-  },
-  async beforeDestroy() {
-    await this.destroy()
+  holderId: `editor_${uuidv4()}`,
+  editor: null,
+  async beforeUnmount() {
+    await this.destroy();
   },
   async mounted() {
-    await this.init()
+    await this.init();
   },
   methods: {
     async init() {
-      await this.destroy()
-      const { default: BalloonEditor } = await import('@ckeditor/ckeditor5-build-inline')
-      this.editor = await BalloonEditor.create(document.getElementById(this.holderId), {
-        toolbar: ['bold', 'italic'],
-      })
-      this.editor.model.document.on('change:data', () => {
-        this.$emit('input', this.editor.getData())
-      })
-      this.editor.setData(this.value || '')
+      await this.destroy();
+      const { default: BalloonEditor } = await import(
+        "@ckeditor/ckeditor5-build-inline"
+      );
+      this.$options.editor = await BalloonEditor.create(
+        document.getElementById(this.$options.holderId),
+        {
+          toolbar: ["bold", "italic"],
+        }
+      );
+      this.$options.editor.model.document.on("change:data", () => {
+        this.$emit("update:model-value", this.$options.editor.getData());
+      });
+      this.$options.editor.setData(this.modelValue || "");
     },
     async destroy() {
-      if (await this.editor) {
-        await this.editor.destroy()
-        this.editor = Promise.resolve(null)
+      if (this.$options.editor && this.$options.editor.state !== "destroyed") {
+        await this.$options.editor.destroy();
+        this.editor = null;
       }
     },
   },
-}
+});
 </script>

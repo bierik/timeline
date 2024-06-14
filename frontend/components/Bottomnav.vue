@@ -3,13 +3,13 @@
     <slot name="activator" v-bind="{ on: { click: open } }" />
     <div class="group" :class="isOpen ? '' : 'bottom-nav-close'">
       <div
-        class="z-30 fixed bottom-0 left-0 right-0 group-[.bottom-nav-close]:translate-y-full transition-transform"
+        class="fixed inset-x-0 bottom-0 z-30 transition-transform group-[.bottom-nav-close]:translate-y-full"
         @click="close"
       >
         <slot />
       </div>
       <div
-        class="transition-opacity z-20 fixed inset-0 bg-black opacity-60 group-[.bottom-nav-close]:opacity-0"
+        class="fixed inset-0 z-20 bg-black opacity-60 transition-opacity group-[.bottom-nav-close]:opacity-0"
         :class="isOpen ? '' : 'pointer-events-none'"
         @click="close"
       />
@@ -17,26 +17,26 @@
   </div>
 </template>
 <script>
-import { escapeable, modalable } from '@/mixins/modal'
+import { escapeable, modalable } from "@/mixins/modal";
 
 export default {
-  name: 'Bottomnav',
-  mixins: [escapeable('close'), modalable('isOpen')],
+  name: "Bottomnav",
+  mixins: [escapeable("close"), modalable("isOpen")],
   data() {
     return {
       isOpen: false,
-    }
+    };
   },
-  beforeDestroy() {
-    this.unlockModal()
+  beforeUnmount() {
+    this.unlockModal();
   },
   methods: {
     close() {
-      this.isOpen = false
+      this.isOpen = false;
     },
     open() {
-      this.isOpen = true
+      this.isOpen = true;
     },
   },
-}
+};
 </script>

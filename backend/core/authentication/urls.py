@@ -1,9 +1,6 @@
-from core.authentication.views import ChangePasswordView
-from core.authentication.views import LoginView
-from core.authentication.views import UserView
+from core.authentication.views import ChangePasswordView, LoginView, UserView
 from django.urls import path
 from knox import views as knox_views
-
 
 urlpatterns = [
     path("change_password/", ChangePasswordView.as_view(), name="change_password"),

@@ -1,8 +1,8 @@
 <template>
   <Field v-bind="$attrs">
     <textarea
-      v-model="modelValue"
-      class="bg-gray-200 appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-primary-300"
+      v-model="value"
+      class="w-full appearance-none rounded-lg border-2 border-gray-200 bg-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-primary-300 focus:bg-white focus:outline-none"
       required
       type="text"
     />
@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import fieldMixin from '@/components/fields/field-mixin'
+import fieldMixin from "@/components/fields/field-mixin";
 
 export default {
   mixins: [fieldMixin],
-}
+};
 </script>

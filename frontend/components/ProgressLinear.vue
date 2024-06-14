@@ -1,12 +1,18 @@
 <template>
-  <div class="w-full bg-gray-500 rounded relative">
-    <div :class="sizeClass" class="bg-primary-500 rounded" :style="barWidthStyle" />
-    <span class="absolute text-xs left-1/2 -translate-x-1/2 top-0 text-white">{{ progressText }}</span>
+  <div class="relative w-full rounded bg-gray-500">
+    <div
+      :class="sizeClass"
+      class="rounded bg-primary-500"
+      :style="barWidthStyle"
+    />
+    <span class="absolute left-1/2 top-0 -translate-x-1/2 text-xs text-white">{{
+      progressText
+    }}</span>
   </div>
 </template>
 <script>
 export default {
-  name: 'ProgressLinear',
+  name: "ProgressLinear",
   props: {
     max: {
       type: Number,
@@ -23,16 +29,16 @@ export default {
   },
   computed: {
     sizeClass() {
-      return `p-${this.size}`
+      return `p-${this.size}`;
     },
     barWidthStyle() {
       return {
         width: `${(this.value / this.max) * 100}%`,
-      }
+      };
     },
     progressText() {
-      return `${this.value} / ${this.max}`
+      return `${this.value} / ${this.max}`;
     },
   },
-}
+};
 </script>

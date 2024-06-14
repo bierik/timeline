@@ -1,38 +1,43 @@
 <template>
-  <div class="flex flex-col min-h-dvh">
-    <div class="bg-primary h-12 sticky top-0 z-30">
-      <div class="container items-stretch flex h-full">
+  <div class="flex min-h-dvh flex-col">
+    <div class="sticky top-0 z-30 h-12 bg-primary">
+      <div class="container flex h-full items-stretch">
         <nuxt-link
-          :to="{ name: 'event-timeline' }"
-          class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
+          :to="{ name: 'index' }"
+          class="flex h-full items-center px-4 text-white hover:bg-primary-400"
           active-class="bg-primary-400"
         >
-          <feather size="20" type="calendar" />
-          <span class="hidden sm:block ml-1">Timeline</span>
+          <Icon name="feather:calendar" size="20" />
+          <span class="ml-1 hidden sm:block">Timeline</span>
         </nuxt-link>
         <nuxt-link
           :to="{ name: 'event-list' }"
-          class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
+          class="flex h-full items-center px-4 text-white hover:bg-primary-400"
           active-class="bg-primary-400"
         >
-          <feather size="20" type="list" />
-          <span class="hidden sm:block ml-1">Ereignisse</span>
+          <Icon size="20" name="feather:list" />
+          <span class="ml-1 hidden sm:block">Ereignisse</span>
         </nuxt-link>
         <nuxt-link
           :to="{ name: 'person' }"
           :exact="false"
-          class="flex items-center text-white px-4 hover:bg-primary-400 h-full"
-          :class="{ 'bg-primary-400': ['/person', '/role'].includes($route.fullPath) }"
+          class="flex h-full items-center px-4 text-white hover:bg-primary-400"
+          :class="{
+            'bg-primary-400': ['/person', '/role'].includes($route.fullPath),
+          }"
         >
-          <feather size="20" type="user" />
-          <span class="hidden sm:block ml-1">Personen</span>
+          <Icon size="20" name="feather:user" />
+          <span class="ml-1 hidden sm:block">Personen</span>
         </nuxt-link>
         <div class="grow" />
         <slot name="append" />
         <div class="flex items-center">
-          <nuxt-link :to="{ name: 'user' }" class="mx-4 bg-white w-7 h-7 rounded-full flex items-center justify-center">
-            <span v-if="hasSignature">{{ userSignature }}</span>
-            <feather v-else size="20" type="user" />
+          <nuxt-link
+            :to="{ name: 'user' }"
+            class="mx-4 flex size-7 items-center justify-center rounded-full bg-white"
+          >
+            <span v-if="hasSignature">{{ signature }}</span>
+            <Icon v-else size="20" name="feather:user" />
           </nuxt-link>
         </div>
       </div>
@@ -43,7 +48,8 @@
   </div>
 </template>
 <script>
-import first from 'lodash/first'
+import { mapState } from "pinia";
+import { useAuthStore } from "@/store/auth";
 
 export default {
   props: {
@@ -53,15 +59,10 @@ export default {
     },
   },
   computed: {
-    userSignature() {
-      return [
-        first(Array.from(this.$auth.user.first_name || '')),
-        first(Array.from(this.$auth.user.last_name || '')),
-      ].join('')
-    },
+    ...mapState(useAuthStore, ["user", "signature"]),
     hasSignature() {
-      return !!this.userSignature
+      return !!this.signature;
     },
   },
-}
+};
 </script>

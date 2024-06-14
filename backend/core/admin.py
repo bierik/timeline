@@ -2,6 +2,7 @@ from core.authentication.models import User
 from core.events.models import Event
 from core.image.models import Image
 from core.people.models import Person
+from core.role.models import Role
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
@@ -27,6 +28,11 @@ class EventAdmin(admin.ModelAdmin):
     list_display_links = ["title"]
     inlines = [ImageInline]
     filter_horizonal = ("relations",)
+
+
+@admin.register(Role)
+class RoleAdmin(admin.ModelAdmin):
+    pass
 
 
 admin.site.register(User, UserAdmin)

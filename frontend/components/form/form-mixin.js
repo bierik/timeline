@@ -1,6 +1,6 @@
-import get from 'lodash/get'
-import isEqual from 'lodash/isEqual'
-import noop from 'lodash/noop'
+import get from "lodash/get";
+import isEqual from "lodash/isEqual";
+import noop from "lodash/noop";
 
 export default {
   props: {
@@ -25,50 +25,50 @@ export default {
     return {
       loading: false,
       valid: null,
-    }
+    };
   },
   computed: {
     disableRemove() {
-      return isEqual(this.remove, noop)
+      return isEqual(this.remove, noop);
     },
   },
   methods: {
     async _remove() {
       try {
-        const response = await this.remove()
-        this.$emit('success-remove', response)
+        const response = await this.remove();
+        this.$emit("success-remove", response);
       } catch (error) {
-        const status = get(error, 'response.status')
+        const status = get(error, "response.status");
         if (status >= 500) {
-          this.$emit('serverError', error)
-          this.$toast.error(JSON.stringify(error.response.data))
+          this.$emit("serverError", error);
+          this.$toast.error(JSON.stringify(error.response.data));
         } else {
-          this.$emit('error', error)
-          throw error
+          this.$emit("error", error);
+          throw error;
         }
       }
     },
     async _save() {
-      this.loading = true
+      this.loading = true;
       try {
-        const response = await this.save()
-        this.$emit('success', response)
+        const response = await this.save();
+        this.$emit("success", response);
       } catch (error) {
-        const status = get(error, 'response.status')
+        const status = get(error, "response.status");
         if (status >= 400 && status < 500) {
-          this.$emit('update:errors', error.response.data)
-          this.$toast.warning('Überprüfen Sie die Eingabefelder auf Fehler.')
-          this.$emit('clientError', error)
+          this.$emit("update:errors", error.response.data);
+          this.$toast.warning("Überprüfen Sie die Eingabefelder auf Fehler.");
+          this.$emit("clientError", error);
         } else if (status >= 500) {
-          this.$emit('serverError', error)
-          this.$toast.error('Es ist ein unerwarteter Fehler aufgetreten.')
+          this.$emit("serverError", error);
+          this.$toast.error("Es ist ein unerwarteter Fehler aufgetreten.");
         } else {
-          this.$emit('error', error)
-          throw error
+          this.$emit("error", error);
+          throw error;
         }
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
   },
-}
+};

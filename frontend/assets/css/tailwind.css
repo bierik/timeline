@@ -7,45 +7,45 @@
 }
 
 .theme-sunrise {
-    --color-primary-DEFAULT: #E15B5B;
-    --color-primary-50: #FDF6F6;
-    --color-primary-100: #FAE5E5;
-    --color-primary-200: #F4C3C3;
-    --color-primary-300: #EEA0A0;
-    --color-primary-400: #E87D7D;
-    --color-primary-500: #E15B5B;
-    --color-primary-600: #D92B2B;
-    --color-primary-700: #AD1F1F;
-    --color-primary-800: #7D1717;
-    --color-primary-900: #4E0E0E;
+  --color-primary-DEFAULT: #e15b5b;
+  --color-primary-50: #fdf6f6;
+  --color-primary-100: #fae5e5;
+  --color-primary-200: #f4c3c3;
+  --color-primary-300: #eea0a0;
+  --color-primary-400: #e87d7d;
+  --color-primary-500: #e15b5b;
+  --color-primary-600: #d92b2b;
+  --color-primary-700: #ad1f1f;
+  --color-primary-800: #7d1717;
+  --color-primary-900: #4e0e0e;
 }
 
 .theme-ocean {
-  --color-primary-DEFAULT: #3B82F6;
-  --color-primary-50: #EBF2FE;
-  --color-primary-100: #D7E6FD;
-  --color-primary-200: #B0CDFB;
-  --color-primary-300: #89B4FA;
-  --color-primary-400: #629BF8;
-  --color-primary-500: #3B82F6;
-  --color-primary-600: #0B61EE;
-  --color-primary-700: #084BB8;
+  --color-primary-DEFAULT: #3b82f6;
+  --color-primary-50: #ebf2fe;
+  --color-primary-100: #d7e6fd;
+  --color-primary-200: #b0cdfb;
+  --color-primary-300: #89b4fa;
+  --color-primary-400: #629bf8;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #0b61ee;
+  --color-primary-700: #084bb8;
   --color-primary-800: #063583;
-  --color-primary-900: #041F4D;
+  --color-primary-900: #041f4d;
 }
 
 .theme-grass {
-  --color-primary-DEFAULT: #486F38;
-  --color-primary-50: #8ABB77;
-  --color-primary-100: #7FB46A;
-  --color-primary-200: #73AD5C;
-  --color-primary-300: #60954B;
+  --color-primary-DEFAULT: #486f38;
+  --color-primary-50: #8abb77;
+  --color-primary-100: #7fb46a;
+  --color-primary-200: #73ad5c;
+  --color-primary-300: #60954b;
   --color-primary-400: #578844;
-  --color-primary-500: #486F38;
-  --color-primary-600: #466D37;
-  --color-primary-700: #3D5F30;
+  --color-primary-500: #486f38;
+  --color-primary-600: #466d37;
+  --color-primary-700: #3d5f30;
   --color-primary-800: #345129;
-  --color-primary-900: #2C4422;
+  --color-primary-900: #2c4422;
 }
 
 .vis-timeline {
@@ -57,7 +57,8 @@
   @apply bg-transparent  !important;
 }
 
-.vis-item.vis-dot, .vis-item.vis-line {
+.vis-item.vis-dot,
+.vis-item.vis-line {
   @apply border-black  !important;
   @apply bg-black  !important;
 }
@@ -96,8 +97,8 @@
 }
 
 .pswp__caption {
- @apply absolute;
- @apply bottom-0;
- @apply left-0;
- @apply right-0;
+  @apply absolute;
+  @apply bottom-0;
+  @apply left-0;
+  @apply right-0;
 }
