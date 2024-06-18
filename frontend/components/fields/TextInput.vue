@@ -1,9 +1,8 @@
 <template>
-  <Field v-bind="$attrs">
+  <Field>
     <input
+      v-bind="$attrs"
       v-model="value"
-      v-bind="omit($attrs, 'class')"
-      :class="targetClass"
       class="w-full appearance-none rounded-lg border-2 border-gray-200 bg-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-primary-300 focus:bg-white focus:outline-none"
       :type="inputType"
     />
@@ -11,19 +10,26 @@
 </template>
 
 <script>
-import omit from "lodash/omit";
-import fieldMixin from "@/components/fields/field-mixin";
-
-export default {
+export default defineNuxtComponent({
   name: "TextInput",
-  mixins: [fieldMixin],
+  props: {
+    modelValue: {
+      type: String,
+      default: () => "",
+    },
+  },
   computed: {
     inputType() {
       return this.$attrs.type || "text";
     },
+    value: {
+      get() {
+        return this.modelValue;
+      },
+      set(value) {
+        this.$emit("update:model-value", value);
+      },
+    },
   },
-  methods: {
-    omit,
-  },
-};
+});
 </script>

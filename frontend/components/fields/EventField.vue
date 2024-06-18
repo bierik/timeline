@@ -1,10 +1,10 @@
 <template>
-  <div v-bind="$attrs">
+  <div>
     <TextInput
       v-model="query"
-      v-bind="omit($attrs, 'class')"
+      :label="$attrs.label"
       placeholder="Nach Ereignissen suchen"
-      target-class="rounded-bl-none rounded-br-none"
+      class="rounded-b-none"
     />
     <div class="rounded-b-md border-x-2 border-b-2">
       <template v-if="items.length">
@@ -28,16 +28,14 @@ import debounce from "lodash/debounce";
 import isNumber from "lodash/isNumber";
 import uniqBy from "lodash/uniqBy";
 import omit from "lodash/omit";
-import pick from "lodash/pick";
 
 export default defineNuxtComponent({
-  inheritAttrs: false,
   props: {
     exclude: {
       type: Number,
       default: () => null,
     },
-    value: {
+    modelValue: {
       type: Array,
       default: () => [],
     },
@@ -45,15 +43,17 @@ export default defineNuxtComponent({
   data() {
     return {
       loading: false,
-      items: this.value,
+      items: this.modelValue,
       query: "",
-      itemsCache: this.value,
+      itemsCache: this.modelValue,
     };
   },
   computed: {
     selectedItems: {
       get() {
-        return this.value.map((value) => (isNumber(value) ? value : value.id));
+        return this.modelValue.map((value) =>
+          isNumber(value) ? value : value.id
+        );
       },
       set(selectedItems) {
         this.$emit("update:model-value", selectedItems);
@@ -72,12 +72,11 @@ export default defineNuxtComponent({
   mounted() {
     this.$emit(
       "update:model-value",
-      this.value.map((value) => (isNumber(value) ? value : value.id))
+      this.modelValue.map((value) => (isNumber(value) ? value : value.id))
     );
   },
   methods: {
     omit,
-    pick,
     async search() {
       if (!this.query) {
         return;

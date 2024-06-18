@@ -7,9 +7,3 @@
     <Icon size="20" name="feather:trash" />
   </button>
 </template>
-
-<script>
-export default {
-  inheritAttrs: false,
-};
-</script>

@@ -1,5 +1,5 @@
 <template>
-  <Field v-bind="$attrs" tag="div">
+  <Field tag="div">
     <div class="grid w-full grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-4">
       <div
         v-for="(image, index) in files"
@@ -33,6 +33,7 @@
           class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         />
         <input
+          ref="fileInput"
           class="hidden"
           :multiple="multiple"
           type="file"
@@ -50,7 +51,6 @@ import first from "lodash/first";
 import isEmpty from "lodash/isEmpty";
 import reject from "lodash/reject";
 import * as tus from "tus-js-client";
-import fieldMixin from "@/components/fields/field-mixin";
 import { readImage, randomFilename } from "@/lib/file";
 
 function createPendingFile(file) {
@@ -59,7 +59,6 @@ function createPendingFile(file) {
 }
 
 export default defineNuxtComponent({
-  mixins: [fieldMixin],
   props: {
     multiple: {
       type: Boolean,
@@ -123,6 +122,7 @@ export default defineNuxtComponent({
           : first(this.uploadedFiles)
       );
       this.uploadedFiles = [];
+      this.$refs.fileInput.value = "";
     },
     remove(indexToRemove) {
       this.$emit(

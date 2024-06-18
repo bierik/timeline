@@ -26,7 +26,6 @@
 
 <script>
 export default {
-  inheritAttrs: false,
   props: {
     loading: {
       type: Boolean,

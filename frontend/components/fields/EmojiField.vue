@@ -6,14 +6,14 @@
       class="fixed inset-0 z-40 flex items-center justify-center bg-black/60"
       @click="close"
     />
-    <div class="flex items-end" :class="contentClass">
+    <div class="flex items-end">
       <TextInput
+        v-bind="omit($attrs, 'class')"
+        v-model="value"
         readonly
         maxlength="1"
         class="w-14"
-        v-bind="omit($attrs, 'class')"
-        @focus="open"
-        @blur="close"
+        @click="open"
       />
     </div>
   </div>
@@ -26,7 +26,7 @@ import omit from "lodash/omit";
 export default defineNuxtComponent({
   mixins: [escapeable("close"), modalable("isOpen")],
   props: {
-    contentClass: {
+    modelValue: {
       type: String,
       default: () => "",
     },
@@ -45,6 +45,16 @@ export default defineNuxtComponent({
       isOpen: false,
       picker,
     };
+  },
+  computed: {
+    value: {
+      get() {
+        return this.modelValue;
+      },
+      set(value) {
+        this.$emit("update:model-value", value);
+      },
+    },
   },
   mounted() {
     document.body.prepend(this.$refs["emoji-picker-anchor"]);

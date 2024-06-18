@@ -1,6 +1,16 @@
 <template>
   <div class="relative">
-    <div ref="timeline" class="h-full" />
+    <div
+      ref="timeline"
+      :style="{ visibility: timeline ? 'visible' : 'hidden' }"
+      class="h-full"
+    />
+    <Icon
+      class="absolute bottom-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+      name="feather:loader"
+      size="50"
+      :style="{ visibility: timeline ? 'hidden' : 'visible' }"
+    />
     <div class="fixed bottom-0 right-0 flex flex-col pb-20 pr-5">
       <Button
         v-if="timeline"
@@ -49,25 +59,29 @@ export default defineNuxtComponent({
       this.timeline.itemsData.update(events);
     },
     "$route.query.activeEvent": {
-      async handler(activeEvent) {
-        if (!activeEvent) {
-          this.timeline.setSelection([]);
-          this.timeline.setOptions({ horizontalScroll: true });
-          return;
-        }
-        await this.addEvent(activeEvent);
-        this.selectActiveEvent();
-        this.timeline.setOptions({ horizontalScroll: false });
-        setTimeout(() => {
-          this.timeline.focus(Number.parseInt(activeEvent), { zoom: false });
-        }, 0);
+      async handler(event) {
+        this.selectEvent(event);
       },
     },
   },
-  mounted() {
-    this.initTimeline();
+  async mounted() {
+    await this.initTimeline();
+    this.selectEvent(this.$route.query.activeEvent);
   },
   methods: {
+    async selectEvent(event) {
+      if (!event) {
+        this.timeline.setSelection([]);
+        this.timeline.setOptions({ horizontalScroll: true });
+        return;
+      }
+      await this.addEvent(event);
+      this.selectActiveEvent();
+      this.timeline.setOptions({ horizontalScroll: false });
+      setTimeout(() => {
+        this.timeline.focus(Number.parseInt(event), { zoom: false });
+      }, 0);
+    },
     async initTimeline() {
       await this.$nextTick();
       if (this.timeline) {
@@ -110,6 +124,9 @@ export default defineNuxtComponent({
       this.timeline.itemsData.add(event);
     },
     selectActiveEvent() {
+      Array.from(document.querySelectorAll(".vis-item")).forEach((item) =>
+        item.classList.remove("vis-selected")
+      );
       const eventEl = document.querySelector(
         `[data-event-id="${this.$route.query.activeEvent}"]`
       );

@@ -33,13 +33,13 @@
           <EventField
             v-model="event.relations"
             label="Verknüpfungen"
-            class="mb-4 grow"
+            class="mb-4 grow basis-full md:basis-0"
             :exclude="excludeFromSearch"
           />
           <PersonField
             v-model="event.people"
             label="Personen"
-            class="mb-4 grow basis-full md:basis-0"
+            class="mb-4 grow"
           />
         </div>
         <TUSUpload
