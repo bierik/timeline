@@ -22,6 +22,8 @@ COPY ./store ./store
 COPY ./lib ./lib
 COPY ./tailwind.config.js .
 COPY ./nuxt.config.js .
+COPY ./pwa-assets.config.js .
+COPY ./app.vue .
 RUN pnpm run generate-pwa-assets
 RUN pnpm run generate
 
