@@ -39,8 +39,7 @@
 
 <script>
 import { DateTime, Interval } from "luxon";
-import { DataSet } from "vis-data";
-import { Timeline } from "vis-timeline";
+import { Timeline } from "vis-timeline/esnext";
 
 export default defineNuxtComponent({
   props: {
@@ -89,7 +88,7 @@ export default defineNuxtComponent({
       }
       this.timeline = new Timeline(
         this.$refs.timeline,
-        new DataSet(this.events),
+        this.events,
         this.$config.TIMELINE_OPTIONS
       );
       this.timeline.setOptions({
