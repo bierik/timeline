@@ -11,7 +11,8 @@
     "lint": "pnpm run lint:eslint && yarn lint:prettier",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
-    "lintfix": "eslint . --fix && prettier --write --list-different ."
+    "lintfix": "eslint . --fix && prettier --write --list-different .",
+    "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-inline": "^41.4.2",
@@ -37,6 +38,8 @@
   "devDependencies": {
     "@nuxt/eslint": "^0.3.13",
     "@nuxtjs/google-fonts": "^3.2.0",
+    "@vite-pwa/assets-generator": "^0.2.4",
+    "@vite-pwa/nuxt": "^0.8.0",
     "autoprefixer": "^10.4.19",
     "eslint": "^9.4.0",
     "eslint-config-prettier": "^9.1.0",

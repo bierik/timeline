@@ -1,5 +1,7 @@
 import { defineNuxtConfig } from "nuxt/config";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: [
@@ -8,7 +10,37 @@ export default defineNuxtConfig({
     "photoswipe/dist/photoswipe.css",
   ],
   ssr: false,
-  modules: ["@nuxt/eslint", "@pinia/nuxt", "@nuxtjs/google-fonts", "nuxt-icon"],
+  modules: [
+    "@nuxt/eslint",
+    "@pinia/nuxt",
+    "@nuxtjs/google-fonts",
+    "nuxt-icon",
+    "@vite-pwa/nuxt",
+  ],
+  pwa: {
+    registerType: "autoUpdate",
+    manifest: {
+      name: "Timeline",
+      short_name: "Timeline",
+      description: "Capture your memories on a timeline",
+      theme_color: "#3b82f6",
+    },
+    pwaAssets: {
+      config: true,
+    },
+    client: {
+      periodicSyncForUpdates: 3600,
+    },
+    devOptions: {
+      enabled: !isProduction,
+    },
+    workbox: {
+      globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+    },
+    injectManifest: {
+      globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+    },
+  },
   postcss: {
     plugins: {
       tailwindcss: {},

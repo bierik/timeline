@@ -9,6 +9,7 @@ WORKDIR /app
 
 COPY pnpm-lock.yaml package.json ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run generate-pwa-assets
 
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=3000

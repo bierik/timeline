@@ -22,6 +22,7 @@ COPY ./store ./store
 COPY ./lib ./lib
 COPY ./tailwind.config.js .
 COPY ./nuxt.config.js .
+RUN pnpm run generate-pwa-assets
 RUN pnpm run generate
 
 FROM nginx:stable-alpine
