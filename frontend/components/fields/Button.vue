@@ -25,7 +25,7 @@
 </template>
 
 <script>
-export default {
+export default defineNuxtComponent({
   props: {
     loading: {
       type: Boolean,
@@ -45,5 +45,5 @@ export default {
       return this.loading || this.disabled;
     },
   },
-};
+});
 </script>

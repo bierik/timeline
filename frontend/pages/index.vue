@@ -2,6 +2,7 @@
   <Layout narrow>
     <template #append>
       <button
+        type="button"
         class="flex h-full items-center px-4 text-white hover:bg-primary-400"
         @click="filterDrawer = true"
       >
@@ -11,6 +12,7 @@
       <Bottomnav>
         <template #activator="{ on }">
           <button
+            type="button"
             class="flex h-full items-center px-4 text-white hover:bg-primary-400"
             v-on="on"
           >
@@ -46,8 +48,8 @@
       ref="timeline"
       :events="events"
       class="h-[calc(100dvh_-_3rem)]"
-      @rangechanged="setMonthFilter"
-      @rangechange="fetchEventsForTimeline"
+      @rangechange="handleRangeChange"
+      @ready="handleReady"
     />
     <NavigationDrawer v-model="filterDrawer">
       <div class="p-4">
@@ -68,7 +70,7 @@
 </template>
 
 <script>
-import debounce from "lodash/debounce";
+import throttle from "lodash/throttle";
 import { DateTime } from "luxon";
 
 export default defineNuxtComponent({
@@ -81,7 +83,15 @@ export default defineNuxtComponent({
     };
   },
   methods: {
-    setMonthFilter({ currentTime }) {
+    handleRangeChange({ currentTime, start, end }) {
+      this.setMonthFilter(currentTime);
+      this.loadEventsThrotteled(start, end);
+    },
+    async handleReady({ currentTime, start, end }) {
+      this.setMonthFilter(currentTime);
+      this.loadEvents(start, end);
+    },
+    setMonthFilter(currentTime) {
       this.monthFilter = currentTime;
     },
     setTimelineTime(monthFilter) {
@@ -96,41 +106,31 @@ export default defineNuxtComponent({
     applyFilter(filter) {
       this.filter = { ...this.filter, ...filter };
       this.$refs.timeline.reset();
-      this.fetchEventsForTimeline();
+      const { start, end } = this.$refs.timeline.getWindow();
+      this.fetchEventsForTimeline(start, end);
     },
-    fetchEventsDebounced: debounce(
-      async function fetchEventsDebounced(params) {
-        const response = await this.$axios.get("/events/", { params });
-        return response;
+    async loadEvents(start, end) {
+      const response = await this.$axios.get("/events/", {
+        params: {
+          date_after: DateTime.fromJSDate(start)
+            .minus(this.$config.FETCH_PADDING)
+            .toISODate(),
+          date_before: DateTime.fromJSDate(end)
+            .plus(this.$config.FETCH_PADDING)
+            .toISODate(),
+          ordering: "-date",
+          ...this.filter,
+        },
+      });
+      this.events = response.data.results;
+    },
+    loadEventsThrotteled: throttle(
+      async function fetchEventsThrotteled(start, end) {
+        await this.loadEvents(start, end);
       },
-      200,
-      { leading: true, trailing: false }
+      500,
+      { leading: false, trailing: true }
     ),
-    async fetchEventsForTimeline({ start, end } = {}) {
-      this.filter = {
-        ...this.filter,
-        start: start || this.filter.start,
-        end: end || this.filter.end,
-      };
-      try {
-        this.events = (
-          await this.fetchEventsDebounced({
-            date_after: DateTime.fromJSDate(start)
-              .minus(this.$config.FETCH_PADDING)
-              .toISODate(),
-            date_before: DateTime.fromJSDate(end)
-              .plus(this.$config.FETCH_PADDING)
-              .toISODate(),
-            ordering: "-date",
-            ...this.filter,
-          })
-        ).data.results;
-      } catch (error) {
-        if (error !== "canceled") {
-          throw error;
-        }
-      }
-    },
   },
 });
 </script>

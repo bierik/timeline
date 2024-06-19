@@ -2,6 +2,7 @@
   <Layout>
     <template #append>
       <button
+        type="button"
         class="flex h-full items-center px-4 text-white hover:bg-primary-400"
         @click="filterDrawer = true"
       >
@@ -11,6 +12,7 @@
       <Bottomnav>
         <template #activator="{ on }">
           <button
+            type="button"
             class="flex h-full items-center px-4 text-white hover:bg-primary-400"
             v-on="on"
           >

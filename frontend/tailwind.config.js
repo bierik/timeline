@@ -19,7 +19,6 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: "Quicksand",
         dymo: "Courier Prime",
       },
       colors: {

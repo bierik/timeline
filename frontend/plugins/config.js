@@ -2,14 +2,21 @@ import { Duration } from "luxon";
 import { createApp } from "vue";
 import EventComponent from "@/components/Event.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import "moment";
 
 export default defineNuxtPlugin(({ $config, $router }) => {
-  const FETCH_PADDING = { months: 3 };
-  const INITIAL_WINDOW = { months: 1 };
-  const RUNTIME_WINDOW_SPAN = { months: 1 };
+  const FETCH_PADDING = $config.breakpoints.mdAndDown
+    ? { weeks: 3 }
+    : { months: 3 };
   const MAX_ZOOM = { months: 2 };
   const MIN_ZOOM = { days: 4 };
+  const INITIAL_WINDOW = $config.breakpoints.mdAndDown
+    ? { weeks: 1 }
+    : { months: 1 };
   const ZOOM_STEP = 0.5;
+  const RUNTIME_WINDOW_SPAN = $config.breakpoints.mdAndDown
+    ? { weeks: 1 }
+    : { months: 1 };
 
   const TIMELINE_OPTIONS = {
     locale: "de",

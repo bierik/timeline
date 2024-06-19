@@ -7,7 +7,7 @@
 </template>
 
 <script>
-export default {
+export default defineNuxtComponent({
   name: "Field",
   props: {
     errors: {
@@ -28,5 +28,5 @@ export default {
       return this.errors.join("");
     },
   },
-};
+});
 </script>

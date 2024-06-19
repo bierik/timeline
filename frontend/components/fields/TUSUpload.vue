@@ -20,8 +20,9 @@
         </div>
         <button
           v-else
+          type="button"
           class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-1"
-          @click.stop.prevent="remove(index)"
+          @click.stop.prevent="remove($event)"
         >
           <Icon name="feather:x" />
         </button>

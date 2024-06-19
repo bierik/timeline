@@ -63,7 +63,6 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       "Courier Prime": true,
-      Quicksand: [300, 400, 500, 600, 700],
     },
   },
   nitro: {

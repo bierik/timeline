@@ -19,7 +19,7 @@
 <script>
 import { escapeable, modalable } from "@/mixins/modal";
 
-export default {
+export default defineNuxtComponent({
   name: "Bottomnav",
   mixins: [escapeable("close"), modalable("isOpen")],
   data() {
@@ -38,5 +38,5 @@ export default {
       this.isOpen = true;
     },
   },
-};
+});
 </script>

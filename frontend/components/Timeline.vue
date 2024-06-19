@@ -39,6 +39,7 @@
 
 <script>
 import { DateTime, Interval } from "luxon";
+import "moment/dist/locale/de";
 import { Timeline } from "vis-timeline/esnext";
 
 export default defineNuxtComponent({
@@ -99,18 +100,22 @@ export default defineNuxtComponent({
         now.minus(this.$config.INITIAL_WINDOW).toISODate(),
         now.plus(this.$config.INITIAL_WINDOW).toISODate()
       );
-      this.timeline.on("rangechange", (args) => {
-        this.$emit("rangechange", args);
-      });
-      this.timeline.on("rangechanged", (args) => {
-        const interval = Interval.fromDateTimes(
-          DateTime.fromJSDate(args.start),
-          DateTime.fromJSDate(args.end)
-        );
-        const currentTime = interval.divideEqually(2)[0].end;
-        this.$emit("rangechanged", { ...args, currentTime });
+      this.timeline.on("rangechange", ({ start, end }) => {
+        const currentTime = this.getCurrentTime(start, end);
+        this.$emit("rangechange", { start, end, currentTime });
       });
       this.timeline.on("changed", () => this.selectActiveEvent());
+
+      const { start, end } = this.timeline.getWindow();
+      const currentTime = this.getCurrentTime(start, end);
+      this.$emit("ready", { start, end, currentTime });
+    },
+    getCurrentTime(start, end) {
+      const interval = Interval.fromDateTimes(
+        DateTime.fromJSDate(start),
+        DateTime.fromJSDate(end)
+      );
+      return interval.divideEqually(2)[0].end;
     },
     hasEvent(id) {
       return this.timeline.itemsData.getIds().includes(Number.parseInt(id));
@@ -144,6 +149,9 @@ export default defineNuxtComponent({
     },
     setWindow(...args) {
       this.timeline.setWindow(...args);
+    },
+    getWindow() {
+      return this.timeline.getWindow();
     },
     reset() {
       this.timeline.itemsData.clear();

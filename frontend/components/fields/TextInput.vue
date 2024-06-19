@@ -1,5 +1,5 @@
 <template>
-  <Field>
+  <Field v-bind="$attrs">
     <input
       v-bind="$attrs"
       v-model="value"

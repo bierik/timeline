@@ -22,6 +22,7 @@
     "exif-js": "^2.3.0",
     "lodash": "^4.17.21",
     "luxon": "^3.4.4",
+    "moment": "^2.30.1",
     "nuxt": "^3.11.2",
     "photoswipe": "^5.4.4",
     "pinia": "^2.1.7",
@@ -33,7 +34,8 @@
     "vis-timeline": "^7.7.3",
     "vue": "^3.4.27",
     "vue-dompurify-html": "^5.0.1",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.2",
+    "vue-toast-notification": "^3"
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.3.13",

@@ -43,6 +43,7 @@
         :thumbnail="event.thumbnail"
       />
       <button
+        type="button"
         class="absolute bottom-0 right-0 flex size-8 items-center justify-center rounded-full bg-white p-2 shadow-flat shadow-primary transition-all hover:shadow-flat-lg"
         @click="edit"
       >
@@ -60,6 +61,7 @@
         </svg>
       </button>
       <button
+        type="button"
         class="absolute right-0 top-0 flex size-8 items-center justify-center rounded-full bg-white p-2 shadow-flat shadow-primary transition-all hover:shadow-flat-lg"
         @click="closeDialog"
       >
@@ -90,7 +92,7 @@
 </template>
 
 <script>
-export default {
+export default defineNuxtComponent({
   name: "TimelineEvent",
   inject: ["$router"],
   props: {
@@ -139,5 +141,5 @@ export default {
       this.$router.push({ name: "index" });
     },
   },
-};
+});
 </script>

@@ -16,6 +16,7 @@
             v-model="event.title"
             class="mb-4 block grow"
             label="Titel"
+            :errors="errorsForField('title')"
           />
           <EmojiField
             v-model="event.icon"

@@ -25,8 +25,8 @@
 
 <script>
 import formMixin from "@/components/form/form-mixin";
-export default {
+export default defineNuxtComponent({
   name: "SubmitForm",
   mixins: [formMixin],
-};
+});
 </script>
