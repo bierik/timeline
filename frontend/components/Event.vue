@@ -109,8 +109,8 @@ export default defineNuxtComponent({
   computed: {
     isActive() {
       return (
-        Number.parseInt(this.$router.currentRoute.value.query.activeEvent) ===
-        this.event.id
+        Number.parseInt(this.$router.currentRoute.value.query.activeEvent)
+        === this.event.id
       );
     },
   },

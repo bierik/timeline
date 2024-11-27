@@ -1,17 +1,34 @@
 {
-    "folders": [
-      { "path": "./backend" },
-      { "path": "./frontend" },
-      {
-        "name": "timeline",
-        "path": "."
-      }
-    ],
-    "settings": {
-      "files.exclude": {
-        "backend": true,
-        "frontend": true,
-      },
-      "ruff.enable": true,
+  "folders": [
+    { "path": "./backend" },
+    { "path": "./frontend" },
+    {
+      "name": "timeline",
+      "path": "."
     }
+  ],
+  "settings": {
+    "djlint.enableLinting": false,
+    "prettier.enable": false,
+    "files.exclude": {
+      "backend": true,
+      "frontend": true
+    },
+    "[javascript]": {
+      "editor.tabSize": 2,
+      "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+      }
+    },
+    "[vue]": {
+      "editor.tabSize": 2,
+      "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+      }
+    },
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true
+    },
+  }
 }

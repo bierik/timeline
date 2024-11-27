@@ -1,7 +1,13 @@
 <template>
   <div>
-    <slot name="activator" v-bind="{ on: { click: open } }" />
-    <div class="group" :class="isOpen ? '' : 'bottom-nav-close'">
+    <slot
+      name="activator"
+      v-bind="{ on: { click: open } }"
+    />
+    <div
+      class="group"
+      :class="isOpen ? '' : 'bottom-nav-close'"
+    >
       <div
         class="fixed inset-x-0 bottom-0 z-30 transition-transform group-[.bottom-nav-close]:translate-y-full"
         @click="close"
@@ -16,6 +22,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { escapeable, modalable } from "@/mixins/modal";
 

@@ -17,21 +17,30 @@
         class="mb-2 hidden items-center justify-center rounded-full p-3 drop-shadow-lg md:flex"
         @click="zoomIn"
       >
-        <Icon size="20" name="feather:zoom-in" />
+        <Icon
+          size="20"
+          name="feather:zoom-in"
+        />
       </Button>
       <Button
         v-if="timeline"
         class="mb-2 hidden items-center justify-center rounded-full p-3 drop-shadow-lg md:flex"
         @click="zoomOut"
       >
-        <Icon size="20" name="feather:zoom-out" />
+        <Icon
+          size="20"
+          name="feather:zoom-out"
+        />
       </Button>
       <Button
         v-if="timeline"
         class="flex items-center justify-center rounded-full p-3 drop-shadow-lg"
         @click="goToToday"
       >
-        <Icon size="20" name="feather:calendar" />
+        <Icon
+          size="20"
+          name="feather:calendar"
+        />
       </Button>
     </div>
   </div>

@@ -1,11 +1,16 @@
 <template>
   <Layout>
     <div class="container px-4">
-      <h1 class="mb-4 text-xl font-bold">Bilder importieren</h1>
+      <h1 class="mb-4 text-xl font-bold">
+        Bilder importieren
+      </h1>
       <label
         class="flex h-16 cursor-pointer items-center justify-center rounded-lg bg-primary-500 px-4 py-2 leading-tight text-white hover:bg-primary-400 focus:bg-primary-400 focus:outline-none"
       >
-        <Icon name="feather:file-plus" class="mr-1" />
+        <Icon
+          name="feather:file-plus"
+          class="mr-1"
+        />
         <span>Bilder auswählen</span>
         <input
           class="hidden"
@@ -157,14 +162,28 @@
         class="fixed inset-x-0 bottom-0 z-10 bg-primary-50"
       >
         <div class="container flex flex-col p-4">
-          <ProgressLinear class="mb-4" :max="imagesCount" :value="activeStep" />
+          <ProgressLinear
+            class="mb-4"
+            :max="imagesCount"
+            :value="activeStep"
+          />
           <div class="flex">
-            <Button id="prev-button" class="mr-2">Zurück</Button>
-            <Button id="next-button">Weiter</Button>
-            <div class="grow" />
-            <Button :loading="loading" @click="performImport"
-              >Importieren</Button
+            <Button
+              id="prev-button"
+              class="mr-2"
             >
+              Zurück
+            </Button>
+            <Button id="next-button">
+              Weiter
+            </Button>
+            <div class="grow" />
+            <Button
+              :loading="loading"
+              @click="performImport"
+            >
+              Importieren
+            </Button>
           </div>
         </div>
       </div>
@@ -288,8 +307,8 @@ export default defineNuxtComponent({
     },
     imagesCount() {
       return (
-        size(this.groupedImportedImagesWithOriginalDate) +
-        size(this.importedImagesWithMissingOriginalDate)
+        size(this.groupedImportedImagesWithOriginalDate)
+        + size(this.importedImagesWithMissingOriginalDate)
       );
     },
   },
@@ -313,10 +332,10 @@ export default defineNuxtComponent({
     },
     async loadImages(event) {
       this.importedImages = await extractCreatedDate(event.target.files);
-      this.groupedImportedImagesWithOriginalDate =
-        extractImagesWithOriginalDate(this.importedImages);
-      this.importedImagesWithMissingOriginalDate =
-        extractImagesWithMissingOriginalDate(this.importedImages);
+      this.groupedImportedImagesWithOriginalDate
+        = extractImagesWithOriginalDate(this.importedImages);
+      this.importedImagesWithMissingOriginalDate
+        = extractImagesWithMissingOriginalDate(this.importedImages);
       setTimeout(() => {
         this.$refs.swiper.swiper.update();
       }, 0);
@@ -325,10 +344,10 @@ export default defineNuxtComponent({
       this.importedImages = this.importedImages.filter(
         (i) => i.file.name !== importedImage.file.name,
       );
-      this.groupedImportedImagesWithOriginalDate =
-        extractImagesWithOriginalDate(this.importedImages);
-      this.importedImagesWithMissingOriginalDate =
-        extractImagesWithMissingOriginalDate(this.importedImages);
+      this.groupedImportedImagesWithOriginalDate
+        = extractImagesWithOriginalDate(this.importedImages);
+      this.importedImagesWithMissingOriginalDate
+        = extractImagesWithMissingOriginalDate(this.importedImages);
     },
     async performImport() {
       const imagesToUpload = this.importedImages.map((importedImage) => {
@@ -419,6 +438,7 @@ export default defineNuxtComponent({
   },
 });
 </script>
+
 <style>
 ::range-thumb {
   border-radius: 1px;

@@ -6,7 +6,10 @@
         class="flex h-full items-center px-4 text-white hover:bg-primary-400"
         @click="filterDrawer = true"
       >
-        <Icon name="feather:filter" size="18" />
+        <Icon
+          name="feather:filter"
+          size="18"
+        />
         <span class="ml-1 hidden sm:block">Filter</span>
       </button>
       <Bottomnav>
@@ -16,7 +19,10 @@
             class="flex h-full items-center px-4 text-white hover:bg-primary-400"
             v-on="on"
           >
-            <Icon name="feather:plus" size="18" />
+            <Icon
+              name="feather:plus"
+              size="18"
+            />
             <span class="ml-1 hidden sm:block">Hinzufügen</span>
           </button>
         </template>
@@ -25,7 +31,10 @@
             to="/event/new"
             class="flex h-full items-center p-4 hover:bg-gray-200"
           >
-            <Icon name="feather:plus" size="18" />
+            <Icon
+              name="feather:plus"
+              size="18"
+            />
             <span class="ml-1">Hinzufügen</span>
           </nuxt-link>
           <hr />
@@ -33,7 +42,10 @@
             class="flex h-full items-center p-4 hover:bg-gray-200"
             :to="{ name: 'import' }"
           >
-            <Icon name="feather:upload" size="18" />
+            <Icon
+              name="feather:upload"
+              size="18"
+            />
             <span class="ml-1">Import</span>
           </nuxt-link>
         </div>

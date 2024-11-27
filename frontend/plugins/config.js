@@ -1,7 +1,7 @@
 import { Duration } from "luxon";
 import { createApp } from "vue";
-import EventComponent from "@/components/Event.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import EventComponent from "@/components/Event.vue";
 import "moment";
 
 export default defineNuxtPlugin(({ $config, $router }) => {

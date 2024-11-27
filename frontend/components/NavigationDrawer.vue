@@ -1,5 +1,8 @@
 <template>
-  <div class="group" :class="modelValue ? '' : 'navigation-drawer-close'">
+  <div
+    class="group"
+    :class="modelValue ? '' : 'navigation-drawer-close'"
+  >
     <div
       class="fixed inset-y-0 right-0 z-50 bg-white transition-transform group-[.navigation-drawer-close]:translate-x-full"
     >

@@ -1,5 +1,9 @@
 <template>
-  <SelectInput multiple :options="options" v-bind="$attrs" />
+  <SelectInput
+    multiple
+    :options="options"
+    v-bind="$attrs"
+  />
 </template>
 
 <script>

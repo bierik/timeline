@@ -5,13 +5,19 @@
         to="/person/new"
         class="flex h-full items-center px-4 text-white hover:bg-primary-400"
       >
-        <Icon name="feather:plus" size="18" />
+        <Icon
+          name="feather:plus"
+          size="18"
+        />
         <span class="ml-1 hidden sm:block">Hinzufügen</span>
       </nuxt-link>
     </template>
     <div class="container">
       <PersonTabs class="mb-4" />
-      <template v-for="person in people" :key="person.id">
+      <template
+        v-for="person in people"
+        :key="person.id"
+      >
         <nuxt-link
           class="flex items-center px-4 py-6 hover:bg-gray-200"
           :to="{ name: 'person-id-edit', params: { id: person.id } }"

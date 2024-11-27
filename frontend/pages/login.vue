@@ -1,6 +1,9 @@
 <template>
   <div class="flex h-screen flex-col items-center justify-center">
-    <form class="rounded bg-slate-50 p-16" @submit.prevent="login">
+    <form
+      class="rounded bg-slate-50 p-16"
+      @submit.prevent="login"
+    >
       <TextInput
         v-model="credentials.username"
         autofocus
@@ -15,7 +18,12 @@
         type="password"
         label="Passwort"
       />
-      <Button type="submit" class="w-full">Login</Button>
+      <Button
+        type="submit"
+        class="w-full"
+      >
+        Login
+      </Button>
     </form>
   </div>
 </template>

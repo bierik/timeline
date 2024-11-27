@@ -6,7 +6,10 @@
         class="flex h-full items-center px-4 text-white hover:bg-primary-400"
         @click="filterDrawer = true"
       >
-        <Icon name="feather:filter" size="18" />
+        <Icon
+          name="feather:filter"
+          size="18"
+        />
         <span class="ml-1 hidden sm:block">Filter</span>
       </button>
       <Bottomnav>
@@ -16,7 +19,10 @@
             class="flex h-full items-center px-4 text-white hover:bg-primary-400"
             v-on="on"
           >
-            <Icon name="feather:plus" size="18" />
+            <Icon
+              name="feather:plus"
+              size="18"
+            />
             <span class="ml-1 hidden sm:block">Hinzufügen</span>
           </button>
         </template>
@@ -25,7 +31,10 @@
             to="/event/new"
             class="flex h-full items-center p-4 hover:bg-gray-200"
           >
-            <Icon name="feather:plus" size="18" />
+            <Icon
+              name="feather:plus"
+              size="18"
+            />
             <span class="ml-1">Hinzufügen</span>
           </nuxt-link>
           <hr />
@@ -33,7 +42,10 @@
             class="flex h-full items-center p-4 hover:bg-gray-200"
             :to="{ name: 'import' }"
           >
-            <Icon name="feather:upload" size="18" />
+            <Icon
+              name="feather:upload"
+              size="18"
+            />
             <span class="ml-1">Import</span>
           </nuxt-link>
         </div>
@@ -68,12 +80,17 @@
     </NavigationDrawer>
     <div class="container">
       <ul>
-        <li v-for="event in events" :key="event.id">
+        <li
+          v-for="event in events"
+          :key="event.id"
+        >
           <nuxt-link
             class="flex items-center justify-between p-4 hover:bg-gray-200"
             :to="{ name: 'event-id-edit', params: { id: event.id } }"
           >
-            <div class="text-3xl">{{ event.icon }}</div>
+            <div class="text-3xl">
+              {{ event.icon }}
+            </div>
             <div
               class="flex h-full grow flex-col place-content-center"
               :class="{ 'pl-4': !!event.icon, 'pr-4': !!event.has_images }"
@@ -90,7 +107,11 @@
                     query: { activeEvent: event.id },
                   }"
                 >
-                  <Icon class="mr-1" size="15" name="feather:map-pin" />
+                  <Icon
+                    class="mr-1"
+                    size="15"
+                    name="feather:map-pin"
+                  />
                   <small>Timeline</small>
                 </nuxt-link>
               </div>
@@ -105,7 +126,10 @@
           <hr />
         </li>
       </ul>
-      <div ref="infiniteScrollAnchor" class="invisible" />
+      <div
+        ref="infiniteScrollAnchor"
+        class="invisible"
+      />
     </div>
   </Layout>
 </template>

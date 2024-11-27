@@ -1,7 +1,9 @@
 <template>
   <Layout>
     <div class="container px-4">
-      <h1 class="mb-4 text-xl font-bold">Neue Rolle hinzfügen</h1>
+      <h1 class="mb-4 text-xl font-bold">
+        Neue Rolle hinzfügen
+      </h1>
       <Form
         v-model:errors="errors"
         :save="save"

@@ -1,7 +1,14 @@
 <template>
   <div class="m-2 flex">
-    <SelectInput v-model="month" class="mr-2" :options="monthChoices" />
-    <TextInput v-model="year" class="w-20" />
+    <SelectInput
+      v-model="month"
+      class="mr-2"
+      :options="monthChoices"
+    />
+    <TextInput
+      v-model="year"
+      class="w-20"
+    />
   </div>
 </template>
 

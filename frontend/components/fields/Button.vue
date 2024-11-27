@@ -18,7 +18,10 @@
       animation="spin"
       animation-speed="slow"
     />
-    <div :class="{ invisible: loading }" class="flex items-center">
+    <div
+      :class="{ invisible: loading }"
+      class="flex items-center"
+    >
       <slot />
     </div>
   </button>

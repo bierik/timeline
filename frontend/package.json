@@ -8,10 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "pnpm run lint:eslint && yarn lint:prettier",
-    "lint:eslint": "eslint .",
-    "lint:prettier": "prettier . --check",
-    "lintfix": "eslint . --fix && prettier --write --list-different .",
+    "lint": "nuxt prepare && eslint .",
+    "lintfix": "nuxt prepare && eslint . --fix",
     "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {

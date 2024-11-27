@@ -1,5 +1,8 @@
 <template>
-  <component :is="tag" class="flex flex-col items-start">
+  <component
+    :is="tag"
+    class="flex flex-col items-start"
+  >
     <span class="block font-bold text-gray-500">{{ label }}</span>
     <slot />
     <span class="text-red-600">{{ errorText }}</span>

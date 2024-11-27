@@ -16,7 +16,10 @@
           v-if="image.loading"
           class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2"
         >
-          <Icon name="feather:loader" animation="spin" />
+          <Icon
+            name="feather:loader"
+            animation="spin"
+          />
         </div>
         <button
           v-else

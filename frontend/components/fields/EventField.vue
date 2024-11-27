@@ -14,11 +14,18 @@
           class="block p-4 hover:bg-gray-50"
           :class="{ 'border-b-2': index !== items.length - 1 }"
         >
-          <input v-model="selectedItems" type="checkbox" :value="item.id" />
+          <input
+            v-model="selectedItems"
+            type="checkbox"
+            :value="item.id"
+          />
           {{ item.title }}
         </label>
       </template>
-      <span v-else class="block p-4">Keine Ergebnisse</span>
+      <span
+        v-else
+        class="block p-4"
+      >Keine Ergebnisse</span>
     </div>
   </div>
 </template>

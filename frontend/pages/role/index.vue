@@ -5,13 +5,19 @@
         to="/role/new"
         class="flex h-full items-center px-4 text-white hover:bg-primary-400"
       >
-        <Icon name="feather:plus" size="18" />
+        <Icon
+          name="feather:plus"
+          size="18"
+        />
         <span class="ml-1 hidden sm:block">Hinzufügen</span>
       </nuxt-link>
     </template>
     <div class="container">
       <PersonTabs class="mb-4" />
-      <template v-for="role in roles" :key="role.id">
+      <template
+        v-for="role in roles"
+        :key="role.id"
+      >
         <nuxt-link
           class="flex items-center px-4 py-6 hover:bg-gray-200"
           :to="{ name: 'role-id-edit', params: { id: role.id } }"

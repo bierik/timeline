@@ -18,10 +18,11 @@
     </div>
   </div>
 </template>
+
 <script>
 import { Picker } from "emoji-mart";
-import { escapeable, modalable } from "@/mixins/modal";
 import omit from "lodash/omit";
+import { escapeable, modalable } from "@/mixins/modal";
 
 export default defineNuxtComponent({
   mixins: [escapeable("close"), modalable("isOpen")],

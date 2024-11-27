@@ -8,6 +8,7 @@
     />
   </Field>
 </template>
+
 <script>
 export default defineNuxtComponent({
   props: {
