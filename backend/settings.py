@@ -65,7 +65,14 @@ class Base(Configuration):
     AWS_S3_OBJECT_PARAMETERS = {
         "CacheControl": "max-age=31536000",
     }
-    DEFAULT_FILE_STORAGE = "core.storage_backends.MediaStorage"
+    STORAGES = {
+        "default": {
+            "BACKEND": "core.storage_backends.MediaStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
 
     STATIC_URL = "/static/"
     STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -176,5 +183,12 @@ class Dev(Base):
     def MEDIA_ROOT(self):  # noqa: N802
         return self.BASE_DIR / "media"
 
-    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
     LOGGING = None
