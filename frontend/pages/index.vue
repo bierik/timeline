@@ -100,7 +100,7 @@ export default defineNuxtComponent({
         monthFilter
           .startOf("month")
           .plus(this.$config.RUNTIME_WINDOW_SPAN)
-          .toJSDate()
+          .toJSDate(),
       );
     },
     applyFilter(filter) {
@@ -129,7 +129,7 @@ export default defineNuxtComponent({
         await this.loadEvents(start, end);
       },
       500,
-      { leading: false, trailing: true }
+      { leading: false, trailing: true },
     ),
   },
 });

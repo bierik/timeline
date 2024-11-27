@@ -2,7 +2,7 @@
   <Field tag="div">
     <div class="grid w-full grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-4">
       <div
-        v-for="(image, index) in files"
+        v-for="image in files"
         :key="image.name"
         class="relative aspect-square"
       >
@@ -89,7 +89,7 @@ export default defineNuxtComponent({
       }
       this.uploadedFiles = (
         await Promise.all(
-          differenceBy(event.target.files, this.files, "name").map(readImage)
+          differenceBy(event.target.files, this.files, "name").map(readImage),
         )
       ).map(createPendingFile);
       const uploads = this.uploadedFiles.map((file, index) => {
@@ -120,7 +120,7 @@ export default defineNuxtComponent({
         "update:model-value",
         this.multiple
           ? [...this.modelValue, ...this.uploadedFiles]
-          : first(this.uploadedFiles)
+          : first(this.uploadedFiles),
       );
       this.uploadedFiles = [];
       this.$refs.fileInput.value = "";
@@ -128,7 +128,7 @@ export default defineNuxtComponent({
     remove(indexToRemove) {
       this.$emit(
         "update:model-value",
-        this.files.filter((_, index) => index !== indexToRemove)
+        this.files.filter((_, index) => index !== indexToRemove),
       );
     },
   },

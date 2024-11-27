@@ -52,7 +52,7 @@ export default defineNuxtComponent({
     selectedItems: {
       get() {
         return this.modelValue.map((value) =>
-          isNumber(value) ? value : value.id
+          isNumber(value) ? value : value.id,
         );
       },
       set(selectedItems) {
@@ -72,7 +72,7 @@ export default defineNuxtComponent({
   mounted() {
     this.$emit(
       "update:model-value",
-      this.modelValue.map((value) => (isNumber(value) ? value : value.id))
+      this.modelValue.map((value) => (isNumber(value) ? value : value.id)),
     );
   },
   methods: {
@@ -105,7 +105,7 @@ export default defineNuxtComponent({
                 })
               ).data.results,
             ],
-            "id"
+            "id",
           ).filter((item) => item.id !== this.exclude);
         } catch (e) {
           this.items = [];
@@ -115,7 +115,7 @@ export default defineNuxtComponent({
         }
       },
       400,
-      { leading: true, trailing: false }
+      { leading: true, trailing: false },
     ),
   },
 });

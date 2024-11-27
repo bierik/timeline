@@ -172,7 +172,7 @@ export default defineNuxtComponent({
         await this.performSearch();
       },
       200,
-      { leading: true, trailing: false }
+      { leading: true, trailing: false },
     ),
     async applyFilter(filter) {
       try {

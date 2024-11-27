@@ -212,11 +212,11 @@ function parseEXIFDateTime(str) {
 
 async function extractCreatedDate(files = []) {
   const arrayBuffers = await Promise.all(
-    Array.from(files).map((f) => readFileAsArrayBuffer(f))
+    Array.from(files).map((f) => readFileAsArrayBuffer(f)),
   );
   return arrayBuffers.map(([file, buffer]) => {
     const dateTimeOriginal = parseEXIFDateTime(
-      get(EXIF.readFromBinaryFile(buffer), "DateTimeOriginal")
+      get(EXIF.readFromBinaryFile(buffer), "DateTimeOriginal"),
     );
     return {
       buffer,
@@ -295,7 +295,7 @@ export default defineNuxtComponent({
   },
   beforeUnmount() {
     this.importedImages.forEach((importedImage) =>
-      URL.revokeObjectURL(importedImage.buffer)
+      URL.revokeObjectURL(importedImage.buffer),
     );
   },
   methods: {
@@ -305,10 +305,10 @@ export default defineNuxtComponent({
         : index;
       return get(this.errors[finalIndex], field);
     },
-    makeProgress({ detail: [_, progress] }) {
+    makeProgress({ detail }) {
       this.activeStep = Math.min(
         this.imagesCount,
-        1 + progress * (this.imagesCount - 1)
+        1 + detail[1] * (this.imagesCount - 1),
       );
     },
     async loadImages(event) {
@@ -323,7 +323,7 @@ export default defineNuxtComponent({
     },
     removeImage(importedImage) {
       this.importedImages = this.importedImages.filter(
-        (i) => i.file.name !== importedImage.file.name
+        (i) => i.file.name !== importedImage.file.name,
       );
       this.groupedImportedImagesWithOriginalDate =
         extractImagesWithOriginalDate(this.importedImages);
@@ -370,9 +370,9 @@ export default defineNuxtComponent({
               images: groupedUploadedImage.values.map(
                 (uploadedImage) =>
                   find(uploadedImages, { filename: uploadedImage.file.name })
-                    .uploadFilename
+                    .uploadFilename,
               ),
-            })
+            }),
           ),
           ...this.importedImagesWithMissingOriginalDate.map(
             (uploadedImage) => ({
@@ -388,7 +388,7 @@ export default defineNuxtComponent({
                 find(uploadedImages, { filename: uploadedImage.file.name })
                   .uploadFilename,
               ],
-            })
+            }),
           ),
         ];
         try {
@@ -407,9 +407,9 @@ export default defineNuxtComponent({
         } finally {
           this.loading = false;
         }
-      } catch (error) {
+      } catch {
         this.$toast.error(
-          "Beim Hochladen der Bilder ist ein unerwarteter Fehler aufgetreten."
+          "Beim Hochladen der Bilder ist ein unerwarteter Fehler aufgetreten.",
         );
         return;
       } finally {

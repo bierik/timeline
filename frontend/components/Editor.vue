@@ -33,7 +33,7 @@ export default defineNuxtComponent({
         document.getElementById(this.$options.holderId),
         {
           toolbar: ["bold", "italic"],
-        }
+        },
       );
       this.$options.editor.model.document.on("change:data", () => {
         this.$emit("update:model-value", this.$options.editor.getData());

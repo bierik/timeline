@@ -23,7 +23,7 @@ export default defineNuxtPlugin({
         }
         return config;
       },
-      (error) => Promise.reject(error)
+      (error) => Promise.reject(error),
     );
 
     client.interceptors.response.use(
@@ -33,7 +33,7 @@ export default defineNuxtPlugin({
           router.push({ name: "login" });
         }
         return Promise.reject(error);
-      }
+      },
     );
     return {
       provide: {

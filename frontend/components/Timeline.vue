@@ -90,7 +90,7 @@ export default defineNuxtComponent({
       this.timeline = new Timeline(
         this.$refs.timeline,
         this.events,
-        this.$config.TIMELINE_OPTIONS
+        this.$config.TIMELINE_OPTIONS,
       );
       this.timeline.setOptions({
         zoomable: this.$config.device.isTouchDevice,
@@ -98,7 +98,7 @@ export default defineNuxtComponent({
       const now = DateTime.local();
       this.timeline.setWindow(
         now.minus(this.$config.INITIAL_WINDOW).toISODate(),
-        now.plus(this.$config.INITIAL_WINDOW).toISODate()
+        now.plus(this.$config.INITIAL_WINDOW).toISODate(),
       );
       this.timeline.on("rangechange", ({ start, end }) => {
         const currentTime = this.getCurrentTime(start, end);
@@ -113,7 +113,7 @@ export default defineNuxtComponent({
     getCurrentTime(start, end) {
       const interval = Interval.fromDateTimes(
         DateTime.fromJSDate(start),
-        DateTime.fromJSDate(end)
+        DateTime.fromJSDate(end),
       );
       return interval.divideEqually(2)[0].end;
     },
@@ -129,10 +129,10 @@ export default defineNuxtComponent({
     },
     selectActiveEvent() {
       Array.from(document.querySelectorAll(".vis-item")).forEach((item) =>
-        item.classList.remove("vis-selected")
+        item.classList.remove("vis-selected"),
       );
       const eventEl = document.querySelector(
-        `[data-event-id="${this.$route.query.activeEvent}"]`
+        `[data-event-id="${this.$route.query.activeEvent}"]`,
       );
       if (eventEl) {
         eventEl.closest(".vis-item").classList.add("vis-selected");
