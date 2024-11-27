@@ -1,4 +1,4 @@
-FROM python:3.12.4-alpine3.20 as builder
+FROM python:3.12.4-alpine3.20 AS builder
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ RUN apk add --no-cache gcc musl-dev postgresql-dev vips-dev mailcap
 COPY poetry.lock pyproject.toml ./
 
 RUN --mount=type=cache,target=/root/.cache \
-    python -m pip install poetry==1.3.1 && \
+    python -m pip install poetry==1.8.4 && \
     poetry config virtualenvs.create false && \
     poetry install --only main --no-interaction --no-ansi \
     && python -m pip install uwsgi
