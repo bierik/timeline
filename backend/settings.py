@@ -1,6 +1,5 @@
 import os
 import sys
-from datetime import timedelta
 from pathlib import Path
 
 from configurations import Configuration, values
@@ -62,7 +61,7 @@ class Base(Configuration):
     AWS_S3_REGION_NAME = "eu-central-1"
     AWS_DEFAULT_ACL = None
     AWS_S3_SIGNATURE_VERSION = "s3v4"
-    AWS_S3_CUSTOM_DOMAIN = "%s.s3.amazonaws.com" % AWS_STORAGE_BUCKET_NAME
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
     AWS_S3_OBJECT_PARAMETERS = {
         "CacheControl": "max-age=31536000",
     }
@@ -87,7 +86,7 @@ class Base(Configuration):
     WSGI_APPLICATION = "wsgi.application"
 
     @property
-    def DATABASES(self):
+    def DATABASES(self):  # noqa: N802
         options = {}
         if os.environ.get("DJANGO_DATABASE_REQUIRE_SSL", False):
             options["sslmode"] = "require"
@@ -174,7 +173,7 @@ class Dev(Base):
     MEDIA_URL = "/media/"
 
     @property
-    def MEDIA_ROOT(self):
+    def MEDIA_ROOT(self):  # noqa: N802
         return self.BASE_DIR / "media"
 
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"

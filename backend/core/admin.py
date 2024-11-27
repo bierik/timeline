@@ -1,10 +1,11 @@
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+
 from core.authentication.models import User
 from core.events.models import Event
 from core.image.models import Image
 from core.people.models import Person
 from core.role.models import Role
-from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 
 
 class ImageInline(admin.TabularInline):

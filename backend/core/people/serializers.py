@@ -1,5 +1,4 @@
 import io
-import os
 from pathlib import Path
 
 import pyvips
@@ -45,18 +44,18 @@ class PersonCreateOrUpdateSerializer(serializers.ModelSerializer):
         file_name = image["filename"]
         image_path = Path(settings.TUS_DESTINATION_DIR) / file_name
         with pyvips.Image.new_from_file(image_path) as image:
-            image = image.autorot()
+            rotated = image.autorot()
             person_image = Image.objects.create(
                 title="title",
                 person=person,
-                width=image.width,
-                height=image.height,
+                width=rotated.width,
+                height=rotated.height,
             )
             person_image.file.save(
                 file_name,
-                io.BytesIO(image.write_to_buffer(".jpeg", **{"Q": 80, "strip": True})),
+                io.BytesIO(rotated.write_to_buffer(".jpeg", Q=80, strip=True)),
             )
-            os.remove(image_path)
+            image_path.unlink()
 
     def to_representation(self, instance):
         return PersonSerializer(instance, context=self.context).data

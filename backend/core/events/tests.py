@@ -1,8 +1,9 @@
-from core.events.models import Event
-from core.testcase import TestCase
 from django.urls import reverse_lazy
 from model_bakery import baker
 from pluck import pluck
+
+from core.events.models import Event
+from core.testcase import TestCase
 
 
 class EventTestCase(TestCase):
