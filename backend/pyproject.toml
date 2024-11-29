@@ -22,12 +22,15 @@ pillow = "^11.0.0"
 django-tus = {git = "https://github.com/alican/django-tus", rev = "2aac2e7c0e6bac79a1cb07721947a48d9cc40ec8"}
 django-configurations = "^2.5"
 
-[tool.poetry.dev-dependencies]
-
 [tool.poetry.group.dev.dependencies]
+ruff = "^0.8.0"
+
+[tool.poetry.group.test.dependencies]
 model-bakery = "^1.20.0"
 pluck = "^0.2"
-ruff = "^0.8.0"
+
+[tool.poetry.group.prod.dependencies]
+uwsgi = "^2.0.28"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
