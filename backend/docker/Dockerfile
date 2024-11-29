@@ -79,6 +79,8 @@ COPY --from=build-prod /app /app
 COPY --from=build-prod /usr/local/bin /usr/local/bin
 COPY --from=build-prod /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY . /app/
+RUN chown -R app /app/tus
+RUN chgrp -R app /app/tus
 RUN python manage.py collectstatic --noinput
 USER app
 ENTRYPOINT ["/app/docker/entrypoint.sh"]
