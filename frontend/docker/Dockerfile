@@ -23,5 +23,4 @@ COPY --from=prod-builder /app/.output/public /usr/share/nginx/html
 COPY ./docker/default.conf.template /etc/nginx/templates/default.conf.template
 COPY ./docker/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
-USER nginx
 CMD ["nginx", "-g", "daemon off;"]
