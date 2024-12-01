@@ -28,6 +28,8 @@ ruff = "^0.8.0"
 [tool.poetry.group.test.dependencies]
 model-bakery = "^1.20.0"
 pluck = "^0.2"
+requests = "^2.32.3"
+pytest-django = "^4.9.0"
 
 [tool.poetry.group.prod.dependencies]
 uwsgi = "^2.0.28"
@@ -46,3 +48,9 @@ ignore = ["D", "ANN", "PT", "ARG001", "ARG002", "RUF012", "ISC", "COM", "TRY003"
 [tool.ruff.lint.per-file-ignores]
 "core/migrations/*" = ["E501"]
 "core/**/test*.py" = ["S107", "S106", "S105", "S311"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "settings"
+DJANGO_CONFIGURATION = "Test"
+python_files = "tests.py test_*.py *_tests.py"
+addopts = "--nomigrations"

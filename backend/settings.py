@@ -109,20 +109,6 @@ class Base(Configuration):
         }
         return {"default": config}
 
-    AUTH_PASSWORD_VALIDATORS = [
-        {
-            "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-        },
-        {
-            "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-        },
-        {
-            "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-        },
-        {
-            "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-        },
-    ]
     LANGUAGE_CODE = "de-ch"
     TIME_ZONE = "UTC"
     USE_I18N = True
@@ -177,18 +163,23 @@ class Dev(Base):
     ALLOWED_HOSTS = ["*"]
     DEBUG = True
     USE_X_FORWARDED_HOST = True
-    MEDIA_URL = "/media/"
 
-    @property
-    def MEDIA_ROOT(self):  # noqa: N802
-        return self.BASE_DIR / "media"
+    AWS_STORAGE_BUCKET_NAME = "media"
+    AWS_ACCESS_KEY_ID = "admin"
+    AWS_SECRET_ACCESS_KEY = "secret"  # noqa: S105
 
-    STORAGES = {
+    LOGGING = None
+
+
+class Test(Base):
+    AWS_STORAGE_BUCKET_NAME = "media"
+    AWS_ACCESS_KEY_ID = "admin"
+    AWS_SECRET_ACCESS_KEY = "secret"  # noqa: S105
+
+    DATABASES = {
         "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
-        },
-        "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+            "ENGINE": "django.db.backends.postgresql",
+            "HOST": "localhost",
+            "PORT": "5432",
         },
     }
-    LOGGING = None
