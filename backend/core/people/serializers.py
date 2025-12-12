@@ -42,7 +42,7 @@ class PersonCreateOrUpdateSerializer(serializers.ModelSerializer):
         if hasattr(person, "image"):
             person.image.delete()
         file_name = image["filename"]
-        image_path = Path(settings.TUS_DESTINATION_DIR) / file_name
+        image_path = Path() / file_name
         with pyvips.Image.new_from_file(image_path) as image:
             rotated = image.autorot()
             person_image = Image.objects.create(

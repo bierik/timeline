@@ -4,15 +4,12 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core.authentication.serializers import (
-    AuthSerializer,
-    PasswordResetSerializer,
-    UserSerializer,
-)
+from core.authentication.serializers import AuthSerializer, PasswordResetSerializer, UserSerializer
 
 
 class LoginView(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
+    authentication_classes = []
 
     def post(self, request, **kwargs):
         serializer = AuthSerializer(data=request.data)

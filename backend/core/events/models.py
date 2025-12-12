@@ -31,7 +31,7 @@ class Event(TimeStampedModel):
         return self.title
 
     def add_image(self, name):
-        image_path = Path(settings.TUS_DESTINATION_DIR) / name
+        image_path = Path() / name
         with pyvips.Image.new_from_file(image_path) as image:
             rotated = image.autorot()
             event_image = Image.objects.create(title="title", event=self, width=rotated.width, height=rotated.height)

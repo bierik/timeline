@@ -43,9 +43,6 @@ export default defineNuxtConfig({
       "/api/": {
         target: `http://backend:8000/api/`,
       },
-      "/media/": {
-        target: `http://backend:8000/media/`,
-      },
       "/admin/": {
         target: `http://backend:8000/admin/`,
       },

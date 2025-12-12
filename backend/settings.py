@@ -20,7 +20,6 @@ class Base(Configuration):
         "django_filters",
         "rest_framework",
         "knox",
-        "django_tus",
         "sorl.thumbnail",
         "core",
         "django_cleanup.apps.CleanupConfig",
@@ -40,10 +39,6 @@ class Base(Configuration):
 
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
     DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
-    TUS_UPLOAD_DIR = BASE_DIR / "tus/tus_intermediate"
-    TUS_DESTINATION_DIR = BASE_DIR / "tus/tus_destination"
-    TUS_FILE_NAME_FORMAT = "keep"
-    TUS_EXISTING_FILE = "error"
 
     SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
 
@@ -109,20 +104,6 @@ class Base(Configuration):
         }
         return {"default": config}
 
-    AUTH_PASSWORD_VALIDATORS = [
-        {
-            "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-        },
-        {
-            "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-        },
-        {
-            "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-        },
-        {
-            "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-        },
-    ]
     LANGUAGE_CODE = "de-ch"
     TIME_ZONE = "UTC"
     USE_I18N = True
@@ -177,18 +158,24 @@ class Dev(Base):
     ALLOWED_HOSTS = ["*"]
     DEBUG = True
     USE_X_FORWARDED_HOST = True
-    MEDIA_URL = "/media/"
 
-    @property
-    def MEDIA_ROOT(self):  # noqa: N802
-        return self.BASE_DIR / "media"
+    AWS_STORAGE_BUCKET_NAME = "media"
+    AWS_ACCESS_KEY_ID = "admin"
+    AWS_SECRET_ACCESS_KEY = "secret"  # noqa: S105
 
-    STORAGES = {
+    LOGGING = None
+
+
+class Test(Base):
+    AWS_STORAGE_BUCKET_NAME = "test-media"
+    AWS_ACCESS_KEY_ID = "admin"
+    AWS_SECRET_ACCESS_KEY = "password"  # noqa: S105
+    AWS_S3_ENDPOINT_URL = "http://localhost:5004"
+
+    DATABASES = {
         "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
-        },
-        "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+            "ENGINE": "django.db.backends.postgresql",
+            "HOST": "localhost",
+            "PORT": "5432",
         },
     }
-    LOGGING = None
